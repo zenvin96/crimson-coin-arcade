@@ -16,13 +16,13 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   const isMobile = useIsMobile();
   
   return (
-    <div className="flex min-h-screen bg-[#F8F8F8]">
+    <div className="flex min-h-screen bg-background">
       {/* Left Sidebar - hidden on mobile */}
       {!isMobile && <LeftSidebar />}
       
       {/* Main Content */}
       <main className={cn(
-        "flex-1 transition-all duration-300 pb-20",
+        "flex-1 transition-all duration-300 pb-20 bg-background",
         isSidebarOpen && !isMobile ? "ml-64" : isMobile ? "ml-0" : "ml-16",
         isMobile && "pt-0" || "pt-16" // Account for fixed header
       )}>

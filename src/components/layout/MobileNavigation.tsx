@@ -24,10 +24,10 @@ const MobileNavigation = () => {
   const [showSearch, setShowSearch] = useState(false);
   
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-40">
+    <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-40">
       {/* Mobile bottom navigation */}
       <div className="flex items-center justify-around h-16 px-2">
-        <Button variant="ghost" size="icon" className="flex flex-col items-center gap-1 text-gray-600">
+        <Button variant="ghost" size="icon" className="flex flex-col items-center gap-1 text-foreground">
           <Home className="h-5 w-5" />
           <span className="text-xs">Home</span>
         </Button>
@@ -35,7 +35,7 @@ const MobileNavigation = () => {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="flex flex-col items-center gap-1 text-gray-600"
+          className="flex flex-col items-center gap-1 text-foreground"
           onClick={() => setShowSearch(!showSearch)}
         >
           <Search className="h-5 w-5" />
@@ -45,18 +45,18 @@ const MobileNavigation = () => {
         {/* Mobile Menu Trigger */}
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="flex flex-col items-center gap-1 text-gray-600">
+            <Button variant="ghost" size="icon" className="flex flex-col items-center gap-1 text-foreground">
               <Menu className="h-5 w-5" />
               <span className="text-xs">Menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-[85%] sm:w-[385px]">
+          <SheetContent side="left" className="w-[85%] sm:w-[385px] bg-background">
             <div className="flex flex-col h-full">
-              <div className="p-4 border-b border-gray-100">
+              <div className="p-4 border-b border-border">
                 <Logo size="md" />
               </div>
               
-              <div className="p-4 border-b border-gray-100">
+              <div className="p-4 border-b border-border">
                 <TokenPriceTracker />
               </div>
               
@@ -87,7 +87,7 @@ const MobileNavigation = () => {
           </SheetContent>
         </Sheet>
         
-        <Button variant="ghost" size="icon" className="flex flex-col items-center gap-1 text-gray-600 relative">
+        <Button variant="ghost" size="icon" className="flex flex-col items-center gap-1 text-foreground relative">
           <Bell className="h-5 w-5" />
           {notificationCount > 0 && (
             <Badge className="absolute -top-1 right-0 h-4 w-4 p-0 flex items-center justify-center bg-red-500">
@@ -97,7 +97,7 @@ const MobileNavigation = () => {
           <span className="text-xs">Alerts</span>
         </Button>
         
-        <Button variant="ghost" size="icon" className="flex flex-col items-center gap-1 text-gray-600">
+        <Button variant="ghost" size="icon" className="flex flex-col items-center gap-1 text-foreground">
           <User className="h-5 w-5" />
           <span className="text-xs">Account</span>
         </Button>
@@ -105,13 +105,13 @@ const MobileNavigation = () => {
       
       {/* Mobile Search Input */}
       {showSearch && (
-        <div className="bg-white p-4 border-t border-gray-200">
+        <div className="bg-background p-4 border-t border-border">
           <div className="relative">
-            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
             <input
               type="search"
               placeholder="Search games..."
-              className="w-full h-10 pl-10 pr-4 rounded-full bg-gray-100 border-none focus:ring-primary/30"
+              className="w-full h-10 pl-10 pr-4 rounded-full bg-muted border-none focus:ring-primary/30"
               autoFocus
             />
           </div>
