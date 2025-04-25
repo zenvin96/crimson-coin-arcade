@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 97%;
+    --background: 0 0% 97%; /* Light mode background */
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -29,7 +29,7 @@
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 240 10% 3.9%; /* Dark mode background - deep dark gray */
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
@@ -49,15 +49,9 @@
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
   }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
 
   body {
-    @apply bg-background text-foreground font-roboto;
+    @apply bg-background text-foreground font-roboto transition-colors duration-300;
   }
 
   h1, h2, h3, h4, h5, h6 {
