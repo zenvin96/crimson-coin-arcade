@@ -12,6 +12,15 @@ const ThemeToggle = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Apply dark class to html element
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
   
   if (!mounted) return null;
   
