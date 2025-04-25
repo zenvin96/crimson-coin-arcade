@@ -10,7 +10,7 @@ const ThemeToggle = () => {
     <Button
       variant="outline"
       size="icon"
-      className="rounded-full bg-white/80 backdrop-blur-sm shadow-soft border-gray-200"
+      className="rounded-full bg-background/80 backdrop-blur-sm shadow-soft border-border"
       onClick={toggleTheme}
     >
       {theme === "light" ? (

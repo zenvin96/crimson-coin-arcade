@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 // Define types
@@ -72,7 +71,7 @@ type AppContextType = {
 };
 
 const defaultContext: AppContextType = {
-  theme: "light",
+  theme: "dark",
   toggleTheme: () => {},
   isSidebarOpen: true,
   toggleSidebar: () => {},
@@ -99,7 +98,7 @@ const AppContext = createContext<AppContextType>(defaultContext);
 export const useApp = () => useContext(AppContext);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<ThemeType>("light");
+  const [theme, setTheme] = useState<ThemeType>("dark");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [currency, setCurrency] = useState<CurrencyType>("MYR");
   const [language, setLanguage] = useState<LanguageType>("EN");
@@ -264,6 +263,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     };
 
     loadMockData();
+  }, []);
+
+  // Add initial theme setup
+  useEffect(() => {
+    document.documentElement.classList.add("dark");
   }, []);
 
   const value = {
