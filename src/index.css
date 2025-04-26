@@ -1,5 +1,4 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -30,36 +29,121 @@
   }
 
   .dark {
-    --background: 240 10% 3.9%; /* Dark mode background - deep dark gray */
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
+    /* 更柔和的深色背景 - 参考BC.Game */
+    --background: 210 3% 12%; /* #1D1F20 - 深灰色背景 */
+    --foreground: 213 10% 85%;
+    /* 卡片背景色稍微亮一点，使其在背景中更突出 */
+    --card: 220 13% 14%;
+    --card-foreground: 213 10% 85%;
+    /* 弹出窗口背景更深，形成层次感 */
+    --popover: 220 13% 16%;
+    --popover-foreground: 213 10% 85%;
+    /* 保持原有的品牌色 */
     --primary: 350 100% 71%;
     --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
+    /* 次要色调整为灰蓝色调 */
+    --secondary: 215 14% 20%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    /* 柔和的深色静音元素 */
+    --muted: 215 14% 16%;
+    --muted-foreground: 215 10% 65%;
+    /* 保持原有的强调色 */
     --accent: 333 80% 57%;
     --accent-foreground: 0 0% 98%;
+    /* 破坏性操作色 */
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
+    /* 边框颜色更明显 */
+    --border: 215 14% 20%;
+    --input: 215 14% 16%;
     --ring: 240 4.9% 83.9%;
   }
 
   html {
     @apply min-h-full transition-colors duration-300;
+    position: relative;
   }
 
   body {
     @apply min-h-full bg-background text-foreground font-roboto transition-colors duration-300;
+    position: relative;
+    overflow-x: hidden;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  /* 添加粉色/红色环境光效果 - 修复z-index */
+  body.dark::before,
+  body.dark::after {
+    content: "";
+    position: fixed;
+    pointer-events: none;
+    z-index: -2; /* 降低body伪元素的z-index */
+    will-change: transform; /* 优化性能 */
+  }
+
+  /* 右上角的粉色光晕 */
+  body.dark::before {
+    top: -10%;
+    right: -5%;
+    width: 45vw;
+    height: 45vw;
+    background: radial-gradient(
+      circle,
+      rgba(255, 107, 139, 0.08) 0%,
+      rgba(232, 62, 140, 0.05) 30%,
+      transparent 70%
+    );
+    border-radius: 50%;
+    filter: blur(40px);
+  }
+
+  /* 左下角的粉色光晕 */
+  body.dark::after {
+    bottom: -10%;
+    left: -5%;
+    width: 40vw;
+    height: 40vw;
+    background: radial-gradient(
+      circle,
+      rgba(232, 62, 140, 0.08) 0%,
+      rgba(255, 107, 139, 0.04) 40%,
+      transparent 70%
+    );
+    border-radius: 50%;
+    filter: blur(50px);
+  }
+
+  /* 为卡片添加微妙的光晕效果 - 确保正确的z-index */
+  .game-card {
+    position: relative;
+    z-index: 1;
+  }
+
+  .game-card:hover::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    z-index: -1; /* 确保在卡片内容之下 */
+    background: linear-gradient(
+      45deg,
+      rgba(255, 107, 139, 0.2),
+      rgba(232, 62, 140, 0.2)
+    );
+    filter: blur(15px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: inherit;
+  }
+
+  .game-card:hover::after {
+    opacity: 1;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-inter font-medium;
   }
 }
@@ -70,10 +154,16 @@
 
 .game-card {
   @apply rounded-lg overflow-hidden shadow-card bg-card text-card-foreground transition-all duration-300 hover:shadow-medium hover:translate-y-[-4px];
+  position: relative;
 }
 
 .gradient-button {
   @apply bg-gradient-to-r from-primary to-accent text-white transition-all duration-300 hover:shadow-glow;
+}
+
+/* 增强按钮的光晕效果 */
+.gradient-button:hover {
+  box-shadow: 0 0 20px 5px rgba(255, 107, 139, 0.2);
 }
 
 .token-price-up {
@@ -91,4 +181,105 @@
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* 添加粉色环境光效果类 - 修复z-index问题 */
+.ambient-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.ambient-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.6;
+  z-index: -1; /* 将静态光晕置于较底层 */
+  animation: pulse-soft 8s infinite alternate ease-in-out;
+  will-change: transform, opacity; /* 优化性能 */
+  pointer-events: none; /* 确保不会干扰交互 */
+}
+
+.glow-top-right {
+  top: -20%;
+  right: -10%;
+  width: 50vw;
+  height: 40vh;
+  background: radial-gradient(
+    circle,
+    rgba(255, 107, 139, 0.15) 0%,
+    rgba(232, 62, 140, 0.05) 50%,
+    transparent 80%
+  );
+}
+
+.glow-bottom-left {
+  bottom: -10%;
+  left: -10%;
+  width: 40vw;
+  height: 40vh;
+  background: radial-gradient(
+    circle,
+    rgba(232, 62, 140, 0.1) 0%,
+    rgba(255, 107, 139, 0.05) 50%,
+    transparent 80%
+  );
+}
+
+.glow-center {
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70vw;
+  height: 40vh;
+  background: radial-gradient(
+    ellipse,
+    rgba(255, 107, 139, 0.05) 0%,
+    rgba(232, 62, 140, 0.03) 40%,
+    transparent 80%
+  );
+}
+
+@keyframes pulse-soft {
+  0% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+@layer utilities {
+  .bg-gradient-radial {
+    background-image: radial-gradient(var(--tw-gradient-stops));
+  }
+
+  /* 鼠标跟随光晕效果 - 调整z-index */
+  .mouse-follower-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(255, 107, 139, 0.12) 0%,
+      rgba(232, 62, 140, 0.08) 40%,
+      transparent 70%
+    );
+    filter: blur(60px);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0; /* 保持在内容之下，但在静态光晕和body伪元素之上 */
+    opacity: 0;
+    transition: opacity 0.2s ease-out, transform 0.03s linear; /* 加快过渡 */
+    will-change: transform, opacity;
+  }
+
+  body:hover .mouse-follower-glow {
+    opacity: 1;
+  }
 }

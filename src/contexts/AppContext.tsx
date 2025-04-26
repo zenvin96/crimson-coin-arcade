@@ -1,4 +1,3 @@
-
 import { createContext, useState, useContext, useEffect } from "react";
 import { AppContextType } from "./AppContextType";
 import { ThemeType, CurrencyType, LanguageType } from "@/types/settings";
@@ -13,7 +12,7 @@ const mockGames: Game[] = [
     category: "slots",
     provider: "CrimsonGames",
     isHot: true,
-    isNew: false
+    isNew: false,
   },
   {
     id: "game2",
@@ -22,7 +21,7 @@ const mockGames: Game[] = [
     category: "slots",
     provider: "AzurePlay",
     isHot: false,
-    isNew: true
+    isNew: true,
   },
   {
     id: "game3",
@@ -31,7 +30,7 @@ const mockGames: Game[] = [
     category: "table",
     provider: "RoyalGaming",
     isHot: true,
-    isNew: false
+    isNew: false,
   },
   {
     id: "game4",
@@ -40,7 +39,7 @@ const mockGames: Game[] = [
     category: "live",
     provider: "LuxuryLive",
     isHot: false,
-    isNew: false
+    isNew: false,
   },
   {
     id: "game5",
@@ -49,7 +48,7 @@ const mockGames: Game[] = [
     category: "jackpot",
     provider: "JackpotKings",
     isHot: true,
-    isNew: false
+    isNew: false,
   },
   {
     id: "game6",
@@ -58,7 +57,7 @@ const mockGames: Game[] = [
     category: "originals",
     provider: "CrimsonGames",
     isHot: false,
-    isNew: true
+    isNew: true,
   },
   {
     id: "game7",
@@ -67,7 +66,7 @@ const mockGames: Game[] = [
     category: "sports",
     provider: "BetMasters",
     isHot: true,
-    isNew: true
+    isNew: true,
   },
   {
     id: "game8",
@@ -76,7 +75,7 @@ const mockGames: Game[] = [
     category: "table",
     provider: "RoyalGaming",
     isHot: false,
-    isNew: false
+    isNew: false,
   },
   {
     id: "game9",
@@ -85,7 +84,7 @@ const mockGames: Game[] = [
     category: "originals",
     provider: "CrimsonGames",
     isHot: true,
-    isNew: false
+    isNew: false,
   },
   {
     id: "game10",
@@ -94,7 +93,7 @@ const mockGames: Game[] = [
     category: "slots",
     provider: "BitPlay",
     isHot: false,
-    isNew: true
+    isNew: true,
   },
   {
     id: "game11",
@@ -103,7 +102,7 @@ const mockGames: Game[] = [
     category: "live",
     provider: "LuxuryLive",
     isHot: true,
-    isNew: false
+    isNew: false,
   },
   {
     id: "game12",
@@ -112,7 +111,7 @@ const mockGames: Game[] = [
     category: "jackpot",
     provider: "JackpotKings",
     isHot: false,
-    isNew: false
+    isNew: false,
   },
   {
     id: "game13",
@@ -121,7 +120,7 @@ const mockGames: Game[] = [
     category: "sports",
     provider: "BetMasters",
     isHot: true,
-    isNew: false
+    isNew: false,
   },
   {
     id: "game14",
@@ -130,7 +129,7 @@ const mockGames: Game[] = [
     category: "slots",
     provider: "AzurePlay",
     isHot: false,
-    isNew: true
+    isNew: true,
   },
   {
     id: "game15",
@@ -139,7 +138,7 @@ const mockGames: Game[] = [
     category: "live",
     provider: "LuxuryLive",
     isHot: false,
-    isNew: false
+    isNew: false,
   },
 ];
 
@@ -151,11 +150,11 @@ const mockWinners: Winner[] = [
     game: {
       id: "game1",
       title: "Lucky Fortune",
-      image: "https://picsum.photos/seed/game1/100"
+      image: "https://picsum.photos/seed/game1/100",
     },
     amount: 12500,
     currency: "MYR",
-    timestamp: new Date(Date.now() - 1000 * 60 * 5)
+    timestamp: new Date(Date.now() - 1000 * 60 * 5),
   },
   {
     id: "win2",
@@ -164,11 +163,11 @@ const mockWinners: Winner[] = [
     game: {
       id: "game5",
       title: "Mega Jackpot",
-      image: "https://picsum.photos/seed/game5/100"
+      image: "https://picsum.photos/seed/game5/100",
     },
     amount: 45750,
     currency: "MYR",
-    timestamp: new Date(Date.now() - 1000 * 60 * 12)
+    timestamp: new Date(Date.now() - 1000 * 60 * 12),
   },
   {
     id: "win3",
@@ -177,11 +176,11 @@ const mockWinners: Winner[] = [
     game: {
       id: "game3",
       title: "Golden Poker",
-      image: "https://picsum.photos/seed/game3/100"
+      image: "https://picsum.photos/seed/game3/100",
     },
     amount: 8900,
     currency: "MYR",
-    timestamp: new Date(Date.now() - 1000 * 60 * 18)
+    timestamp: new Date(Date.now() - 1000 * 60 * 18),
   },
   {
     id: "win4",
@@ -190,11 +189,11 @@ const mockWinners: Winner[] = [
     game: {
       id: "game9",
       title: "Fortune Wheel",
-      image: "https://picsum.photos/seed/game9/100"
+      image: "https://picsum.photos/seed/game9/100",
     },
     amount: 23100,
     currency: "MYR",
-    timestamp: new Date(Date.now() - 1000 * 60 * 25)
+    timestamp: new Date(Date.now() - 1000 * 60 * 25),
   },
   {
     id: "win5",
@@ -203,12 +202,12 @@ const mockWinners: Winner[] = [
     game: {
       id: "game7",
       title: "Sports Betting Pro",
-      image: "https://picsum.photos/seed/game7/100"
+      image: "https://picsum.photos/seed/game7/100",
     },
     amount: 35000,
     currency: "MYR",
-    timestamp: new Date(Date.now() - 1000 * 60 * 32)
-  }
+    timestamp: new Date(Date.now() - 1000 * 60 * 32),
+  },
 ];
 
 const mockCategories: Category[] = [
@@ -217,43 +216,43 @@ const mockCategories: Category[] = [
     title: "Slot Games",
     description: "Spin to win on hundreds of exciting slot machines",
     icon: "slots",
-    slug: "slots"
+    slug: "slots",
   },
   {
     id: "table",
     title: "Table Games",
     description: "Classic casino favorites like Blackjack and Roulette",
     icon: "table",
-    slug: "table-games"
+    slug: "table-games",
   },
   {
     id: "live",
     title: "Live Casino",
     description: "Real-time games with professional live dealers",
     icon: "live",
-    slug: "live-casino"
+    slug: "live-casino",
   },
   {
     id: "jackpot",
     title: "Jackpot Games",
     description: "Massive progressive jackpots waiting to be won",
     icon: "jackpot",
-    slug: "jackpots"
+    slug: "jackpots",
   },
   {
     id: "originals",
     title: "Our Originals",
     description: "Exclusive games you won't find anywhere else",
     icon: "originals",
-    slug: "exclusive-games"
+    slug: "exclusive-games",
   },
   {
     id: "sports",
     title: "Sports Betting",
     description: "Bet on your favorite teams and sports events",
     icon: "sports",
-    slug: "sports"
-  }
+    slug: "sports",
+  },
 ];
 
 const mockTokenPrices: TokenPrice[] = [
@@ -263,7 +262,7 @@ const mockTokenPrices: TokenPrice[] = [
     symbol: "BTC",
     price: 58432.21,
     change24h: 2.5,
-    icon: "bitcoin"
+    icon: "bitcoin",
   },
   {
     id: "eth",
@@ -271,7 +270,7 @@ const mockTokenPrices: TokenPrice[] = [
     symbol: "ETH",
     price: 3201.45,
     change24h: 1.8,
-    icon: "ethereum"
+    icon: "ethereum",
   },
   {
     id: "bnb",
@@ -279,7 +278,7 @@ const mockTokenPrices: TokenPrice[] = [
     symbol: "BNB",
     price: 502.36,
     change24h: -0.7,
-    icon: "binance"
+    icon: "binance",
   },
   {
     id: "sol",
@@ -287,7 +286,7 @@ const mockTokenPrices: TokenPrice[] = [
     symbol: "SOL",
     price: 143.82,
     change24h: 5.2,
-    icon: "solana"
+    icon: "solana",
   },
   {
     id: "ada",
@@ -295,8 +294,8 @@ const mockTokenPrices: TokenPrice[] = [
     symbol: "ADA",
     price: 0.56,
     change24h: -1.2,
-    icon: "cardano"
-  }
+    icon: "cardano",
+  },
 ];
 
 // Create Context
@@ -305,46 +304,46 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 // Provider Component
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   // Theme state
-  const [theme, setTheme] = useState<ThemeType>('dark');
-  const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
-  
+  const [theme, setTheme] = useState<ThemeType>("dark");
+  const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
+
   // Sidebar state
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-  
+
   // Settings state
   const [currency, setCurrency] = useState<CurrencyType>("MYR");
   const [language, setLanguage] = useState<LanguageType>("EN");
-  
+
   // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
+
   // Game filtering state
   const [games] = useState<Game[]>(mockGames);
   const [filteredGames, setFilteredGames] = useState<Game[]>(mockGames);
   const [currentFilter, setCurrentFilter] = useState("all");
-  
+
   // Mock data
   const [recentWinners] = useState<Winner[]>(mockWinners);
   const [categories] = useState<Category[]>(mockCategories);
   const [tokenPrices] = useState<TokenPrice[]>(mockTokenPrices);
-  
+
   // Loading state
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Notification count
   const [notificationCount, setNotificationCount] = useState(2);
-  
+
   // Filter games by category
   const filterGames = (category: string) => {
     setCurrentFilter(category);
     if (category === "all") {
       setFilteredGames(games);
     } else {
-      setFilteredGames(games.filter(game => game.category === category));
+      setFilteredGames(games.filter((game) => game.category === category));
     }
   };
-  
+
   // Mock login function
   const login = async (email: string, password: string) => {
     setIsLoading(true);
@@ -362,30 +361,30 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       }, 1000);
     });
   };
-  
+
   // Mock logout function
   const logout = () => {
     setIsAuthenticated(false);
   };
-  
+
   // Simulate initial loading
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1500);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
   // Apply theme to body
   useEffect(() => {
-    if (theme === 'dark') {
-      document.body.classList.add('dark');
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
     } else {
-      document.body.classList.remove('dark');
+      document.documentElement.classList.remove("dark");
     }
   }, [theme]);
-  
+
   // Context value
   const value: AppContextType = {
     theme,
@@ -407,9 +406,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     recentWinners,
     categories,
     notificationCount,
-    isLoading
+    isLoading,
   };
-  
+
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 

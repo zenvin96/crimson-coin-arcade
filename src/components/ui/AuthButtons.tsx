@@ -1,17 +1,16 @@
-
 import { useState } from "react";
 import { useApp } from "@/contexts/AppContext";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LogIn, User } from "lucide-react";
-import { 
+import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -24,10 +23,10 @@ const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { toast } = useToast();
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       await login(email, password);
       toast({
@@ -42,12 +41,12 @@ const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
       });
     }
   };
-  
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
-        <Input 
+        <Input
           id="email"
           type="email"
           placeholder="youremail@example.com"
@@ -59,11 +58,15 @@ const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label htmlFor="password">Password</Label>
-          <Button type="button" variant="link" className="text-xs text-primary p-0">
+          <Button
+            type="button"
+            variant="link"
+            className="text-xs text-primary p-0"
+          >
             Forgot password?
           </Button>
         </div>
-        <Input 
+        <Input
           id="password"
           type="password"
           placeholder="••••••••"
@@ -72,19 +75,21 @@ const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
           required
         />
       </div>
-      <Button 
-        type="submit" 
-        className="gradient-button w-full" 
+      <Button
+        type="submit"
+        className="gradient-button w-full"
         disabled={isLoading}
       >
         {isLoading ? "Logging in..." : "Login"}
       </Button>
       <div className="text-center">
-        <span className="text-sm text-gray-500">Don't have an account? </span>
-        <Button 
-          type="button" 
-          variant="link" 
-          className="text-primary p-0" 
+        <span className="text-sm text-muted-foreground">
+          Don't have an account?{" "}
+        </span>
+        <Button
+          type="button"
+          variant="link"
+          className="text-primary p-0"
           onClick={() => setMode("register")}
         >
           Register
@@ -100,10 +105,10 @@ const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const { toast } = useToast();
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       // For now, we'll just use login since this is a mock
       await login(email, password);
@@ -119,12 +124,12 @@ const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
       });
     }
   };
-  
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="name">Full Name</Label>
-        <Input 
+        <Input
           id="name"
           type="text"
           placeholder="John Doe"
@@ -135,7 +140,7 @@ const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
       </div>
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
-        <Input 
+        <Input
           id="email"
           type="email"
           placeholder="youremail@example.com"
@@ -146,7 +151,7 @@ const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">Password</Label>
-        <Input 
+        <Input
           id="password"
           type="password"
           placeholder="Create a strong password"
@@ -155,19 +160,21 @@ const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
           required
         />
       </div>
-      <Button 
-        type="submit" 
-        className="gradient-button w-full" 
+      <Button
+        type="submit"
+        className="gradient-button w-full"
         disabled={isLoading}
       >
         {isLoading ? "Creating account..." : "Create Account"}
       </Button>
       <div className="text-center">
-        <span className="text-sm text-gray-500">Already have an account? </span>
-        <Button 
-          type="button" 
-          variant="link" 
-          className="text-primary p-0" 
+        <span className="text-sm text-muted-foreground">
+          Already have an account?{" "}
+        </span>
+        <Button
+          type="button"
+          variant="link"
+          className="text-primary p-0"
           onClick={() => setMode("login")}
         >
           Login
@@ -182,7 +189,7 @@ const AuthButtons = () => {
   const [authMode, setAuthMode] = useState<AuthMode>("login");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
-  
+
   const handleLogout = () => {
     logout();
     toast({
@@ -190,7 +197,7 @@ const AuthButtons = () => {
       description: "You have been logged out successfully",
     });
   };
-  
+
   if (isAuthenticated) {
     return (
       <div className="flex items-center gap-2">
@@ -198,22 +205,19 @@ const AuthButtons = () => {
           <User className="h-4 w-4" />
           My Account
         </Button>
-        <Button 
-          variant="ghost"
-          onClick={handleLogout}
-        >
+        <Button variant="ghost" onClick={handleLogout}>
           Logout
         </Button>
       </div>
     );
   }
-  
+
   return (
     <div className="flex items-center gap-2">
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="flex items-center gap-2"
             onClick={() => {
               setAuthMode("login");
@@ -227,26 +231,28 @@ const AuthButtons = () => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {authMode === "login" ? "Sign In to Your Account" : "Create an Account"}
+              {authMode === "login"
+                ? "Sign In to Your Account"
+                : "Create an Account"}
             </DialogTitle>
             <DialogDescription>
-              {authMode === "login" 
-                ? "Enter your credentials to access your account" 
-                : "Fill out the form below to create your account"
-              }
+              {authMode === "login"
+                ? "Enter your credentials to access your account"
+                : "Fill out the form below to create your account"}
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="py-4">
-            {authMode === "login" 
-              ? <LoginForm setMode={setAuthMode} />
-              : <RegisterForm setMode={setAuthMode} />
-            }
+            {authMode === "login" ? (
+              <LoginForm setMode={setAuthMode} />
+            ) : (
+              <RegisterForm setMode={setAuthMode} />
+            )}
           </div>
         </DialogContent>
       </Dialog>
-      
-      <Button 
+
+      <Button
         className="gradient-button"
         onClick={() => {
           setAuthMode("register");

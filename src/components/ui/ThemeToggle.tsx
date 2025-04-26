@@ -1,4 +1,3 @@
-
 import { useApp } from "@/contexts/AppContext";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
@@ -7,23 +6,14 @@ import { useEffect, useState } from "react";
 const ThemeToggle = () => {
   const { theme, toggleTheme } = useApp();
   const [mounted, setMounted] = useState(false);
-  
+
   // Only render the toggle client-side to avoid hydration mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Apply dark class to html element
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
-  
   if (!mounted) return null;
-  
+
   return (
     <Button
       variant="outline"

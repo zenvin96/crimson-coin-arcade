@@ -1,14 +1,13 @@
-
 import { useEffect, useState, useRef } from "react";
 import { useApp } from "@/contexts/AppContext";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { 
-  ChevronRight, 
-  ChevronLeft, 
-  Trophy, 
+import {
+  ChevronRight,
+  ChevronLeft,
+  Trophy,
   Flame,
-  ArrowRight
+  ArrowRight,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,7 +16,7 @@ type TabType = {
   id: string;
   label: string;
   icon?: React.ReactNode;
-}
+};
 
 const tabs: TabType[] = [
   { id: "all", label: "All Games" },
@@ -29,12 +28,12 @@ const tabs: TabType[] = [
 ];
 
 // Game Card component
-const GameCard = ({ 
-  image, 
-  title, 
-  provider, 
-  isHot = false, 
-  isNew = false 
+const GameCard = ({
+  image,
+  title,
+  provider,
+  isHot = false,
+  isNew = false,
 }: {
   image: string;
   title: string;
@@ -45,12 +44,10 @@ const GameCard = ({
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <div className="game-card relative group">
-      {!imageLoaded && (
-        <Skeleton className="h-40 w-full rounded-t-lg" />
-      )}
-      <img 
-        src={image} 
+    <div className="game-card relative group border border-border/30">
+      {!imageLoaded && <Skeleton className="h-40 w-full rounded-t-lg" />}
+      <img
+        src={image}
         alt={title}
         className={cn(
           "w-full h-40 object-cover rounded-t-lg transition-all",
@@ -58,45 +55,45 @@ const GameCard = ({
         )}
         onLoad={() => setImageLoaded(true)}
       />
-      
+
       {/* Badges */}
       <div className="absolute top-2 left-2 flex gap-1">
         {isHot && (
-          <div className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full flex items-center gap-1">
-            <Flame className="h-3 w-3" />
+          <div className="bg-blue-500 text-white text-xs font-medium px-2 py-1 rounded-full">
             HOT
           </div>
         )}
         {isNew && (
-          <div className="bg-blue-500 text-white text-xs font-medium px-2 py-1 rounded-full">
+          <div className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full flex items-center gap-1">
+            <Flame className="h-3 w-3" />
             NEW
           </div>
         )}
       </div>
-      
+
       {/* Play button overlay */}
       <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 rounded-lg">
         <Button className="gradient-button hover:scale-105 transition-all">
           Play Now
         </Button>
       </div>
-      
+
       <div className="p-3">
         <h3 className="font-medium text-sm">{title}</h3>
-        <p className="text-xs text-gray-500">{provider}</p>
+        <p className="text-xs text-muted-foreground">{provider}</p>
       </div>
     </div>
   );
 };
 
 // Winner Card component
-const WinnerCard = ({ 
+const WinnerCard = ({
   username,
   avatar,
   game,
   amount,
   currency,
-  timestamp
+  timestamp,
 }: {
   username: string;
   avatar: string;
@@ -110,47 +107,47 @@ const WinnerCard = ({
 }) => {
   const timeAgo = (date: Date) => {
     const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-    
+
     let interval = seconds / 31536000;
     if (interval > 1) return Math.floor(interval) + " years ago";
-    
+
     interval = seconds / 2592000;
     if (interval > 1) return Math.floor(interval) + " months ago";
-    
+
     interval = seconds / 86400;
     if (interval > 1) return Math.floor(interval) + " days ago";
-    
+
     interval = seconds / 3600;
     if (interval > 1) return Math.floor(interval) + " hours ago";
-    
+
     interval = seconds / 60;
     if (interval > 1) return Math.floor(interval) + " minutes ago";
-    
+
     return Math.floor(seconds) + " seconds ago";
   };
 
   return (
-    <div className="flex flex-col bg-white rounded-lg shadow-card p-3 min-w-[280px]">
+    <div className="flex flex-col bg-card rounded-lg shadow-card p-3 min-w-[280px] border border-border/30 hover:border-border/50 transition-colors">
       <div className="flex gap-3 items-center mb-3">
-        <img 
+        <img
           src={avatar}
           alt={username}
           className="h-10 w-10 rounded-full border-2 border-primary/20"
         />
         <div>
           <p className="font-medium text-sm">{username}</p>
-          <p className="text-xs text-gray-500">{timeAgo(timestamp)}</p>
+          <p className="text-xs text-muted-foreground">{timeAgo(timestamp)}</p>
         </div>
       </div>
-      
+
       <div className="flex items-center gap-3">
-        <img 
+        <img
           src={game.image}
           alt={game.title}
           className="h-12 w-12 rounded-md object-cover"
         />
         <div className="flex-1">
-          <p className="text-xs text-gray-500">Won on {game.title}</p>
+          <p className="text-xs text-muted-foreground">Won on {game.title}</p>
           <p className="font-bold text-primary">
             {currency} {amount.toLocaleString()}
           </p>
@@ -172,8 +169,8 @@ const TabNavigation = () => {
     if (tabsRef.current) {
       setShowLeftScroll(tabsRef.current.scrollLeft > 0);
       setShowRightScroll(
-        tabsRef.current.scrollLeft < 
-        tabsRef.current.scrollWidth - tabsRef.current.clientWidth
+        tabsRef.current.scrollLeft <
+          tabsRef.current.scrollWidth - tabsRef.current.clientWidth
       );
     }
   };
@@ -182,19 +179,19 @@ const TabNavigation = () => {
     const tabsElement = tabsRef.current;
     // Set initial tabs
     setVisibleTabs(tabs);
-    
+
     // Check for scroll buttons
     checkScrollButtons();
-    
+
     // Add scroll event listener
     if (tabsElement) {
-      tabsElement.addEventListener('scroll', checkScrollButtons);
+      tabsElement.addEventListener("scroll", checkScrollButtons);
     }
-    
+
     // Clean up
     return () => {
       if (tabsElement) {
-        tabsElement.removeEventListener('scroll', checkScrollButtons);
+        tabsElement.removeEventListener("scroll", checkScrollButtons);
       }
     };
   }, []);
@@ -203,12 +200,12 @@ const TabNavigation = () => {
     filterGames(tabId);
   };
 
-  const scrollTabs = (direction: 'left' | 'right') => {
+  const scrollTabs = (direction: "left" | "right") => {
     if (tabsRef.current) {
       const scrollAmount = 200;
       tabsRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
       });
     }
   };
@@ -219,14 +216,14 @@ const TabNavigation = () => {
         <Button
           variant="outline"
           size="icon"
-          className="absolute left-0 z-10 bg-white shadow-md rounded-full"
-          onClick={() => scrollTabs('left')}
+          className="absolute left-0 z-10 bg-card shadow-md rounded-full border border-border/40"
+          onClick={() => scrollTabs("left")}
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
       )}
-      
-      <div 
+
+      <div
         className="overflow-x-auto scrollbar-hide py-2 px-6 flex items-center gap-2"
         ref={tabsRef}
       >
@@ -236,9 +233,9 @@ const TabNavigation = () => {
             variant={currentFilter === tab.id ? "default" : "outline"}
             className={cn(
               "whitespace-nowrap transition-all",
-              currentFilter === tab.id 
-                ? "bg-primary text-white hover:bg-primary/90" 
-                : "hover:bg-gray-100"
+              currentFilter === tab.id
+                ? "bg-primary text-white hover:bg-primary/90"
+                : "hover:bg-muted"
             )}
             onClick={() => handleTabClick(tab.id)}
           >
@@ -247,13 +244,13 @@ const TabNavigation = () => {
           </Button>
         ))}
       </div>
-      
+
       {showRightScroll && (
         <Button
           variant="outline"
           size="icon"
-          className="absolute right-0 z-10 bg-white shadow-md rounded-full"
-          onClick={() => scrollTabs('right')}
+          className="absolute right-0 z-10 bg-card shadow-md rounded-full border border-border/40"
+          onClick={() => scrollTabs("right")}
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
@@ -265,17 +262,20 @@ const TabNavigation = () => {
 const RecentWinners = () => {
   const { recentWinners } = useApp();
   const scrollRef = useRef<HTMLDivElement>(null);
-  
+
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-medium">Recent Winners</h3>
-        <Button variant="ghost" className="text-primary flex items-center gap-1">
+        <Button
+          variant="ghost"
+          className="text-primary flex items-center gap-1"
+        >
           See All <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
-      
-      <div 
+
+      <div
         className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide"
         ref={scrollRef}
       >
@@ -302,41 +302,50 @@ const GameShowcase = () => {
     <section className="w-full mb-10">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold">Featured Games</h2>
-        <Button variant="ghost" className="text-primary flex items-center gap-1">
+        <Button
+          variant="ghost"
+          className="text-primary flex items-center gap-1"
+        >
           View All Games <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
-      
+
       <TabNavigation />
-      
+
       <RecentWinners />
-      
+
       <Separator className="my-8" />
-      
+
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-        {isLoading 
-          ? Array(12).fill(null).map((_, i) => (
-              <div key={`skeleton-${i}`} className="bg-white rounded-lg shadow-card">
-                <Skeleton className="h-40 w-full rounded-t-lg" />
-                <div className="p-3">
-                  <Skeleton className="h-4 w-3/4 mb-2" />
-                  <Skeleton className="h-3 w-1/2" />
+        {isLoading
+          ? Array(12)
+              .fill(null)
+              .map((_, i) => (
+                <div
+                  key={`skeleton-${i}`}
+                  className="bg-card rounded-lg shadow-card border border-border/30"
+                >
+                  <Skeleton className="h-40 w-full rounded-t-lg" />
+                  <div className="p-3">
+                    <Skeleton className="h-4 w-3/4 mb-2" />
+                    <Skeleton className="h-3 w-1/2" />
+                  </div>
                 </div>
-              </div>
-            ))
-          : filteredGames.slice(0, 12).map((game) => (
-              <GameCard 
-                key={game.id}
-                image={game.image}
-                title={game.title}
-                provider={game.provider}
-                isHot={game.isHot}
-                isNew={game.isNew}
-              />
-            ))
-        }
+              ))
+          : filteredGames
+              .slice(0, 12)
+              .map((game) => (
+                <GameCard
+                  key={game.id}
+                  image={game.image}
+                  title={game.title}
+                  provider={game.provider}
+                  isHot={game.isHot}
+                  isNew={game.isNew}
+                />
+              ))}
       </div>
-      
+
       <div className="flex justify-center mt-6">
         <Button size="lg" className="gradient-button hover-scale">
           Load More Games
