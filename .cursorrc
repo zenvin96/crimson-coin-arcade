@@ -1,0 +1,88 @@
+{
+  "ai": {
+    "enableAutoCompletion": true,
+    "enableInlineCompletion": true,
+    "contextLength": "medium",
+    "modelConfig": {
+      "temperature": 0.3,
+      "maxTokens": 2000
+    }
+  },
+  "editor": {
+    "formatOnSave": true,
+    "tabSize": 2,
+    "wordWrap": "on",
+    "fontFamily": "JetBrains Mono, Menlo, Monaco, 'Courier New', monospace",
+    "fontSize": 14
+  },
+  "terminal": {
+    "fontFamily": "JetBrains Mono, Menlo, Monaco, 'Courier New', monospace",
+    "fontSize": 13
+  },
+  "cursor": {
+    "chat": {
+      "defaultPrompt": "你是赤币街机项目的AI助手。请帮助我遵循项目规范进行代码开发。尽量使用中文回复。",
+      "includeContextByDefault": true
+    },
+    "customPrompts": [
+      {
+        "name": "创建新组件",
+        "prompt": "请帮我创建一个名为{{name}}的{{type}}组件。遵循项目的组件结构和样式指南。",
+        "variables": [
+          {
+            "name": "name",
+            "description": "组件名称",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "description": "组件类型",
+            "type": "select",
+            "options": ["ui", "section", "layout"]
+          }
+        ]
+      },
+      {
+        "name": "添加测试",
+        "prompt": "为{{filePath}}文件编写{{testType}}测试。确保测试覆盖主要功能和边缘情况。",
+        "variables": [
+          {
+            "name": "filePath",
+            "description": "要测试的文件路径",
+            "type": "string"
+          },
+          {
+            "name": "testType",
+            "description": "测试类型",
+            "type": "select",
+            "options": ["unit", "integration"]
+          }
+        ]
+      },
+      {
+        "name": "代码优化",
+        "prompt": "分析这段代码并提出性能优化建议。确保遵循React最佳实践和项目代码风格。"
+      },
+      {
+        "name": "文档生成",
+        "prompt": "为{{filePath}}文件生成JSDoc文档注释。确保描述功能、参数和返回值。",
+        "variables": [
+          {
+            "name": "filePath",
+            "description": "需要文档的文件路径",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  },
+  "codebase": {
+    "ignorePaths": [
+      "node_modules",
+      "dist",
+      "build",
+      ".git",
+      "*.log"
+    ]
+  }
+} 

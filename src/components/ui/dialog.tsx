@@ -1,16 +1,66 @@
-import * as React from "react"
-import * as DialogPrimitive from "@radix-ui/react-dialog"
-import { X } from "lucide-react"
+import * as React from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
-const Dialog = DialogPrimitive.Root
+// 自定义滚动锁定处理函数
+const useScrollLock = (lock: boolean) => {
+  React.useEffect(() => {
+    if (!lock) return;
 
-const DialogTrigger = DialogPrimitive.Trigger
+    // 获取滚动条宽度
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+    // 保存滚动位置
+    const scrollY = window.scrollY;
 
-const DialogPortal = DialogPrimitive.Portal
+    // 阻止滚动但保持布局稳定
+    document.documentElement.style.setProperty(
+      "--scrollbar-width",
+      `${scrollbarWidth}px`
+    );
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.bottom = "0";
+    document.body.style.width = "100%";
 
-const DialogClose = DialogPrimitive.Close
+    return () => {
+      // 恢复滚动
+      document.documentElement.style.removeProperty("--scrollbar-width");
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.bottom = "";
+      document.body.style.width = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, [lock]);
+};
+
+// 完全自定义的Dialog组件
+const Dialog = ({
+  children,
+  open,
+  onOpenChange,
+  ...props
+}: DialogPrimitive.DialogProps) => {
+  // 使用自定义滚动锁定
+  useScrollLock(open || false);
+
+  return (
+    <DialogPrimitive.Root open={open} onOpenChange={onOpenChange} {...props}>
+      {children}
+    </DialogPrimitive.Root>
+  );
+};
+
+const DialogTrigger = DialogPrimitive.Trigger;
+const DialogPortal = DialogPrimitive.Portal;
+const DialogClose = DialogPrimitive.Close;
 
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
@@ -24,8 +74,8 @@ const DialogOverlay = React.forwardRef<
     )}
     {...props}
   />
-))
-DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
+));
+DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
@@ -48,8 +98,8 @@ const DialogContent = React.forwardRef<
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
-))
-DialogContent.displayName = DialogPrimitive.Content.displayName
+));
+DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({
   className,
@@ -62,8 +112,8 @@ const DialogHeader = ({
     )}
     {...props}
   />
-)
-DialogHeader.displayName = "DialogHeader"
+);
+DialogHeader.displayName = "DialogHeader";
 
 const DialogFooter = ({
   className,
@@ -76,8 +126,8 @@ const DialogFooter = ({
     )}
     {...props}
   />
-)
-DialogFooter.displayName = "DialogFooter"
+);
+DialogFooter.displayName = "DialogFooter";
 
 const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
@@ -91,8 +141,8 @@ const DialogTitle = React.forwardRef<
     )}
     {...props}
   />
-))
-DialogTitle.displayName = DialogPrimitive.Title.displayName
+));
+DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
@@ -103,8 +153,8 @@ const DialogDescription = React.forwardRef<
     className={cn("text-sm text-muted-foreground", className)}
     {...props}
   />
-))
-DialogDescription.displayName = DialogPrimitive.Description.displayName
+));
+DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 export {
   Dialog,
@@ -117,4 +167,4 @@ export {
   DialogFooter,
   DialogTitle,
   DialogDescription,
-}
+};

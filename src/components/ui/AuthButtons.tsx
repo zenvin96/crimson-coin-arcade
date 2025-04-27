@@ -214,7 +214,7 @@ const AuthButtons = () => {
 
   return (
     <div className="flex items-center gap-2">
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen} modal={false}>
         <DialogTrigger asChild>
           <Button
             variant="outline"

@@ -1,6 +1,11 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { AppContextType } from "./AppContextType";
-import { ThemeType, CurrencyType, LanguageType } from "@/types/settings";
+import {
+  ThemeType,
+  CurrencyType,
+  LanguageType,
+  DisplayModeType,
+} from "@/types/settings";
 import { Game, Winner, Category, TokenPrice } from "@/types/game";
 
 // Mock data for the application
@@ -301,6 +306,18 @@ const mockTokenPrices: TokenPrice[] = [
 // Create Context
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+// 添加USDT图标链接和汇率对象
+const USDT_ICON = "https://cryptologos.cc/logos/tether-usdt-logo.svg";
+
+// 添加汇率数据 (USDT到其他货币的汇率)
+const exchangeRates = {
+  USD: 1, // 1 USDT = 1 USD
+  EUR: 0.92, // 1 USDT = 0.92 EUR
+  MYR: 4.35, // 1 USDT = 4.35 MYR
+  BTC: 0.000017, // 1 USDT = 0.000017 BTC
+  ETH: 0.00032, // 1 USDT = 0.00032 ETH
+};
+
 // Provider Component
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   // Theme state
@@ -312,7 +329,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   // Settings state
-  const [currency, setCurrency] = useState<CurrencyType>("MYR");
+  const [currency, setCurrency] = useState<CurrencyType>("USDT");
   const [language, setLanguage] = useState<LanguageType>("EN");
 
   // Auth state
@@ -334,6 +351,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   // Notification count
   const [notificationCount, setNotificationCount] = useState(2);
 
+  // 余额显示相关
+  const [balance, setBalance] = useState<number>(1250.75); // 默认USDT余额
+  const [displayMode, setDisplayMode] = useState<DisplayModeType>("crypto");
+
   // Filter games by category
   const filterGames = (category: string) => {
     setCurrentFilter(category);
@@ -352,6 +373,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       setTimeout(() => {
         if (email && password) {
           setIsAuthenticated(true);
+          // 设置一个默认余额
+          setBalance(1250.75);
           setIsLoading(false);
           resolve();
         } else {
@@ -365,6 +388,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   // Mock logout function
   const logout = () => {
     setIsAuthenticated(false);
+    setBalance(0); // 清除余额
   };
 
   // Simulate initial loading
@@ -407,6 +431,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     categories,
     notificationCount,
     isLoading,
+
+    // 余额相关
+    balance,
+    displayMode,
+    setDisplayMode,
+    exchangeRates,
+    usdtIcon: USDT_ICON,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

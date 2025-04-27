@@ -1,5 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap");
 
+/* Radix ScrollLock覆盖 - 防止布局偏移 */
+html[data-radix-scroll-lock],
+body[data-radix-scroll-lock] {
+  margin-right: 0 !important;
+  padding-right: var(--scrollbar-width, 0) !important;
+}
+
+/* 覆盖所有可能的滚动锁定属性选择器 */
+[data-radix-scroll-lock],
+[data-radix-scroll-lock-state],
+[data-radix-scroll-lock="true"],
+[data-radix-scroll-lock-state="on"] {
+  margin-right: 0 !important;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -26,6 +41,7 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
+    --scrollbar-width: calc(100vw - 100%);
   }
 
   .dark {
@@ -282,4 +298,47 @@
   body:hover .mouse-follower-glow {
     opacity: 1;
   }
+}
+
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Firefox 滚动条支持 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+}
+
+/* 确保在dropdown打开时滚动条仍然可见 */
+body.overflow-hidden::-webkit-scrollbar,
+[data-state="open"] ~ body::-webkit-scrollbar,
+:has(> [data-state="open"]) body::-webkit-scrollbar {
+  display: block !important;
+  width: 10px !important;
+  height: 10px !important;
+}
+
+body.overflow-hidden,
+[data-state="open"] ~ body,
+:has(> [data-state="open"]) body {
+  padding-right: 10px !important;
+  overflow-y: scroll !important;
 }

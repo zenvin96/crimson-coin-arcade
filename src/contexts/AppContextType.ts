@@ -1,5 +1,9 @@
-
-import { ThemeType, CurrencyType, LanguageType } from "@/types/settings";
+import {
+  ThemeType,
+  CurrencyType,
+  LanguageType,
+  DisplayModeType,
+} from "@/types/settings";
 import { Game, Winner, Category, TokenPrice } from "@/types/game";
 
 export type AppContextType = {
@@ -23,4 +27,12 @@ export type AppContextType = {
   categories: Category[];
   notificationCount: number;
   isLoading: boolean;
+
+  // 余额相关
+  balance: number;
+  displayMode: DisplayModeType;
+  setDisplayMode: (mode: DisplayModeType) => void;
+  exchangeRates: Record<string, number>;
+  // USDT图标
+  usdtIcon: string;
 };

@@ -6,6 +6,7 @@ import TopHeader from "./TopHeader";
 import MobileNavigation from "./MobileNavigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ThemeToggle from "../ui/ThemeToggle";
+import useScrollbarFix from "@/hooks/useScrollbarFix";
 
 type AppLayoutProps = {
   children: React.ReactNode;
@@ -15,6 +16,9 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   const { isSidebarOpen } = useApp();
   const isMobile = useIsMobile();
   const glowRef = useRef<HTMLDivElement>(null);
+
+  // 使用滚动条修复hook
+  useScrollbarFix();
 
   useEffect(() => {
     if (isMobile) return; // 不在移动设备上启用
