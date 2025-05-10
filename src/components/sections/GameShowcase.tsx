@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useApp } from "@/contexts/AppContext";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -14,17 +15,21 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 type TabType = {
   id: string;
-  label: string;
+  labelKey: string;
   icon?: React.ReactNode;
 };
 
-const tabs: TabType[] = [
-  { id: "all", label: "All Games" },
-  { id: "originals", label: "Originals", icon: <Trophy className="h-4 w-4" /> },
-  { id: "slots", label: "Slots" },
-  { id: "table", label: "Table Games" },
-  { id: "live", label: "Live Casino" },
-  { id: "jackpot", label: "Jackpots" },
+const getTabs = (t): TabType[] => [
+  { id: "all", labelKey: "gameShowcase.allGames" },
+  {
+    id: "originals",
+    labelKey: "gameShowcase.originals",
+    icon: <Trophy className="h-4 w-4" />,
+  },
+  { id: "slots", labelKey: "gameShowcase.slots" },
+  { id: "table", labelKey: "gameShowcase.tableGames" },
+  { id: "live", labelKey: "gameShowcase.liveCasino" },
+  { id: "jackpot", labelKey: "gameShowcase.jackpots" },
 ];
 
 // Game Card component
@@ -41,6 +46,7 @@ const GameCard = ({
   isHot?: boolean;
   isNew?: boolean;
 }) => {
+  const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
@@ -60,13 +66,13 @@ const GameCard = ({
       <div className="absolute top-2 left-2 flex gap-1">
         {isHot && (
           <div className="bg-blue-500 text-white text-xs font-medium px-2 py-1 rounded-full">
-            HOT
+            {t("gameShowcase.hotBadge")}
           </div>
         )}
         {isNew && (
           <div className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full flex items-center gap-1">
             <Flame className="h-3 w-3" />
-            NEW
+            {t("gameShowcase.newBadge")}
           </div>
         )}
       </div>
@@ -74,7 +80,7 @@ const GameCard = ({
       {/* Play button overlay */}
       <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 rounded-lg">
         <Button className="gradient-button hover:scale-105 transition-all">
-          Play Now
+          {t("gameShowcase.playNow")}
         </Button>
       </div>
 
@@ -105,6 +111,7 @@ const WinnerCard = ({
   currency: string;
   timestamp: Date;
 }) => {
+  const { t } = useTranslation();
   const timeAgo = (date: Date) => {
     const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
 
@@ -147,7 +154,9 @@ const WinnerCard = ({
           className="h-12 w-12 rounded-md object-cover"
         />
         <div className="flex-1">
-          <p className="text-xs text-muted-foreground">Won on {game.title}</p>
+          <p className="text-xs text-muted-foreground">
+            {t("gameShowcase.wonOn", { gameTitle: game.title })}
+          </p>
           <p className="font-bold text-primary">
             {currency} {amount.toLocaleString()}
           </p>
@@ -158,7 +167,9 @@ const WinnerCard = ({
 };
 
 const TabNavigation = () => {
+  const { t } = useTranslation();
   const { currentFilter, filterGames } = useApp();
+  const tabs = getTabs(t);
   const [visibleTabs, setVisibleTabs] = useState<TabType[]>([]);
   const [showLeftScroll, setShowLeftScroll] = useState(false);
   const [showRightScroll, setShowRightScroll] = useState(false);
@@ -240,7 +251,7 @@ const TabNavigation = () => {
             onClick={() => handleTabClick(tab.id)}
           >
             {tab.icon && <span className="mr-1">{tab.icon}</span>}
-            {tab.label}
+            {t(tab.labelKey)}
           </Button>
         ))}
       </div>
@@ -260,18 +271,19 @@ const TabNavigation = () => {
 };
 
 const RecentWinners = () => {
+  const { t } = useTranslation();
   const { recentWinners } = useApp();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="mb-8">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-medium">Recent Winners</h3>
-        <Button
-          variant="ghost"
-          className="text-primary flex items-center gap-1"
-        >
-          See All <ArrowRight className="h-4 w-4" />
+    <section className="w-full mb-12">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold">
+          {t("gameShowcase.recentWinners")}
+        </h2>
+        <Button variant="link" className="text-primary">
+          {t("gameShowcase.viewAll")}
+          <ArrowRight className="ml-1 h-4 w-4" />
         </Button>
       </div>
 
@@ -291,7 +303,7 @@ const RecentWinners = () => {
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 
@@ -299,18 +311,10 @@ const GameShowcase = () => {
   const { filteredGames, isLoading } = useApp();
 
   return (
-    <section className="w-full mb-10">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">Featured Games</h2>
-        <Button
-          variant="ghost"
-          className="text-primary flex items-center gap-1"
-        >
-          View All Games <ArrowRight className="h-4 w-4" />
-        </Button>
-      </div>
-
+    <section className="w-full">
       <TabNavigation />
+
+      <Separator className="my-12 bg-border/50" />
 
       <RecentWinners />
 

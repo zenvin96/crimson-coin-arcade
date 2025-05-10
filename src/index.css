@@ -15,6 +15,17 @@ body[data-radix-scroll-lock] {
   margin-right: 0 !important;
 }
 
+html,
+body {
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* 防止移动设备上的双击缩放 */
+* {
+  touch-action: manipulation;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useApp } from "@/contexts/AppContext";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 type AuthMode = "login" | "register";
 
 const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
+  const { t } = useTranslation();
   const { login, isLoading } = useApp();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,13 +32,13 @@ const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
     try {
       await login(email, password);
       toast({
-        title: "Login successful",
-        description: "Welcome back to CrimsonCoin!",
+        title: t("auth.loginSuccessTitle"),
+        description: t("auth.loginSuccessDesc"),
       });
     } catch (error) {
       toast({
-        title: "Login failed",
-        description: "Please check your email and password",
+        title: t("auth.loginFailTitle"),
+        description: t("auth.loginFailDesc"),
         variant: "destructive",
       });
     }
@@ -45,11 +47,11 @@ const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("auth.emailLabel")}</Label>
         <Input
           id="email"
           type="email"
-          placeholder="youremail@example.com"
+          placeholder={t("auth.emailPlaceholder")}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -57,19 +59,19 @@ const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
       </div>
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">{t("auth.passwordLabel")}</Label>
           <Button
             type="button"
             variant="link"
             className="text-xs text-primary p-0"
           >
-            Forgot password?
+            {t("auth.forgotPassword")}
           </Button>
         </div>
         <Input
           id="password"
           type="password"
-          placeholder="••••••••"
+          placeholder={t("auth.passwordPlaceholder")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -80,11 +82,11 @@ const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
         className="gradient-button w-full"
         disabled={isLoading}
       >
-        {isLoading ? "Logging in..." : "Login"}
+        {isLoading ? t("auth.loggingInButton") : t("auth.loginButton")}
       </Button>
       <div className="text-center">
         <span className="text-sm text-muted-foreground">
-          Don't have an account?{" "}
+          {t("auth.noAccount")}{" "}
         </span>
         <Button
           type="button"
@@ -92,7 +94,7 @@ const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
           className="text-primary p-0"
           onClick={() => setMode("register")}
         >
-          Register
+          {t("auth.registerLink")}
         </Button>
       </div>
     </form>
@@ -100,6 +102,7 @@ const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
 };
 
 const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
+  const { t } = useTranslation();
   const { login, isLoading } = useApp();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -113,13 +116,13 @@ const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
       // For now, we'll just use login since this is a mock
       await login(email, password);
       toast({
-        title: "Registration successful",
-        description: "Welcome to CrimsonCoin!",
+        title: t("auth.registerSuccessTitle"),
+        description: t("auth.registerSuccessDesc"),
       });
     } catch (error) {
       toast({
-        title: "Registration failed",
-        description: "Please check your information and try again",
+        title: t("auth.registerFailTitle"),
+        description: t("auth.registerFailDesc"),
         variant: "destructive",
       });
     }
@@ -128,33 +131,33 @@ const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="name">Full Name</Label>
+        <Label htmlFor="name">{t("auth.fullNameLabel")}</Label>
         <Input
           id="name"
           type="text"
-          placeholder="John Doe"
+          placeholder={t("auth.fullNamePlaceholder")}
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("auth.emailLabel")}</Label>
         <Input
           id="email"
           type="email"
-          placeholder="youremail@example.com"
+          placeholder={t("auth.emailPlaceholder")}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">{t("auth.passwordLabel")}</Label>
         <Input
           id="password"
           type="password"
-          placeholder="Create a strong password"
+          placeholder={t("auth.createPasswordPlaceholder")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -165,11 +168,13 @@ const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
         className="gradient-button w-full"
         disabled={isLoading}
       >
-        {isLoading ? "Creating account..." : "Create Account"}
+        {isLoading
+          ? t("auth.creatingAccountButton")
+          : t("auth.createAccountButton")}
       </Button>
       <div className="text-center">
         <span className="text-sm text-muted-foreground">
-          Already have an account?{" "}
+          {t("auth.hasAccount")}{" "}
         </span>
         <Button
           type="button"
@@ -177,7 +182,7 @@ const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
           className="text-primary p-0"
           onClick={() => setMode("login")}
         >
-          Login
+          {t("auth.loginLink")}
         </Button>
       </div>
     </form>
@@ -185,6 +190,7 @@ const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
 };
 
 const AuthButtons = () => {
+  const { t } = useTranslation();
   const { isAuthenticated, logout } = useApp();
   const [authMode, setAuthMode] = useState<AuthMode>("login");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -193,8 +199,8 @@ const AuthButtons = () => {
   const handleLogout = () => {
     logout();
     toast({
-      title: "Logged out",
-      description: "You have been logged out successfully",
+      title: t("auth.logoutSuccessTitle"),
+      description: t("auth.logoutSuccessDesc"),
     });
   };
 
@@ -203,10 +209,10 @@ const AuthButtons = () => {
       <div className="flex items-center gap-2">
         <Button variant="outline" className="flex items-center gap-2">
           <User className="h-4 w-4" />
-          My Account
+          {t("auth.myAccountButton")}
         </Button>
         <Button variant="ghost" onClick={handleLogout}>
-          Logout
+          {t("auth.logoutButton")}
         </Button>
       </div>
     );
@@ -225,20 +231,20 @@ const AuthButtons = () => {
             }}
           >
             <LogIn className="h-4 w-4" />
-            Sign In
+            {t("auth.signInButton")}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
               {authMode === "login"
-                ? "Sign In to Your Account"
-                : "Create an Account"}
+                ? t("auth.loginTitle")
+                : t("auth.registerTitle")}
             </DialogTitle>
             <DialogDescription>
               {authMode === "login"
-                ? "Enter your credentials to access your account"
-                : "Fill out the form below to create your account"}
+                ? t("auth.loginDesc")
+                : t("auth.registerDesc")}
             </DialogDescription>
           </DialogHeader>
 
@@ -253,13 +259,13 @@ const AuthButtons = () => {
       </Dialog>
 
       <Button
-        className="gradient-button"
+        className="gradient-button flex items-center gap-2"
         onClick={() => {
           setAuthMode("register");
           setIsDialogOpen(true);
         }}
       >
-        Sign Up
+        {t("auth.signUpButton")}
       </Button>
     </div>
   );

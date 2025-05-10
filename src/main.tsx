@@ -2,6 +2,8 @@ import { createRoot } from "react-dom/client";
 import { AppProvider } from "./contexts/AppContext";
 import App from "./App.tsx";
 import "./index.css";
+// 引入i18n配置
+import "./i18n/i18n";
 
 // 初始化函数，禁用Radix UI滚动锁定的布局偏移
 function disableRadixScrollShift() {

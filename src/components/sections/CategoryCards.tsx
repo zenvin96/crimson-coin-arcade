@@ -1,4 +1,5 @@
 import { useApp } from "@/contexts/AppContext";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -42,15 +43,17 @@ const CategoryCard = ({
   icon: string;
   onClick?: () => void;
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div
       onClick={onClick}
       className={cn(
-        "bg-card rounded-lg shadow-soft p-6 flex flex-col items-center text-center transition-all duration-300",
+        "bg-card rounded-lg shadow-soft p-6 flex flex-col items-center text-center",
         "hover-scale hover:shadow-medium cursor-pointer relative",
         "border border-primary/30 hover:border-primary/70",
-        "after:absolute after:inset-0 after:rounded-lg after:border after:border-primary/10 after:opacity-0 hover:after:opacity-100 after:transition-opacity",
-        "before:absolute before:-inset-0.5 before:rounded-lg before:bg-gradient-to-r before:from-primary/10 before:to-primary/5 before:opacity-0 hover:before:opacity-100 before:blur-md before:-z-10 before:transition-opacity"
+        "after:absolute after:inset-0 after:rounded-lg after:border after:border-primary/10 after:opacity-0 hover:after:opacity-100",
+        "before:absolute before:-inset-0.5 before:rounded-lg before:bg-gradient-to-r before:from-primary/10 before:to-primary/5 before:opacity-0 hover:before:opacity-100 before:blur-md before:-z-10"
       )}
     >
       <div className="mb-4 bg-primary-light/10 p-4 rounded-full">
@@ -59,27 +62,23 @@ const CategoryCard = ({
       <h3 className="text-lg font-medium mb-2">{title}</h3>
       <p className="text-sm text-muted-foreground mb-4">{description}</p>
       <Button className="bg-primary hover:bg-primary-hover">
-        Browse Games
+        {t("games.allGames")}
       </Button>
     </div>
   );
 };
 
 const CategoryCards = () => {
+  const { t } = useTranslation();
   const { categories, isLoading, filterGames } = useApp();
 
   const handleCategoryClick = (categoryId: string) => {
     filterGames(categoryId);
-    // Scroll to game section
-    const gameSection = document.getElementById("game-section");
-    if (gameSection) {
-      gameSection.scrollIntoView({ behavior: "smooth" });
-    }
   };
 
   return (
     <section className="w-full mb-12">
-      <h2 className="text-2xl font-bold mb-8">Browse by Category</h2>
+      <h2 className="text-2xl font-bold mb-8">{t("categories.title")}</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading

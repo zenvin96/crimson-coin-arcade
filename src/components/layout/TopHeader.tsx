@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useApp } from "@/contexts/AppContext";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -41,27 +42,24 @@ import {
 import { Badge } from "@/components/ui/badge";
 import QRCode from "react-qr-code";
 import ProfileDropdown from "./ProfileDropdown";
+import LanguageSwitcher from "../ui/LanguageSwitcher";
 
 // 加密货币列表
 const cryptoCurrencies = [
-  { code: "BCD", name: "BCD", icon: "🔵" },
-  { code: "BTC", name: "Bitcoin", icon: "🟠" },
-  { code: "BC", name: "BC", icon: "🟢" },
-  { code: "SATS", name: "Sats", icon: "🟡" },
-  { code: "ETH", name: "Ethereum", icon: "🔷" },
-  { code: "BNB", name: "Binance Coin", icon: "🟡" },
-  { code: "DOGE", name: "Dogecoin", icon: "🟡" },
+  { code: "BTC", name: "Bitcoin", icon: "/bitcoin-btc-logo.svg" },
+  { code: "ETH", name: "Ethereum", icon: "/ethereum-eth-logo.svg" },
+  { code: "USDT", name: "Tether", icon: "/tether-usdt-logo.svg" },
 ];
 
 // 存款加密货币选项
 const depositCryptos = [
-  { code: "ETH", name: "ETH", icon: "/icons/eth.svg", selected: false },
-  { code: "BTC", name: "BTC", icon: "/icons/btc.svg", selected: false },
-  { code: "USDT", name: "USDT", icon: "/icons/usdt.svg", selected: true },
-  { code: "USDC", name: "USDC", icon: "/icons/usdc.svg", selected: false },
+  { code: "ETH", name: "ETH", icon: "/ethereum-eth-logo.svg", selected: false },
+  { code: "BTC", name: "BTC", icon: "/bitcoin-btc-logo.svg", selected: false },
+  { code: "USDT", name: "USDT", icon: "/tether-usdt-logo.svg", selected: true },
 ];
 
 const TopHeader = () => {
+  const { t } = useTranslation();
   const {
     isSidebarOpen,
     isAuthenticated,
@@ -72,6 +70,7 @@ const TopHeader = () => {
   const [depositModalOpen, setDepositModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("crypto");
   const [selectedCrypto, setSelectedCrypto] = useState("USDT");
+  const [selectedCurrency, setSelectedCurrency] = useState("USDT");
 
   // 格式化余额显示
   const formatBalance = (amount: number) => {
@@ -85,8 +84,17 @@ const TopHeader = () => {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
       // 可以添加提示复制成功的逻辑
-      console.log("地址已复制");
+      console.log(t("topHeader.addressCopied"));
     });
+  };
+
+  // 获取当前选择的货币图标
+  const getCurrencyIcon = (code: string) => {
+    const crypto = cryptoCurrencies.find((c) => c.code === code);
+    if (crypto && crypto.icon) {
+      return <img src={crypto.icon} alt={crypto.name} className="w-6 h-6" />;
+    }
+    return null;
   };
 
   const depositAddress = "TPKyA6Gt7PFMt8Q8Yw5NDSBhtdA2QawEsZ";
@@ -107,7 +115,7 @@ const TopHeader = () => {
           <div className="relative ml-2">
             <input
               type="text"
-              placeholder="Search"
+              placeholder={t("common.searchPlaceholder")}
               className="h-10 w-64 rounded-md bg-black/20 border border-gray-700 px-3 focus:outline-none focus:ring-1 focus:ring-primary/50"
             />
           </div>
@@ -115,6 +123,9 @@ const TopHeader = () => {
 
         {/* 右侧功能区 */}
         <div className="flex items-center gap-2">
+          {/* 添加语言切换器 */}
+          <LanguageSwitcher />
+
           {/* 余额和存款按钮组合 */}
           <div className="flex items-center">
             <DropdownMenu
@@ -128,29 +139,57 @@ const TopHeader = () => {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex items-center gap-1 text-white px-2 py-1 h-10 border border-gray-700 rounded-l-md bg-black/40"
+                  className="flex items-center gap-2 text-white px-3 py-1 h-10 border border-gray-700 rounded-l-md bg-black/40"
                   onClick={() => {
                     // 点击触发器时确保滚动条保持可见
                     document.body.style.overflow = "auto";
                     document.body.style.paddingRight = "0";
                   }}
                 >
-                  <span className="text-primary">$</span>
-                  <span>{formatBalance(0.0)}</span>
+                  <div className="flex items-center gap-2">
+                    {getCurrencyIcon(selectedCurrency)}
+                    <div className="flex items-center">
+                      <span className="text-primary">
+                        $ {formatBalance(0.0)}
+                      </span>
+                    </div>
+                  </div>
                   <ChevronDown className="h-4 w-4 text-gray-400" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="bg-card border border-gray-700 min-w-[180px]"
+                className="bg-card border border-gray-700 min-w-[200px] p-2"
                 data-no-scroll-impact="true"
               >
-                <DropdownMenuLabel>Select Currency</DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                <DropdownMenuLabel className="px-2 py-1.5">
+                  {t("topHeader.selectCurrency")}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="my-1" />
                 {cryptoCurrencies.map((crypto) => (
-                  <DropdownMenuItem key={crypto.code}>
-                    <div className="flex items-center gap-2 w-full">
-                      <span className="flex-shrink-0">{crypto.icon}</span>
-                      <span className="font-medium">{crypto.code}</span>
+                  <DropdownMenuItem
+                    key={crypto.code}
+                    className={`px-3 py-2 rounded hover:bg-gray-800 cursor-pointer ${
+                      selectedCurrency === crypto.code
+                        ? "bg-gray-800/80 border-l-2 border-primary"
+                        : ""
+                    }`}
+                    onClick={() => setSelectedCurrency(crypto.code)}
+                  >
+                    <div className="flex items-center gap-3 w-full">
+                      <span className="flex-shrink-0 w-6 h-6 relative">
+                        <img
+                          src={crypto.icon}
+                          alt={crypto.name}
+                          className="w-6 h-6"
+                        />
+                      </span>
+                      <span
+                        className={`font-medium ${
+                          selectedCurrency === crypto.code ? "text-primary" : ""
+                        }`}
+                      >
+                        {crypto.code}
+                      </span>
                       <span className="ml-auto text-right text-gray-400">
                         ${formatBalance(0.0)}
                       </span>
@@ -160,11 +199,11 @@ const TopHeader = () => {
                     </div>
                   </DropdownMenuItem>
                 ))}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuSeparator className="my-1" />
+                <DropdownMenuItem className="px-3 py-2 rounded hover:bg-gray-800">
                   <div className="text-sm text-gray-400 flex items-center gap-2">
                     <Info className="h-4 w-4" />
-                    View in currency
+                    {t("topHeader.viewCurrencies")}
                   </div>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -175,7 +214,7 @@ const TopHeader = () => {
               className="bg-primary hover:bg-primary/90 text-white font-medium h-10 rounded-l-none border-l-0"
               onClick={() => setDepositModalOpen(true)}
             >
-              Deposit
+              {t("topHeader.deposit")}
             </Button>
           </div>
 
@@ -184,6 +223,7 @@ const TopHeader = () => {
             variant="ghost"
             size="icon"
             className="text-gray-400 relative"
+            aria-label={t("topHeader.messages")}
           >
             <Mail className="h-5 w-5" />
             <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-primary">
@@ -196,6 +236,7 @@ const TopHeader = () => {
             variant="ghost"
             size="icon"
             className="text-gray-400 relative"
+            aria-label={t("topHeader.gifts")}
           >
             <Gift className="h-5 w-5" />
             <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-primary">
@@ -208,6 +249,7 @@ const TopHeader = () => {
             variant="ghost"
             size="icon"
             className="text-gray-400 relative"
+            aria-label={t("topHeader.notifications")}
           >
             <Bell className="h-5 w-5" />
             <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-primary">
@@ -225,7 +267,7 @@ const TopHeader = () => {
         <DialogContent className="bg-[#1e2124] border-gray-800 text-white p-0 max-w-[500px] max-h-[85vh] overflow-hidden">
           <DialogHeader className="p-4 border-b border-gray-800 flex justify-between items-center">
             <DialogTitle className="text-center flex-1 text-white">
-              Deposit
+              {t("topHeader.depositModalTitle")}
             </DialogTitle>
           </DialogHeader>
 
@@ -244,7 +286,7 @@ const TopHeader = () => {
                     : "border-transparent text-gray-500"
                 }`}
               >
-                Crypto
+                {t("topHeader.cryptoTab")}
               </TabsTrigger>
               <TabsTrigger
                 value="fiat"
@@ -254,7 +296,7 @@ const TopHeader = () => {
                     : "border-transparent text-gray-500"
                 }`}
               >
-                Fiat
+                {t("topHeader.fiatTab")}
               </TabsTrigger>
             </TabsList>
 
@@ -272,19 +314,12 @@ const TopHeader = () => {
                       }`}
                       onClick={() => setSelectedCrypto(crypto.code)}
                     >
-                      <div
-                        className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                          crypto.code === "USDT"
-                            ? "bg-[#26A17B]"
-                            : "bg-gray-700"
-                        }`}
-                      >
-                        {crypto.code === "ETH" && <span>Ξ</span>}
-                        {crypto.code === "BTC" && <span>₿</span>}
-                        {crypto.code === "USDT" && (
-                          <span className="text-white">T</span>
-                        )}
-                        {crypto.code === "USDC" && <span>U</span>}
+                      <div className="w-6 h-6 flex items-center justify-center">
+                        <img
+                          src={crypto.icon}
+                          alt={crypto.code}
+                          className="w-6 h-6"
+                        />
                       </div>
                       <span>{crypto.code}</span>
                     </button>
@@ -293,7 +328,7 @@ const TopHeader = () => {
                     <div className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center">
                       +
                     </div>
-                    <span>More</span>
+                    <span>{t("topHeader.more")}</span>
                   </button>
                 </div>
 
@@ -302,14 +337,16 @@ const TopHeader = () => {
                   {/* 存款货币选择 */}
                   <div>
                     <label className="text-sm text-gray-400 mb-1 block">
-                      Deposit Currency
+                      {t("topHeader.depositCurrencyLabel")}
                     </label>
                     <Select defaultValue="USDT">
                       <SelectTrigger className="w-full bg-[#1e2124] border-gray-700 text-white">
                         <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-full bg-[#26A17B] flex items-center justify-center">
-                            <span className="text-white">T</span>
-                          </div>
+                          <img
+                            src="/tether-usdt-logo.svg"
+                            alt="USDT"
+                            className="w-6 h-6"
+                          />
                           <SelectValue placeholder="USDT" />
                         </div>
                       </SelectTrigger>
@@ -322,7 +359,7 @@ const TopHeader = () => {
                   {/* 网络选择 */}
                   <div>
                     <label className="text-sm text-gray-400 mb-1 block">
-                      Choose Network
+                      {t("topHeader.chooseNetworkLabel")}
                     </label>
                     <Select defaultValue="tron">
                       <SelectTrigger className="w-full bg-[#1e2124] border-gray-700 text-white">
@@ -337,15 +374,17 @@ const TopHeader = () => {
                   {/* 奖金选择 */}
                   <div>
                     <label className="text-sm text-gray-400 mb-1 block">
-                      Choose your bonus
+                      {t("topHeader.chooseBonusLabel")}
                     </label>
                     <Select defaultValue="no_bonus">
                       <SelectTrigger className="w-full bg-[#1e2124] border-gray-700 text-white">
-                        <SelectValue placeholder="Deposit without Bonus" />
+                        <SelectValue
+                          placeholder={t("topHeader.depositWithoutBonus")}
+                        />
                       </SelectTrigger>
                       <SelectContent className="bg-[#1e2124] border-gray-700 text-white">
                         <SelectItem value="no_bonus">
-                          Deposit without Bonus
+                          {t("topHeader.depositWithoutBonus")}
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -356,14 +395,13 @@ const TopHeader = () => {
                     <AlertCircle className="h-5 w-5 text-primary mt-0.5" />
                     <div className="flex-1">
                       <p className="text-sm text-white">
-                        Your deposit bonus will be credited in your locked
-                        rackback bonus balance.
+                        {t("topHeader.bonusInfo")}
                       </p>
                       <a
                         href="#"
                         className="text-sm text-primary hover:underline"
                       >
-                        Bonus T&C
+                        {t("topHeader.bonusTerms")}
                       </a>
                     </div>
                     <button className="text-gray-400">
@@ -375,7 +413,7 @@ const TopHeader = () => {
                 {/* 存款地址 */}
                 <div className="space-y-3 bg-[#282c30] rounded-md p-4">
                   <label className="text-sm text-gray-400 mb-1 block">
-                    Deposit address
+                    {t("topHeader.depositAddressLabel")}
                   </label>
                   <div className="flex">
                     <div className="flex-shrink-0 mr-3">
@@ -398,7 +436,7 @@ const TopHeader = () => {
                         className="w-full bg-[#1e2124] hover:bg-gray-700 border border-gray-700"
                       >
                         <Copy className="h-4 w-4 mr-2" />
-                        Copy Address
+                        {t("topHeader.copyAddress")}
                       </Button>
                     </div>
                   </div>
@@ -408,15 +446,17 @@ const TopHeader = () => {
                 <div className="flex items-start gap-2 bg-[#1e2124] p-3 rounded-md border-l-4 border-primary">
                   <AlertCircle className="h-5 w-5 text-primary mt-0.5" />
                   <p className="text-sm text-white">
-                    Send only USDT to this deposit address. Transfers below 1
-                    USDT will not be credited.
+                    {t("topHeader.depositWarning", {
+                      currency: selectedCrypto,
+                      minAmount: 1,
+                    })}
                   </p>
                 </div>
               </TabsContent>
 
               <TabsContent value="fiat" className="p-4">
                 <div className="text-center text-gray-400 py-8">
-                  <p>Fiat deposit options are not available yet.</p>
+                  <p>{t("topHeader.fiatNotAvailable")}</p>
                 </div>
               </TabsContent>
             </ScrollArea>

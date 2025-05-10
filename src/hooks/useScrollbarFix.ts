@@ -1,15 +1,20 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 /**
  * Hook用于修复模态窗口、下拉菜单等打开时滚动条消失的问题
  */
 const useScrollbarFix = () => {
+  const initialLoad = useRef(true);
+
   useEffect(() => {
     // 创建一个MutationObserver监听DOM变化
     const observer = new MutationObserver(() => {
-      // 直接将body样式重置为始终允许滚动
-      document.body.style.overflow = "auto";
-      document.body.style.paddingRight = "0";
+      // 仅当非初始加载时恢复滚动
+      if (!initialLoad.current) {
+        // 直接将body样式重置为始终允许滚动
+        document.body.style.overflow = "auto";
+        document.body.style.paddingRight = "0";
+      }
     });
 
     // 监听body的style变化
@@ -43,8 +48,10 @@ const useScrollbarFix = () => {
 
     // 确保即使有元素设置了滚动锁定，也不会影响全局滚动条
     const preventScrollLock = () => {
-      document.body.style.overflow = "auto";
-      document.body.style.paddingRight = "0";
+      if (!initialLoad.current) {
+        document.body.style.overflow = "auto";
+        document.body.style.paddingRight = "0";
+      }
     };
 
     // 监听交互事件来保持滚动条
@@ -54,11 +61,16 @@ const useScrollbarFix = () => {
 
     // 创建一个定时器定期检查滚动状态
     const intervalId = setInterval(() => {
-      if (document.body.style.overflow === "hidden") {
+      if (!initialLoad.current && document.body.style.overflow === "hidden") {
         document.body.style.overflow = "auto";
         document.body.style.paddingRight = "0";
       }
     }, 100);
+
+    // 页面完全加载后将初始加载标志设置为false
+    setTimeout(() => {
+      initialLoad.current = false;
+    }, 500);
 
     return () => {
       observer.disconnect();

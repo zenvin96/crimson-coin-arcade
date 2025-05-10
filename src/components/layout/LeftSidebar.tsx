@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useApp } from "@/contexts/AppContext";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ import {
 } from "lucide-react";
 import Logo from "../ui/Logo";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 
 type NavItemProps = {
   icon: React.ElementType;
@@ -71,11 +73,21 @@ const NavItem = ({
 };
 
 const LeftSidebar = () => {
+  const { t } = useTranslation();
   const { isSidebarOpen, toggleSidebar } = useApp();
   const [activeNav, setActiveNav] = useState("home");
+  const navigate = useNavigate();
 
   const handleNavClick = (navId: string) => {
     setActiveNav(navId);
+
+    // 根据导航ID进行路由跳转
+    if (navId === "games") {
+      navigate("/all-games");
+    } else if (navId === "home") {
+      navigate("/");
+    }
+    // 其他路由跳转可以在这里添加...
   };
 
   return (
@@ -118,20 +130,20 @@ const LeftSidebar = () => {
         <div className="space-y-1">
           <NavItem
             icon={Home}
-            label="Home"
+            label={t("sidebar.home")}
             isActive={activeNav === "home"}
             onClick={() => handleNavClick("home")}
           />
           <NavItem
             icon={Menu}
-            label="All Games"
+            label={t("sidebar.allGames")}
             isActive={activeNav === "games"}
             onClick={() => handleNavClick("games")}
           />
           <NavItem
             icon={Trophy}
-            label="Tournaments"
-            badge="New"
+            label={t("sidebar.tournaments")}
+            badge={t("sidebar.new")}
             badgeVariant="secondary"
             isActive={activeNav === "tournaments"}
             onClick={() => handleNavClick("tournaments")}
@@ -141,18 +153,18 @@ const LeftSidebar = () => {
         <div className="mt-6 mb-2 px-4">
           {isSidebarOpen && (
             <p className="text-xs font-medium text-muted-foreground uppercase mb-2">
-              VIP Benefits
+              {t("sidebar.vipBenefits")}
             </p>
           )}
           <NavItem
             icon={Zap}
-            label="VIP Levels"
+            label={t("sidebar.vipLevels")}
             isActive={activeNav === "vip"}
             onClick={() => handleNavClick("vip")}
           />
           <NavItem
             icon={Gift}
-            label="Bonuses"
+            label={t("sidebar.bonuses")}
             badge={2}
             badgeVariant="destructive"
             isActive={activeNav === "bonuses"}
@@ -163,32 +175,12 @@ const LeftSidebar = () => {
         <div className="mt-6 mb-2 px-4">
           {isSidebarOpen && (
             <p className="text-xs font-medium text-muted-foreground uppercase mb-2">
-              Banking
-            </p>
-          )}
-          <NavItem
-            icon={Wallet}
-            label="Deposit"
-            isActive={activeNav === "deposit"}
-            onClick={() => handleNavClick("deposit")}
-          />
-          <NavItem
-            icon={CircleDollarSign}
-            label="Withdraw"
-            isActive={activeNav === "withdraw"}
-            onClick={() => handleNavClick("withdraw")}
-          />
-        </div>
-
-        <div className="mt-6 mb-2 px-4">
-          {isSidebarOpen && (
-            <p className="text-xs font-medium text-muted-foreground uppercase mb-2">
-              More
+              {t("sidebar.more")}
             </p>
           )}
           <NavItem
             icon={Users}
-            label="Refer Friends"
+            label={t("sidebar.referFriends")}
             badge="2x"
             badgeVariant="outline"
             isActive={activeNav === "refer"}
@@ -196,7 +188,7 @@ const LeftSidebar = () => {
           />
           <NavItem
             icon={HeartHandshake}
-            label="Promotions"
+            label={t("sidebar.promotions")}
             isActive={activeNav === "promotions"}
             onClick={() => handleNavClick("promotions")}
           />
@@ -207,17 +199,17 @@ const LeftSidebar = () => {
       <div className="p-3 border-t border-border">
         <NavItem
           icon={HelpCircle}
-          label="Support"
+          label={t("sidebar.support")}
           onClick={() => handleNavClick("support")}
         />
         <NavItem
           icon={Settings}
-          label="Settings"
+          label={t("sidebar.settings")}
           onClick={() => handleNavClick("settings")}
         />
         <NavItem
           icon={LogOut}
-          label="Logout"
+          label={t("sidebar.logout")}
           onClick={() => handleNavClick("logout")}
         />
       </div>

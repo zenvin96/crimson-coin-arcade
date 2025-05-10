@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useApp } from "@/contexts/AppContext";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -42,6 +43,7 @@ const AnimatedCounter = ({ value, duration = 2000 }: CounterProps) => {
 };
 
 const PromotionBanner = () => {
+  const { t } = useTranslation();
   const { currency } = useApp();
 
   return (
@@ -55,36 +57,35 @@ const PromotionBanner = () => {
         />
       </div>
       <div className="relative z-10">
-        <h3 className="text-lg font-bold">Official Partner</h3>
-        <p className="text-sm opacity-90">
-          Official Crypto Gaming Partner of Team XYZ
-        </p>
+        <h3 className="text-lg font-bold">{t("hero.officialPartner")}</h3>
+        <p className="text-sm opacity-90">{t("hero.cryptoGamingPartner")}</p>
       </div>
     </div>
   );
 };
 
 const SignupOffer = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-card p-6 rounded-lg shadow-soft w-full flex flex-col items-start animate-fade-in border border-border/40 relative">
       <div className="absolute inset-0 rounded-lg border border-primary/20 opacity-60 pointer-events-none"></div>
       <div className="absolute -top-3 -right-3 w-16 h-16 bg-gradient-radial from-primary/30 to-transparent rounded-full filter blur-xl"></div>
 
-      <span className="text-sm font-medium text-primary">New Players</span>
-      <h2 className="text-3xl font-bold mt-2 mb-4">
-        Get up to <span className="text-primary">₹10,000</span> &{" "}
-        <span className="text-primary">100 Free Spins</span>
-      </h2>
+      <span className="text-sm font-medium text-primary">
+        {t("hero.newPlayersOffer")}
+      </span>
+      <h2 className="text-3xl font-bold mt-2 mb-4">{t("hero.getBonusText")}</h2>
 
       <div className="flex flex-col gap-3 w-full mb-6">
         <div className="flex items-center justify-between p-3 bg-muted/70 rounded-lg border border-border/30">
-          <span className="text-sm">Players online now</span>
+          <span className="text-sm">{t("hero.playersOnline")}</span>
           <span className="font-bold text-lg">
             <AnimatedCounter value={1458} />
           </span>
         </div>
         <div className="flex items-center justify-between p-3 bg-muted/70 rounded-lg border border-border/30">
-          <span className="text-sm">Total winnings today</span>
+          <span className="text-sm">{t("hero.totalWinningsToday")}</span>
           <span className="font-bold text-lg">
             MYR <AnimatedCounter value={2483945} />
           </span>
@@ -93,7 +94,7 @@ const SignupOffer = () => {
 
       <Button size="lg" className="gradient-button hover-scale w-full relative">
         <span className="relative z-10">
-          Join Now
+          {t("common.joinNow")}
           <ArrowRight className="ml-2 h-5 w-5 inline" />
         </span>
       </Button>
@@ -102,6 +103,7 @@ const SignupOffer = () => {
 };
 
 const HeroSection = () => {
+  const { t } = useTranslation();
   // 引用主hero容器
   const heroRef = useRef<HTMLDivElement>(null);
 
@@ -109,10 +111,7 @@ const HeroSection = () => {
   useEffect(() => {
     // 预加载硬币图片
     const preloadImages = () => {
-      const images = [
-        "https://cryptologos.cc/logos/bitcoin-btc-logo.svg?v=029",
-        "https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029",
-      ];
+      const images = ["/bitcoin-btc-logo.svg", "/ethereum-eth-logo.svg"];
 
       images.forEach((src) => {
         const img = new Image();
@@ -128,6 +127,14 @@ const HeroSection = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg h-64 md:h-80 flex items-center shadow-medium border border-border/20 will-change-transform">
+            <div className="absolute inset-0">
+              <img
+                src="/herobg.webp"
+                alt="Hero background"
+                className="w-full h-full object-cover opacity-30"
+              />
+              <div className="absolute inset-0 bg-black/60"></div>
+            </div>
             {/* 确保背景渐变层次正确 */}
             <div
               className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5"
@@ -144,34 +151,21 @@ const HeroSection = () => {
               style={{ zIndex: 2 }}
             ></div>
 
-            {/* 调整SVG图案的层次 */}
-            <div className="absolute inset-0 opacity-10" style={{ zIndex: 3 }}>
-              <svg width="100%" height="100%" aria-hidden="true">
-                <pattern
-                  id="pattern-circles"
-                  x="0"
-                  y="0"
-                  width="20"
-                  height="20"
-                  patternUnits="userSpaceOnUse"
-                  patternContentUnits="userSpaceOnUse"
-                >
-                  <circle
-                    id="pattern-circle"
-                    cx="10"
-                    cy="10"
-                    r="2"
-                    fill="#fff"
-                  ></circle>
-                </pattern>
-                <rect
-                  x="0"
-                  y="0"
-                  width="100%"
-                  height="100%"
-                  fill="url(#pattern-circles)"
-                ></rect>
-              </svg>
+            {/* 添加Lumi人物图片 - 使用不同方式向下移动 */}
+            <div
+              className="absolute right-0 bottom-[-30%] h-full max-h-96 opacity-90"
+              style={{ zIndex: 6 }}
+            >
+              <img
+                src="/lumi3.webp"
+                alt="Lumi Character"
+                className="h-full object-contain scale-150"
+                loading="eager"
+                style={{
+                  transformOrigin: "bottom right",
+                  marginTop: "50px", // 向下移动图片
+                }}
+              />
             </div>
 
             {/* 内容层，确保最高层级 */}
@@ -180,28 +174,23 @@ const HeroSection = () => {
               style={{ zIndex: 5 }}
             >
               <span className="inline-block bg-primary text-white px-3 py-1 text-xs rounded-full mb-4 uppercase font-medium animate-pulse">
-                New Players Welcome
+                {t("hero.newPlayers")}
               </span>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-                Play with Crypto, Win{" "}
-                <span className="text-primary relative">
-                  Real Money
-                  <span className="absolute -inset-1 bg-primary/20 blur-md rounded-lg -z-10"></span>
-                </span>
+                {t("hero.playWithCrypto")}
               </h1>
               <p className="text-gray-200 mb-6 max-w-lg">
-                Join thousands of players already winning big with our selection
-                of top crypto games. Start your journey now!
+                {t("hero.joinDescription")}
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button className="gradient-button hover-scale text-lg px-8 py-6 relative">
-                  <span className="relative z-10">Play Now</span>
+                  <span className="relative z-10">{t("common.playNow")}</span>
                 </Button>
                 <Button
                   variant="outline"
                   className="bg-white/10 border-white/30 text-white hover:bg-white/20 text-lg px-8 py-6 relative overflow-hidden"
                 >
-                  <span className="relative z-10">Learn More</span>
+                  <span className="relative z-10">{t("common.learnMore")}</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 hover:opacity-100 transition-opacity"></div>
                 </Button>
               </div>
@@ -213,7 +202,7 @@ const HeroSection = () => {
               style={{ zIndex: 4 }}
             >
               <img
-                src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg?v=029"
+                src="/bitcoin-btc-logo.svg"
                 alt="Bitcoin"
                 className="h-full w-full"
                 loading="eager"
@@ -227,7 +216,7 @@ const HeroSection = () => {
               style={{ zIndex: 4 }}
             >
               <img
-                src="https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029"
+                src="/ethereum-eth-logo.svg"
                 alt="Ethereum"
                 className="h-full w-full"
                 loading="eager"

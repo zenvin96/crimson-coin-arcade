@@ -3,7 +3,6 @@ import AppLayout from "@/components/layout/AppLayout";
 import HeroSection from "@/components/sections/HeroSection";
 import GameShowcase from "@/components/sections/GameShowcase";
 import CategoryCards from "@/components/sections/CategoryCards";
-import ScrollRestoration from "@/components/ui/ScrollRestoration";
 import MouseGlow from "@/components/ui/MouseGlow";
 
 const Index = () => {
@@ -11,7 +10,6 @@ const Index = () => {
     <AppProvider>
       <AppLayout>
         <MouseGlow />
-        <ScrollRestoration />
         <HeroSection />
         <CategoryCards />
         <div id="game-section">

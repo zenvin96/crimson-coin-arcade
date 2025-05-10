@@ -14,6 +14,7 @@ import {
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { cn } from "@/lib/utils";
 import { forwardRef, useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ProfileDropdownProps {
   avatar?: string;
@@ -25,6 +26,7 @@ const ProfileDropdown = ({
   avatar,
   username = "User",
 }: ProfileDropdownProps) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   // 每次状态改变时确保滚动条可见
@@ -67,15 +69,7 @@ const ProfileDropdown = ({
         className="h-12 w-12 rounded-full flex items-center justify-center text-white cursor-pointer border-2 border-pink-500"
         onClick={() => setOpen(!open)}
       >
-        {avatar ? (
-          <img
-            src={avatar}
-            alt={username}
-            className="h-full w-full object-cover rounded-full"
-          />
-        ) : (
-          <User className="h-5 w-5" />
-        )}
+        <User className="h-5 w-5" />
       </div>
 
       {/* 下拉菜单内容 */}
@@ -92,47 +86,47 @@ const ProfileDropdown = ({
             {/* 菜单项 */}
             <MenuItem
               icon={<Wallet className="h-4.5 w-4.5 text-gray-400" />}
-              label="Wallet"
+              label={t("profileDropdown.wallet")}
             />
             <MenuItem
               icon={<ArrowDown className="h-4.5 w-4.5 text-gray-400" />}
-              label="Withdraw"
+              label={t("profileDropdown.withdraw", "Withdraw")}
             />
             <MenuItem
               icon={<BarChart3 className="h-4.5 w-4.5 text-gray-400" />}
-              label="Transactions"
+              label={t("profileDropdown.transactions", "Transactions")}
             />
             <MenuItem
               icon={<Clock className="h-4.5 w-4.5 text-gray-400" />}
-              label="Bet History"
+              label={t("profileDropdown.betHistory", "Bet History")}
             />
             <MenuItem
               icon={<PieChart className="h-4.5 w-4.5 text-gray-400" />}
-              label="Rollover Overview"
+              label={t("profileDropdown.rolloverOverview", "Rollover Overview")}
             />
             <MenuItem
               icon={<Crown className="h-4.5 w-4.5 text-gray-400" />}
-              label="VIP Club"
+              label={t("profileDropdown.vipClub")}
             />
             <MenuItem
               icon={<Lock className="h-4.5 w-4.5 text-gray-400" />}
-              label="Vault Pro"
+              label={t("profileDropdown.vaultPro", "Vault Pro")}
             />
             <MenuItem
               icon={<BarChart3 className="h-4.5 w-4.5 text-gray-400" />}
-              label="Affiliate"
+              label={t("profileDropdown.affiliate", "Affiliate")}
             />
             <MenuItem
               icon={<User className="h-4.5 w-4.5 text-gray-400" />}
-              label="My Profile"
+              label={t("profileDropdown.myProfile")}
             />
             <MenuItem
               icon={<Settings className="h-4.5 w-4.5 text-gray-400" />}
-              label="Global Settings"
+              label={t("profileDropdown.settings")}
             />
             <MenuItem
               icon={<LogOut className="h-4.5 w-4.5 text-gray-400" />}
-              label="Log Out"
+              label={t("profileDropdown.logout")}
             />
           </div>
         </>
