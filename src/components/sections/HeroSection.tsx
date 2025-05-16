@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useApp } from "@/contexts/AppContext";
+// import { useApp } from "@/contexts/AppContext"; // Removed unused import
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
@@ -44,7 +44,6 @@ const AnimatedCounter = ({ value, duration = 2000 }: CounterProps) => {
 
 const PromotionBanner = () => {
   const { t } = useTranslation();
-  const { currency } = useApp();
 
   return (
     <div className="bg-gradient-to-r from-primary/80 to-accent p-4 rounded-lg text-white shadow-medium flex items-center gap-4 animate-fade-in border border-accent/20 relative overflow-hidden">

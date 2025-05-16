@@ -46,7 +46,11 @@
     "support": "客户支持",
     "settings": "设置",
     "logout": "退出登录",
-    "new": "新"
+    "new": "新",
+    "originalGames": "原创游戏",
+    "slotMachines": "老虎机",
+    "tableGames": "桌面游戏",
+    "liveCasino": "真人娱乐场"
   },
   "topHeader": {
     "selectCurrency": "选择货币",

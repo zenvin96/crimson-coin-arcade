@@ -11,7 +11,6 @@ import {
   Gift,
   Info,
   X,
-  Check,
   Copy,
   AlertCircle,
 } from "lucide-react";
@@ -20,7 +19,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -43,6 +41,7 @@ import { Badge } from "@/components/ui/badge";
 import QRCode from "react-qr-code";
 import ProfileDropdown from "./ProfileDropdown";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
+import AuthButtons from "../ui/AuthButtons";
 
 // 加密货币列表
 const cryptoCurrencies = [
@@ -66,7 +65,6 @@ const TopHeader = () => {
     notificationCount = 1,
     balance = 0,
   } = useApp();
-  const [searchOpen, setSearchOpen] = useState(false);
   const [depositModalOpen, setDepositModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("crypto");
   const [selectedCrypto, setSelectedCrypto] = useState("USDT");
@@ -130,7 +128,7 @@ const TopHeader = () => {
           <div className="flex items-center">
             <DropdownMenu
               modal={false}
-              onOpenChange={(open) => {
+              onOpenChange={(_open) => {
                 // 无论打开还是关闭，都确保滚动条保持可见
                 document.body.style.overflow = "auto";
                 document.body.style.paddingRight = "0";
@@ -150,7 +148,7 @@ const TopHeader = () => {
                     {getCurrencyIcon(selectedCurrency)}
                     <div className="flex items-center">
                       <span className="text-primary">
-                        $ {formatBalance(0.0)}
+                        $ {formatBalance(balance)}
                       </span>
                     </div>
                   </div>
@@ -191,7 +189,7 @@ const TopHeader = () => {
                         {crypto.code}
                       </span>
                       <span className="ml-auto text-right text-gray-400">
-                        ${formatBalance(0.0)}
+                        ${formatBalance(balance)}
                       </span>
                       <Badge className="h-5 w-5 rounded-full bg-gray-800 text-[10px] p-0 flex items-center justify-center">
                         0
@@ -257,8 +255,8 @@ const TopHeader = () => {
             </Badge>
           </Button>
 
-          {/* 用户头像，替换为ProfileDropdown组件 */}
-          <ProfileDropdown avatar="/images/avatar.png" username="User" />
+          {/* 根据认证状态显示 AuthButtons 或 ProfileDropdown */}
+          {isAuthenticated ? <ProfileDropdown /> : <AuthButtons />}
         </div>
       </div>
 

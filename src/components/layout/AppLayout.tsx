@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { Outlet } from "react-router-dom";
 import { useApp } from "@/contexts/AppContext";
 import { cn } from "@/lib/utils";
 import LeftSidebar from "./LeftSidebar";
@@ -8,11 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import ThemeToggle from "../ui/ThemeToggle";
 import useScrollbarFix from "@/hooks/useScrollbarFix";
 
-type AppLayoutProps = {
-  children: React.ReactNode;
-};
-
-const AppLayout = ({ children }: AppLayoutProps) => {
+const AppLayout = () => {
   const { isSidebarOpen } = useApp();
   const isMobile = useIsMobile();
   const glowRef = useRef<HTMLDivElement>(null);
@@ -68,7 +65,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 
         {/* Page Content */}
         <div className="container max-w-7xl mx-auto p-4 md:p-6 relative">
-          {children}
+          <Outlet />
         </div>
 
         {/* Theme Toggle */}

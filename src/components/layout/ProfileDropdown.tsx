@@ -1,5 +1,4 @@
 import {
-  Home,
   ArrowDown,
   BarChart3,
   Clock,
@@ -11,23 +10,21 @@ import {
   Wallet,
   PieChart,
 } from "lucide-react";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { cn } from "@/lib/utils";
-import { forwardRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useApp } from "@/contexts/AppContext";
 
-interface ProfileDropdownProps {
-  avatar?: string;
-  username?: string;
-}
+// interface ProfileDropdownProps { // Removed
+//   // avatar?: string; // Removed
+//   // username?: string; // Removed
+// } // Removed
 
 // 创建一个完全自定义的下拉菜单实现
-const ProfileDropdown = ({
-  avatar,
-  username = "User",
-}: ProfileDropdownProps) => {
+const ProfileDropdown = () => {
+  // Parameters changed to ()
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  const { logout } = useApp();
 
   // 每次状态改变时确保滚动条可见
   useEffect(() => {
@@ -127,6 +124,10 @@ const ProfileDropdown = ({
             <MenuItem
               icon={<LogOut className="h-4.5 w-4.5 text-gray-400" />}
               label={t("profileDropdown.logout")}
+              onClick={() => {
+                logout();
+                setOpen(false);
+              }}
             />
           </div>
         </>
@@ -139,11 +140,16 @@ const ProfileDropdown = ({
 const MenuItem = ({
   icon,
   label,
+  onClick,
 }: {
   icon: React.ReactNode;
   label: string;
+  onClick?: () => void;
 }) => (
-  <div className="flex items-center gap-3 px-3.5 py-2 hover:bg-gray-800/50 rounded-md cursor-pointer">
+  <div
+    className="flex items-center gap-3 px-3.5 py-2 hover:bg-gray-800/50 rounded-md cursor-pointer"
+    onClick={onClick}
+  >
     {icon}
     <span className="text-sm">{label}</span>
   </div>

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useApp } from "@/contexts/AppContext";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LogIn, User } from "lucide-react";
 import {
@@ -11,7 +10,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";

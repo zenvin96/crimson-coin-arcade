@@ -349,7 +349,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   // Notification count
-  const [notificationCount, setNotificationCount] = useState(2);
+  const [notificationCount, _setNotificationCount] = useState(2);
 
   // 余额显示相关
   const [balance, setBalance] = useState<number>(1250.75); // 默认USDT余额

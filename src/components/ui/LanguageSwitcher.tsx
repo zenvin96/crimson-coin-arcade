@@ -63,7 +63,7 @@ const LanguageSwitcher = () => {
           variant="outline"
           className="w-10 h-10 p-0 rounded-full"
           aria-label="Language"
-          onClick={(e) => {
+          onClick={(_e) => {
             // 点击触发器时确保滚动条保持可见
             document.body.style.overflow = "auto";
             document.body.style.paddingRight = "0";

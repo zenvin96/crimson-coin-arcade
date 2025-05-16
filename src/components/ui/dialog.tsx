@@ -5,41 +5,41 @@ import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // 自定义滚动锁定处理函数
-const useScrollLock = (lock: boolean) => {
-  React.useEffect(() => {
-    if (!lock) return;
+// const useScrollLock = (lock: boolean) => {
+//   React.useEffect(() => {
+//     if (!lock) return;
 
-    // 获取滚动条宽度
-    const scrollbarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
-    // 保存滚动位置
-    const scrollY = window.scrollY;
+//     // 获取滚动条宽度
+//     const scrollbarWidth =
+//       window.innerWidth - document.documentElement.clientWidth;
+//     // 保存滚动位置
+//     const scrollY = window.scrollY;
 
-    // 阻止滚动但保持布局稳定
-    document.documentElement.style.setProperty(
-      "--scrollbar-width",
-      `${scrollbarWidth}px`
-    );
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.left = "0";
-    document.body.style.right = "0";
-    document.body.style.bottom = "0";
-    document.body.style.width = "100%";
+//     // 阻止滚动但保持布局稳定
+//     document.documentElement.style.setProperty(
+//       "--scrollbar-width",
+//       `${scrollbarWidth}px`
+//     );
+//     document.body.style.position = "fixed";
+//     document.body.style.top = `-${scrollY}px`;
+//     document.body.style.left = "0";
+//     document.body.style.right = "0";
+//     document.body.style.bottom = "0";
+//     document.body.style.width = "100%";
 
-    return () => {
-      // 恢复滚动
-      document.documentElement.style.removeProperty("--scrollbar-width");
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.left = "";
-      document.body.style.right = "";
-      document.body.style.bottom = "";
-      document.body.style.width = "";
-      window.scrollTo(0, scrollY);
-    };
-  }, [lock]);
-};
+//     return () => {
+//       // 恢复滚动
+//       document.documentElement.style.removeProperty("--scrollbar-width");
+//       document.body.style.position = "";
+//       document.body.style.top = "";
+//       document.body.style.left = "";
+//       document.body.style.right = "";
+//       document.body.style.bottom = "";
+//       document.body.style.width = "";
+//       window.scrollTo(0, scrollY);
+//     };
+//   }, [lock]);
+// };
 
 // 完全自定义的Dialog组件
 const Dialog = ({
@@ -49,7 +49,7 @@ const Dialog = ({
   ...props
 }: DialogPrimitive.DialogProps) => {
   // 使用自定义滚动锁定
-  useScrollLock(open || false);
+  // useScrollLock(open || false);
 
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange} {...props}>

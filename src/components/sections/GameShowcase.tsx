@@ -19,7 +19,7 @@ type TabType = {
   icon?: React.ReactNode;
 };
 
-const getTabs = (t): TabType[] => [
+const getTabs = (): TabType[] => [
   { id: "all", labelKey: "gameShowcase.allGames" },
   {
     id: "originals",
@@ -169,7 +169,7 @@ const WinnerCard = ({
 const TabNavigation = () => {
   const { t } = useTranslation();
   const { currentFilter, filterGames } = useApp();
-  const tabs = getTabs(t);
+  const tabs = getTabs();
   const [visibleTabs, setVisibleTabs] = useState<TabType[]>([]);
   const [showLeftScroll, setShowLeftScroll] = useState(false);
   const [showRightScroll, setShowRightScroll] = useState(false);

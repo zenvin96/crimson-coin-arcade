@@ -17,18 +17,24 @@ function disableRadixScrollShift() {
 
   // 强制修改Radix UI滚动锁定行为
   const originalAddEventListener = window.addEventListener;
-  window.addEventListener = function (type, listener, options) {
+  window.addEventListener = function (
+    type: string,
+    listener: EventListenerOrEventListenerObject | null,
+    options?: boolean | AddEventListenerOptions
+  ) {
     // 如果是Radix UI尝试添加的scroll事件监听器，则阻止它
     if (type === "scroll" && typeof listener === "function") {
       const originalListener = listener;
-      listener = function (event) {
+      listener = function (event: Event) {
         // 阻止Radix UI滚动锁定时修改margin-right
         if (document.body.hasAttribute("data-radix-scroll-lock")) {
           document.body.style.marginRight = "0px";
         }
+        // @ts-ignore
         return originalListener(event);
       };
     }
+    // @ts-ignore
     return originalAddEventListener.call(this, type, listener, options);
   };
 }

@@ -46,7 +46,11 @@
     "support": "Support",
     "settings": "Settings",
     "logout": "Logout",
-    "new": "New"
+    "new": "New",
+    "originalGames": "Original Games",
+    "slotMachines": "Slot Machines",
+    "tableGames": "Table Games",
+    "liveCasino": "Live Casino"
   },
   "topHeader": {
     "selectCurrency": "Select Currency",

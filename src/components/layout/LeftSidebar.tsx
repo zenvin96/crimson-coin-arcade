@@ -11,13 +11,15 @@ import {
   Trophy,
   Gift,
   Zap,
-  CircleDollarSign,
-  Wallet,
   HeartHandshake,
   Users,
   HelpCircle,
   Settings,
   LogOut,
+  Sparkles,
+  Dice3,
+  LayoutGrid,
+  Clapperboard,
 } from "lucide-react";
 import Logo from "../ui/Logo";
 import { Badge } from "@/components/ui/badge";
@@ -86,6 +88,32 @@ const LeftSidebar = () => {
       navigate("/all-games");
     } else if (navId === "home") {
       navigate("/");
+    } else if (navId === "tournaments") {
+      navigate("/tournaments");
+    } else if (navId === "originalGames") {
+      navigate("/original-games");
+    } else if (navId === "slotMachines") {
+      navigate("/slot-machines");
+    } else if (navId === "tableGames") {
+      navigate("/table-games");
+    } else if (navId === "liveCasino") {
+      navigate("/live-casino");
+    } else if (navId === "vip") {
+      navigate("/vip");
+    } else if (navId === "bonuses") {
+      navigate("/bonuses");
+    } else if (navId === "refer") {
+      navigate("/refer-friends");
+    } else if (navId === "promotions") {
+      navigate("/promotions");
+    } else if (navId === "support") {
+      navigate("/support");
+    } else if (navId === "settings") {
+      navigate("/settings");
+    } else if (navId === "logout") {
+      // Logout logic might be different, e.g., calling a function
+      // For now, let's assume it's a route or placeholder
+      navigate("/logout");
     }
     // 其他路由跳转可以在这里添加...
   };
@@ -148,9 +176,33 @@ const LeftSidebar = () => {
             isActive={activeNav === "tournaments"}
             onClick={() => handleNavClick("tournaments")}
           />
+          <NavItem
+            icon={Sparkles}
+            label={t("sidebar.originalGames")}
+            isActive={activeNav === "originalGames"}
+            onClick={() => handleNavClick("originalGames")}
+          />
+          <NavItem
+            icon={Dice3}
+            label={t("sidebar.slotMachines")}
+            isActive={activeNav === "slotMachines"}
+            onClick={() => handleNavClick("slotMachines")}
+          />
+          <NavItem
+            icon={LayoutGrid}
+            label={t("sidebar.tableGames")}
+            isActive={activeNav === "tableGames"}
+            onClick={() => handleNavClick("tableGames")}
+          />
+          <NavItem
+            icon={Clapperboard}
+            label={t("sidebar.liveCasino")}
+            isActive={activeNav === "liveCasino"}
+            onClick={() => handleNavClick("liveCasino")}
+          />
         </div>
 
-        <div className="mt-6 mb-2 px-4">
+        {/* <div className="mt-6 mb-2 px-4">
           {isSidebarOpen && (
             <p className="text-xs font-medium text-muted-foreground uppercase mb-2">
               {t("sidebar.vipBenefits")}
@@ -170,7 +222,7 @@ const LeftSidebar = () => {
             isActive={activeNav === "bonuses"}
             onClick={() => handleNavClick("bonuses")}
           />
-        </div>
+        </div> */}
 
         <div className="mt-6 mb-2 px-4">
           {isSidebarOpen && (

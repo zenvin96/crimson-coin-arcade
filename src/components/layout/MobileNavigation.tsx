@@ -6,7 +6,6 @@ import { Home, Search, Menu, Bell, User } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import Logo from "../ui/Logo";
-import AuthButtons from "../ui/AuthButtons";
 
 const MobileNavigation = () => {
   const { t } = useTranslation();
