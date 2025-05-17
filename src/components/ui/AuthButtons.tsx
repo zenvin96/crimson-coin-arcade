@@ -43,9 +43,11 @@ const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 min-h-[29rem]">
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-pink-400">{t("auth.emailLabel")}</Label>
+        <Label htmlFor="email" className="text-pink-400">
+          {t("auth.emailLabel")}
+        </Label>
         <Input
           id="email"
           type="email"
@@ -58,7 +60,9 @@ const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
       </div>
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="password" className="text-pink-400">{t("auth.passwordLabel")}</Label>
+          <Label htmlFor="password" className="text-pink-400">
+            {t("auth.passwordLabel")}
+          </Label>
           <Button
             type="button"
             variant="link"
@@ -84,7 +88,7 @@ const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
       >
         {isLoading ? t("auth.loggingInButton") : t("auth.loginButton")}
       </Button>
-      
+
       <div className="my-6">
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
@@ -98,37 +102,59 @@ const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
         </div>
 
         <div className="mt-6 flex  justify-around gap-3">
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <span className="font-bold text-neutral-400">G</span>
           </Button>
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <Send className="h-5 w-5 text-neutral-400" />
           </Button>
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <span className="font-bold text-neutral-400">M</span>
           </Button>
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <Twitter className="h-5 w-5 text-neutral-400" />
           </Button>
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <span className="font-bold text-neutral-400">WC</span>
           </Button>
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <MessageCircle className="h-5 w-5 text-neutral-400" />
           </Button>
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <span className="font-bold text-neutral-400">L</span>
           </Button>
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <span className="font-bold text-neutral-400">Z</span>
           </Button>
         </div>
       </div>
 
       <div className="text-center">
-        <span className="text-sm text-neutral-400">
-          {t("auth.noAccount")}{" "}
-        </span>
+        <span className="text-sm text-neutral-400">{t("auth.noAccount")} </span>
         <Button
           type="button"
           variant="link"
@@ -170,9 +196,11 @@ const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 min-h-[29rem]">
       <div className="space-y-2">
-        <Label htmlFor="name" className="text-pink-400">{t("auth.fullNameLabel")}</Label>
+        <Label htmlFor="name" className="text-pink-400">
+          {t("auth.fullNameLabel")}
+        </Label>
         <Input
           id="name"
           type="text"
@@ -184,7 +212,9 @@ const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-pink-400">{t("auth.emailLabel")}</Label>
+        <Label htmlFor="email" className="text-pink-400">
+          {t("auth.emailLabel")}
+        </Label>
         <Input
           id="email"
           type="email"
@@ -196,7 +226,9 @@ const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-pink-400">{t("auth.passwordLabel")}</Label>
+        <Label htmlFor="password" className="text-pink-400">
+          {t("auth.passwordLabel")}
+        </Label>
         <Input
           id="password"
           type="password"
@@ -230,28 +262,52 @@ const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
         </div>
 
         <div className="mt-6 flex  justify-around gap-3">
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <span className="font-bold text-neutral-400">G</span>
           </Button>
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <Send className="h-5 w-5 text-neutral-400" />
           </Button>
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <span className="font-bold text-neutral-400">M</span>
           </Button>
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <Twitter className="h-5 w-5 text-neutral-400" />
           </Button>
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <span className="font-bold text-neutral-400">WC</span>
           </Button>
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <MessageCircle className="h-5 w-5 text-neutral-400" />
           </Button>
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <span className="font-bold text-neutral-400">L</span>
           </Button>
-          <Button variant="outline" className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center">
+          <Button
+            variant="outline"
+            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+          >
             <span className="font-bold text-neutral-400">Z</span>
           </Button>
         </div>
@@ -319,26 +375,37 @@ const AuthButtons = () => {
             {t("auth.signInButton")}
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-md bg-neutral-900 border border-pink-600/70 shadow-2xl shadow-pink-600/30 rounded-lg">
-          <DialogHeader>
-            <DialogTitle className="text-pink-400">
-              {authMode === "login"
-                ? t("auth.loginTitle")
-                : t("auth.registerTitle")}
-            </DialogTitle>
-            <DialogDescription className="text-neutral-400">
-              {authMode === "login"
-                ? t("auth.loginDesc")
-                : t("auth.registerDesc")}
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="sm:max-w-[calc(28rem+300px)] bg-neutral-900 border border-pink-600/70 shadow-2xl shadow-pink-600/30 rounded-lg p-0 overflow-hidden">
+          <div className="flex">
+            <div className="sm:w-[28rem] p-6">
+              <DialogHeader>
+                <DialogTitle className="text-pink-400">
+                  {authMode === "login"
+                    ? t("auth.loginTitle")
+                    : t("auth.registerTitle")}
+                </DialogTitle>
+                <DialogDescription className="text-neutral-400">
+                  {authMode === "login"
+                    ? t("auth.loginDesc")
+                    : t("auth.registerDesc")}
+                </DialogDescription>
+              </DialogHeader>
 
-          <div className="py-4">
-            {authMode === "login" ? (
-              <LoginForm setMode={setAuthMode} />
-            ) : (
-              <RegisterForm setMode={setAuthMode} />
-            )}
+              <div className="py-4">
+                {authMode === "login" ? (
+                  <LoginForm setMode={setAuthMode} />
+                ) : (
+                  <RegisterForm setMode={setAuthMode} />
+                )}
+              </div>
+            </div>
+            <div className="hidden sm:block w-[300px] h-auto relative">
+              <img
+                src="/register-min.jpg"
+                alt="Register Visual"
+                className="absolute top-0 left-0 w-full h-full object-cover rounded-r-lg"
+              />
+            </div>
           </div>
         </DialogContent>
       </Dialog>
