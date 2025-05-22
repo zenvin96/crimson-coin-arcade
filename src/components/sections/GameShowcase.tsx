@@ -166,10 +166,11 @@ const WinnerCard = ({
   );
 };
 
+const TABS_FOR_NAVIGATION = getTabs();
+
 const TabNavigation = () => {
   const { t } = useTranslation();
   const { currentFilter, filterGames } = useApp();
-  const tabs = getTabs();
   const [visibleTabs, setVisibleTabs] = useState<TabType[]>([]);
   const [showLeftScroll, setShowLeftScroll] = useState(false);
   const [showRightScroll, setShowRightScroll] = useState(false);
@@ -189,7 +190,7 @@ const TabNavigation = () => {
   useEffect(() => {
     const tabsElement = tabsRef.current;
     // Set initial tabs
-    setVisibleTabs(tabs);
+    setVisibleTabs(TABS_FOR_NAVIGATION);
 
     // Check for scroll buttons
     checkScrollButtons();
@@ -207,7 +208,7 @@ const TabNavigation = () => {
     };
   }, []);
 
-  const handleTabClick = (tabId: string) => {
+  const handleTabClick = (tabId:string) => {
     filterGames(tabId);
   };
 

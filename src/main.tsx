@@ -30,11 +30,11 @@ function disableRadixScrollShift() {
         if (document.body.hasAttribute("data-radix-scroll-lock")) {
           document.body.style.marginRight = "0px";
         }
-        // @ts-ignore
+        // @ts-expect-error Radix UI scroll lock overrides
         return originalListener(event);
       };
     }
-    // @ts-ignore
+    // @ts-expect-error Radix UI scroll lock overrides
     return originalAddEventListener.call(this, type, listener, options);
   };
 }
