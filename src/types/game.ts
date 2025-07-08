@@ -18,10 +18,12 @@ export type Winner = {
     id: string;
     title: string;
     image: string;
+    category: string;
   };
   amount: number;
   currency: string;
   timestamp: Date;
+  isHidden?: boolean;
 };
 
 export type Category = {

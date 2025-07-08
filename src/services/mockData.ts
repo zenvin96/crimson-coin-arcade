@@ -28,30 +28,60 @@ export const generateMockData = () => {
     };
   });
 
-  // Mock winners
-  const mockWinners: Winner[] = Array(10).fill(null).map((_, index) => {
-    const usernames = ["Player1", "CryptoWin", "GamerPro", "LuckyGamer", "BitHunter"];
-    const amounts = [1250.75, 489.50, 2570.25, 860.30, 1025.40];
-    const timestamps = [
-      new Date(Date.now() - 1000 * 60),
-      new Date(Date.now() - 1000 * 60 * 5),
-      new Date(Date.now() - 1000 * 60 * 15),
-      new Date(Date.now() - 1000 * 60 * 30),
-      new Date(Date.now() - 1000 * 60 * 60),
+  // Mock winners with diverse data
+  const mockWinners: Winner[] = Array(20).fill(null).map((_, index) => {
+    const usernames = [
+      "scarav***", "Slelusj***", "Hidden", "Melting***", "Hidden",
+      "Mtrwnf***", "JobyBo***", "Uldilixl***", "scarav***", "Player123",
+      "CryptoKing", "LuckyGambler", "BitHunter", "WinnerPro", "GamerX"
     ];
+    
+    const games = [
+      { title: "Plinko", category: "originals" },
+      { title: "Lucky Ace Casino", category: "live" },
+      { title: "Eye Of Spartania", category: "slots" },
+      { title: "PIGGY OUTSOURCED", category: "slots" },
+      { title: "Keno", category: "originals" },
+      { title: "Sugar Rush 1000", category: "slots" },
+      { title: "Shellsy's Megaways", category: "slots" },
+      { title: "Duck Hunters", category: "slots" },
+      { title: "Video Poker", category: "table" },
+      { title: "Live Roulette", category: "live" },
+      { title: "Lion's Fortune", category: "jackpot" },
+      { title: "Bonanza", category: "slots" },
+      { title: "Chicken Rush", category: "originals" },
+    ];
+    
+    const currencies = ["BTC", "USDT", "ETH", "USDT", "BTC", "ETH", "USDT", "BTC"];
+    const currency = currencies[index % currencies.length];
+    
+    // Different amounts based on currency
+    let amount: number;
+    if (currency === "BTC") {
+      amount = parseFloat((Math.random() * 2 + 0.1).toFixed(4)); // 0.1 - 2.1 BTC
+    } else if (currency === "ETH") {
+      amount = parseFloat((Math.random() * 50 + 1).toFixed(4)); // 1 - 51 ETH
+    } else {
+      amount = parseFloat((Math.random() * 5000 + 100).toFixed(2)); // 100 - 5100 USDT
+    }
+    
+    const gameIndex = index % games.length;
+    const isHidden = index % 3 === 2; // Every third winner is hidden
 
     return {
       id: `win-${index + 1}`,
-      username: usernames[index % usernames.length],
+      username: isHidden ? "Hidden" : usernames[index % usernames.length],
       avatar: `https://api.dicebear.com/6.x/avataaars/svg?seed=${index}`,
       game: {
-        id: `game-${(index % 5) + 1}`,
-        title: `Game ${(index % 5) + 1}`,
-        image: `https://picsum.photos/seed/${(index % 5) + 200}/300/200`,
+        id: `game-${gameIndex + 1}`,
+        title: games[gameIndex].title,
+        image: `https://picsum.photos/seed/${gameIndex + 200}/300/200`,
+        category: games[gameIndex].category,
       },
-      amount: amounts[index % amounts.length],
-      currency: "MYR",
-      timestamp: timestamps[index % timestamps.length],
+      amount: amount,
+      currency: currency,
+      timestamp: new Date(Date.now() - 1000 * 60 * (index + 1)),
+      isHidden: isHidden,
     };
   });
 

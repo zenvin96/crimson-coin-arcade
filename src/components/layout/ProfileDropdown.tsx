@@ -10,149 +10,148 @@ import {
   Wallet,
   PieChart,
 } from "lucide-react";
-import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useApp } from "@/contexts/AppContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-// interface ProfileDropdownProps { // Removed
-//   // avatar?: string; // Removed
-//   // username?: string; // Removed
-// } // Removed
-
-// 创建一个完全自定义的下拉菜单实现
 const ProfileDropdown = () => {
-  // Parameters changed to ()
   const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
   const { logout } = useApp();
 
-  // 每次状态改变时确保滚动条可见
-  useEffect(() => {
-    if (open) {
-      // 确保在下拉菜单打开时不影响body的滚动
-      document.body.style.overflow = "";
-      document.body.style.paddingRight = "";
-    }
-
-    // 添加一个直接的CSS覆盖，确保滚动条不会消失
-    const styleEl = document.createElement("style");
-    styleEl.id = "dropdown-scrollbar-fix";
-    styleEl.textContent = `
-      body {
-        overflow: auto !important;
-        padding-right: 0 !important;
-        overscroll-behavior: auto !important;
-      }
-    `;
-
-    document.head.appendChild(styleEl);
-
-    return () => {
-      if (document.getElementById("dropdown-scrollbar-fix")) {
-        document.getElementById("dropdown-scrollbar-fix")?.remove();
-      }
-    };
-  }, [open]);
-
-  // 阻止点击传播，避免影响body
-  const stopPropagation = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
   return (
-    <div className="relative">
-      {/* 触发器 */}
-      <div
-        className="h-12 w-12 rounded-full flex items-center justify-center text-white cursor-pointer border-2 border-pink-500"
-        onClick={() => setOpen(!open)}
-      >
-        <User className="h-5 w-5" />
-      </div>
-
-      {/* 下拉菜单内容 */}
-      {open && (
-        <>
-          {/* 背景遮罩，只处理点击事件不阻止滚动 */}
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-
-          {/* 菜单内容 */}
-          <div
-            className="absolute right-0 top-full mt-2 w-56 z-50 bg-[#1a1b1d] text-gray-200 border border-gray-800 rounded-md shadow-xl py-1.5 px-1"
-            onClick={stopPropagation}
-          >
-            {/* 菜单项 */}
-            <MenuItem
-              icon={<Wallet className="h-4.5 w-4.5 text-gray-400" />}
-              label={t("profileDropdown.wallet")}
-            />
-            <MenuItem
-              icon={<ArrowDown className="h-4.5 w-4.5 text-gray-400" />}
-              label={t("profileDropdown.withdraw", "Withdraw")}
-            />
-            <MenuItem
-              icon={<BarChart3 className="h-4.5 w-4.5 text-gray-400" />}
-              label={t("profileDropdown.transactions", "Transactions")}
-            />
-            <MenuItem
-              icon={<Clock className="h-4.5 w-4.5 text-gray-400" />}
-              label={t("profileDropdown.betHistory", "Bet History")}
-            />
-            <MenuItem
-              icon={<PieChart className="h-4.5 w-4.5 text-gray-400" />}
-              label={t("profileDropdown.rolloverOverview", "Rollover Overview")}
-            />
-            <MenuItem
-              icon={<Crown className="h-4.5 w-4.5 text-gray-400" />}
-              label={t("profileDropdown.vipClub")}
-            />
-            <MenuItem
-              icon={<Lock className="h-4.5 w-4.5 text-gray-400" />}
-              label={t("profileDropdown.vaultPro", "Vault Pro")}
-            />
-            <MenuItem
-              icon={<BarChart3 className="h-4.5 w-4.5 text-gray-400" />}
-              label={t("profileDropdown.affiliate", "Affiliate")}
-            />
-            <MenuItem
-              icon={<User className="h-4.5 w-4.5 text-gray-400" />}
-              label={t("profileDropdown.myProfile")}
-            />
-            <MenuItem
-              icon={<Settings className="h-4.5 w-4.5 text-gray-400" />}
-              label={t("profileDropdown.settings")}
-            />
-            <MenuItem
-              icon={<LogOut className="h-4.5 w-4.5 text-gray-400" />}
-              label={t("profileDropdown.logout")}
-              onClick={() => {
-                logout();
-                setOpen(false);
-              }}
-            />
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <div className="h-12 w-12 rounded-full flex items-center justify-center text-white cursor-pointer border-2 border-pink-500 hover:border-pink-400 transition-colors">
+          <User className="h-5 w-5" />
+        </div>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-80 bg-neutral-900 border-neutral-700" align="end">
+        <DropdownMenuLabel className="text-white font-semibold">
+          {t("profileDropdown.myAccount", "My Account")}
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator className="bg-neutral-700" />
+        
+        {/* User Info Section */}
+        <DropdownMenuItem className="p-3 hover:bg-neutral-800 cursor-pointer transition-colors">
+          <div className="flex gap-3 w-full">
+            <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+              <User className="h-6 w-6 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-white">User123456</p>
+              <p className="text-sm text-neutral-300">user@example.com</p>
+              <p className="text-xs text-primary mt-1">VIP Gold Member</p>
+            </div>
           </div>
-        </>
-      )}
-    </div>
+        </DropdownMenuItem>
+        
+        <DropdownMenuSeparator className="bg-neutral-700" />
+        
+        <ScrollArea className="h-[400px]">
+          {/* Wallet */}
+          <DropdownMenuItem className="p-3 hover:bg-neutral-800 cursor-pointer transition-colors">
+            <div className="flex items-center gap-3 w-full">
+              <Wallet className="h-5 w-5 text-neutral-400" />
+              <span className="text-sm text-neutral-300">{t("profileDropdown.wallet")}</span>
+            </div>
+          </DropdownMenuItem>
+          
+          {/* Withdraw */}
+          <DropdownMenuItem className="p-3 hover:bg-neutral-800 cursor-pointer transition-colors">
+            <div className="flex items-center gap-3 w-full">
+              <ArrowDown className="h-5 w-5 text-neutral-400" />
+              <span className="text-sm text-neutral-300">{t("profileDropdown.withdraw", "Withdraw")}</span>
+            </div>
+          </DropdownMenuItem>
+          
+          {/* Transactions */}
+          <DropdownMenuItem className="p-3 hover:bg-neutral-800 cursor-pointer transition-colors">
+            <div className="flex items-center gap-3 w-full">
+              <BarChart3 className="h-5 w-5 text-neutral-400" />
+              <span className="text-sm text-neutral-300">{t("profileDropdown.transactions", "Transactions")}</span>
+            </div>
+          </DropdownMenuItem>
+          
+          {/* Bet History */}
+          <DropdownMenuItem className="p-3 hover:bg-neutral-800 cursor-pointer transition-colors">
+            <div className="flex items-center gap-3 w-full">
+              <Clock className="h-5 w-5 text-neutral-400" />
+              <span className="text-sm text-neutral-300">{t("profileDropdown.betHistory", "Bet History")}</span>
+            </div>
+          </DropdownMenuItem>
+          
+          {/* Rollover Overview */}
+          <DropdownMenuItem className="p-3 hover:bg-neutral-800 cursor-pointer transition-colors">
+            <div className="flex items-center gap-3 w-full">
+              <PieChart className="h-5 w-5 text-neutral-400" />
+              <span className="text-sm text-neutral-300">{t("profileDropdown.rolloverOverview", "Rollover Overview")}</span>
+            </div>
+          </DropdownMenuItem>
+          
+          {/* VIP Club */}
+          <DropdownMenuItem className="p-3 hover:bg-neutral-800 cursor-pointer transition-colors">
+            <div className="flex items-center gap-3 w-full">
+              <Crown className="h-5 w-5 text-neutral-400" />
+              <span className="text-sm text-neutral-300">{t("profileDropdown.vipClub")}</span>
+            </div>
+          </DropdownMenuItem>
+          
+          {/* Vault Pro */}
+          <DropdownMenuItem className="p-3 hover:bg-neutral-800 cursor-pointer transition-colors">
+            <div className="flex items-center gap-3 w-full">
+              <Lock className="h-5 w-5 text-neutral-400" />
+              <span className="text-sm text-neutral-300">{t("profileDropdown.vaultPro", "Vault Pro")}</span>
+            </div>
+          </DropdownMenuItem>
+          
+          {/* Affiliate */}
+          <DropdownMenuItem className="p-3 hover:bg-neutral-800 cursor-pointer transition-colors">
+            <div className="flex items-center gap-3 w-full">
+              <BarChart3 className="h-5 w-5 text-neutral-400" />
+              <span className="text-sm text-neutral-300">{t("profileDropdown.affiliate", "Affiliate")}</span>
+            </div>
+          </DropdownMenuItem>
+          
+          {/* My Profile */}
+          <DropdownMenuItem className="p-3 hover:bg-neutral-800 cursor-pointer transition-colors">
+            <div className="flex items-center gap-3 w-full">
+              <User className="h-5 w-5 text-neutral-400" />
+              <span className="text-sm text-neutral-300">{t("profileDropdown.myProfile")}</span>
+            </div>
+          </DropdownMenuItem>
+          
+          {/* Settings */}
+          <DropdownMenuItem className="p-3 hover:bg-neutral-800 cursor-pointer transition-colors">
+            <div className="flex items-center gap-3 w-full">
+              <Settings className="h-5 w-5 text-neutral-400" />
+              <span className="text-sm text-neutral-300">{t("profileDropdown.settings")}</span>
+            </div>
+          </DropdownMenuItem>
+          
+          <DropdownMenuSeparator className="bg-neutral-700" />
+          
+          {/* Logout */}
+          <DropdownMenuItem 
+            className="p-3 hover:bg-neutral-800 cursor-pointer transition-colors"
+            onClick={() => logout()}
+          >
+            <div className="flex items-center gap-3 w-full">
+              <LogOut className="h-5 w-5 text-red-400" />
+              <span className="text-sm text-red-400">{t("profileDropdown.logout")}</span>
+            </div>
+          </DropdownMenuItem>
+        </ScrollArea>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
-
-// 辅助组件：菜单项
-const MenuItem = ({
-  icon,
-  label,
-  onClick,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  onClick?: () => void;
-}) => (
-  <div
-    className="flex items-center gap-3 px-3.5 py-2 hover:bg-gray-800/50 rounded-md cursor-pointer"
-    onClick={onClick}
-  >
-    {icon}
-    <span className="text-sm">{label}</span>
-  </div>
-);
 
 export default ProfileDropdown;
