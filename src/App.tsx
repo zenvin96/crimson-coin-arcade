@@ -20,6 +20,8 @@ import PromotionsPage from "./pages/PromotionsPage";
 import SupportPage from "./pages/SupportPage";
 import SettingsPage from "./pages/SettingsPage";
 import LogoutPage from "./pages/LogoutPage";
+import AuthCallback from "./pages/AuthCallback";
+import AuthError from "./pages/AuthError";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +49,8 @@ const App = () => (
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/logout" element={<LogoutPage />} />
           </Route>
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/auth/error" element={<AuthError />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -5,6 +5,7 @@ import {
   DisplayModeType,
 } from "@/types/settings";
 import { Game, Winner, Category, TokenPrice } from "@/types/game";
+import { User } from "@/services/api/types";
 
 export type AppContextType = {
   theme: ThemeType;
@@ -16,8 +17,12 @@ export type AppContextType = {
   language: LanguageType;
   setLanguage: (language: LanguageType) => void;
   isAuthenticated: boolean;
+  user: User | null;
   login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  loginWithGoogle: () => void;
+  checkAuth: () => Promise<void>;
   games: Game[];
   filteredGames: Game[];
   filterGames: (category: string) => void;
@@ -27,6 +32,7 @@ export type AppContextType = {
   categories: Category[];
   notificationCount: number;
   isLoading: boolean;
+  authLoading: boolean;
 
   // 余额相关
   balance: number;

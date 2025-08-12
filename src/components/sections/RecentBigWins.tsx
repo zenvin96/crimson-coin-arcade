@@ -88,20 +88,6 @@ const RecentBigWins = () => {
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes infinite-scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-
-        .animate-infinite-scroll {
-          animation: infinite-scroll 5s linear infinite;
-        }
-      `}</style>
     </section>
   );
 };

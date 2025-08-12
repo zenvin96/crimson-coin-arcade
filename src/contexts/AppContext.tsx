@@ -7,6 +7,8 @@ import {
   DisplayModeType,
 } from "@/types/settings";
 import { Game, Winner, Category, TokenPrice } from "@/types/game";
+import { authApi, walletApi, User, ApiError } from "@/services/api";
+import { setToken } from "@/services/api/client";
 
 // Mock data for the application
 const mockGames: Game[] = [
@@ -334,6 +336,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
   // Game filtering state
   const [games] = useState<Game[]>(mockGames);
@@ -365,33 +369,122 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  // Mock login function
+  // Real login function using API
   const login = async (email: string, password: string) => {
     setIsLoading(true);
-    // Simulate API call
-    return new Promise<void>((resolve, reject) => {
-      setTimeout(() => {
-        if (email && password) {
-          setIsAuthenticated(true);
-          // 设置一个默认余额
-          setBalance(1250.75);
-          setIsLoading(false);
-          resolve();
-        } else {
-          setIsLoading(false);
-          reject(new Error("Invalid credentials"));
+    try {
+      const response = await authApi.login({ email, password });
+      setUser(response.user);
+      setIsAuthenticated(true);
+      
+      // Fetch wallet balance after login
+      try {
+        const walletData = await walletApi.getBalance();
+        setBalance(parseFloat(walletData.balance));
+      } catch (error) {
+        console.error('Failed to fetch wallet balance:', error);
+        setBalance(0);
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw new Error(error.message);
+      }
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Real register function using API
+  const register = async (email: string, password: string) => {
+    setIsLoading(true);
+    try {
+      const response = await authApi.register({ email, password });
+      setUser(response.user);
+      setIsAuthenticated(true);
+      
+      // New users start with 0 balance (wallet is initialized by backend)
+      setBalance(0);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw new Error(error.message);
+      }
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Real logout function using API
+  const logout = async () => {
+    try {
+      await authApi.logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setIsAuthenticated(false);
+      setUser(null);
+      setBalance(0);
+    }
+  };
+
+  // Google OAuth login
+  const loginWithGoogle = () => {
+    authApi.googleSignIn();
+  };
+
+  // Check authentication status on mount
+  const checkAuth = async () => {
+    setAuthLoading(true);
+    try {
+      const userData = await authApi.checkAuth();
+      if (userData) {
+        setUser(userData);
+        setIsAuthenticated(true);
+        
+        // Fetch wallet balance
+        try {
+          const walletData = await walletApi.getBalance();
+          setBalance(parseFloat(walletData.balance));
+        } catch (error) {
+          console.error('Failed to fetch wallet balance:', error);
         }
-      }, 1000);
-    });
+      }
+    } catch (error) {
+      console.error('Auth check failed:', error);
+    } finally {
+      setAuthLoading(false);
+    }
   };
 
-  // Mock logout function
-  const logout = () => {
-    setIsAuthenticated(false);
-    setBalance(0); // 清除余额
-  };
+  // Check authentication on mount
+  useEffect(() => {
+    checkAuth();
+  }, []);
 
-  // Simulate initial loading
+  // Listen for OAuth popup messages
+  useEffect(() => {
+    const handleMessage = async (event: MessageEvent) => {
+      // Verify the origin matches our app
+      if (event.origin !== window.location.origin) return;
+      
+      if (event.data.type === 'google-auth-success') {
+        // Set the token that was sent from popup
+        if (event.data.token) {
+          setToken(event.data.token);
+          // Now check auth with the new token
+          await checkAuth();
+        }
+      } else if (event.data.type === 'google-auth-error') {
+        console.error('Google auth error:', event.data.error);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
+  // Simulate initial loading for other data
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -420,8 +513,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     language,
     setLanguage,
     isAuthenticated,
+    user,
     login,
+    register,
     logout,
+    loginWithGoogle,
+    checkAuth,
     games,
     filteredGames,
     filterGames,
@@ -431,6 +528,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     categories,
     notificationCount,
     isLoading,
+    authLoading,
 
     // 余额相关
     balance,

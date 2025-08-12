@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useApp } from "@/contexts/AppContext";
 import { Button } from "@/components/ui/button";
 import { LogIn, User, Twitter, MessageCircle, Send } from "lucide-react";
+import GoogleIcon from "@/components/icons/GoogleIcon";
 import {
   Dialog,
   DialogContent,
@@ -11,322 +12,394 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  loginSchema,
+  registerSchema,
+  type LoginFormData,
+  type RegisterFormData,
+} from "@/lib/validations/auth";
 
 type AuthMode = "login" | "register";
 
-const LoginForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
+const LoginForm = ({ setMode, onSuccess }: { setMode: (mode: AuthMode) => void; onSuccess: () => void }) => {
   const { t } = useTranslation();
-  const { login, isLoading } = useApp();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { login, isLoading, loginWithGoogle } = useApp();
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const form = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
+  const onSubmit = async (data: LoginFormData) => {
     try {
-      await login(email, password);
+      await login(data.email, data.password);
       toast({
         title: t("auth.loginSuccessTitle"),
         description: t("auth.loginSuccessDesc"),
       });
+      onSuccess();
     } catch (error) {
       toast({
         title: t("auth.loginFailTitle"),
-        description: t("auth.loginFailDesc"),
+        description: error instanceof Error ? error.message : t("auth.loginFailDesc"),
         variant: "destructive",
       });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 min-h-[29rem]">
-      <div className="space-y-2">
-        <Label htmlFor="email" className="text-pink-400">
-          {t("auth.emailLabel")}
-        </Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder={t("auth.emailPlaceholder")}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="bg-neutral-800 border-neutral-700 focus:border-pink-500 focus:ring-0 focus:outline-none text-neutral-200 placeholder:text-neutral-500"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 min-h-[29rem]">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-pink-400">
+                {t("auth.emailLabel")}
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="email"
+                  placeholder={t("auth.emailPlaceholder")}
+                  className="bg-neutral-800 border-neutral-700 focus:border-pink-500 focus:ring-0 focus:outline-none text-neutral-200 placeholder:text-neutral-500"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="password" className="text-pink-400">
-            {t("auth.passwordLabel")}
-          </Label>
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between">
+                <FormLabel className="text-pink-400">
+                  {t("auth.passwordLabel")}
+                </FormLabel>
+                <Button
+                  type="button"
+                  variant="link"
+                  className="text-xs text-pink-500 hover:text-pink-400 p-0"
+                >
+                  {t("auth.forgotPassword")}
+                </Button>
+              </div>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder={t("auth.passwordPlaceholder")}
+                  className="bg-neutral-800 border-neutral-700 focus:border-pink-500 focus:ring-0 focus:outline-none text-neutral-200 placeholder:text-neutral-500"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button
+          type="submit"
+          className="gradient-button w-full hover:shadow-[0_0_15px_3px_rgba(236,72,153,0.6)] transition-shadow duration-300"
+          disabled={isLoading}
+        >
+          {isLoading ? t("auth.loggingInButton") : t("auth.loginButton")}
+        </Button>
+
+        <div className="my-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-neutral-700" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-neutral-900 px-2 text-neutral-500">
+                {t("auth.orContinueWith")}
+              </span>
+            </div>
+          </div>
+
+          <div className="mt-6 flex  justify-around gap-3">
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                loginWithGoogle();
+              }}
+              type="button"
+              title={t("auth.signInWithGoogle")}
+            >
+              <GoogleIcon className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+            >
+              <Send className="h-5 w-5 text-neutral-400" />
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+            >
+              <span className="font-bold text-neutral-400">M</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+            >
+              <Twitter className="h-5 w-5 text-neutral-400" />
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+            >
+              <span className="font-bold text-neutral-400">WC</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+            >
+              <MessageCircle className="h-5 w-5 text-neutral-400" />
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+            >
+              <span className="font-bold text-neutral-400">L</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+            >
+              <span className="font-bold text-neutral-400">Z</span>
+            </Button>
+          </div>
+        </div>
+
+        <div className="text-center">
+          <span className="text-sm text-neutral-400">{t("auth.noAccount")} </span>
           <Button
             type="button"
             variant="link"
-            className="text-xs text-pink-500 hover:text-pink-400 p-0"
+            className="text-pink-500 hover:text-pink-400 p-0"
+            onClick={() => setMode("register")}
           >
-            {t("auth.forgotPassword")}
+            {t("auth.registerLink")}
           </Button>
         </div>
-        <Input
-          id="password"
-          type="password"
-          placeholder={t("auth.passwordPlaceholder")}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="bg-neutral-800 border-neutral-700 focus:border-pink-500 focus:ring-0 focus:outline-none text-neutral-200 placeholder:text-neutral-500"
-        />
-      </div>
-      <Button
-        type="submit"
-        className="gradient-button w-full hover:shadow-[0_0_15px_3px_rgba(236,72,153,0.6)] transition-shadow duration-300"
-        disabled={isLoading}
-      >
-        {isLoading ? t("auth.loggingInButton") : t("auth.loginButton")}
-      </Button>
-
-      <div className="my-6">
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-neutral-700" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-neutral-900 px-2 text-neutral-500">
-              {t("auth.orContinueWith")}
-            </span>
-          </div>
-        </div>
-
-        <div className="mt-6 flex  justify-around gap-3">
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <span className="font-bold text-neutral-400">G</span>
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <Send className="h-5 w-5 text-neutral-400" />
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <span className="font-bold text-neutral-400">M</span>
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <Twitter className="h-5 w-5 text-neutral-400" />
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <span className="font-bold text-neutral-400">WC</span>
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <MessageCircle className="h-5 w-5 text-neutral-400" />
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <span className="font-bold text-neutral-400">L</span>
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <span className="font-bold text-neutral-400">Z</span>
-          </Button>
-        </div>
-      </div>
-
-      <div className="text-center">
-        <span className="text-sm text-neutral-400">{t("auth.noAccount")} </span>
-        <Button
-          type="button"
-          variant="link"
-          className="text-pink-500 hover:text-pink-400 p-0"
-          onClick={() => setMode("register")}
-        >
-          {t("auth.registerLink")}
-        </Button>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
 };
 
-const RegisterForm = ({ setMode }: { setMode: (mode: AuthMode) => void }) => {
+const RegisterForm = ({ setMode, onSuccess }: { setMode: (mode: AuthMode) => void; onSuccess: () => void }) => {
   const { t } = useTranslation();
-  const { login, isLoading } = useApp();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const { register, isLoading, loginWithGoogle } = useApp();
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const form = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
+  const onSubmit = async (data: RegisterFormData) => {
     try {
-      // For now, we'll just use login since this is a mock
-      await login(email, password);
+      await register(data.email, data.password);
       toast({
         title: t("auth.registerSuccessTitle"),
         description: t("auth.registerSuccessDesc"),
       });
+      onSuccess();
     } catch (error) {
       toast({
         title: t("auth.registerFailTitle"),
-        description: t("auth.registerFailDesc"),
+        description: error instanceof Error ? error.message : t("auth.registerFailDesc"),
         variant: "destructive",
       });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 min-h-[29rem]">
-      <div className="space-y-2">
-        <Label htmlFor="name" className="text-pink-400">
-          {t("auth.fullNameLabel")}
-        </Label>
-        <Input
-          id="name"
-          type="text"
-          placeholder={t("auth.fullNamePlaceholder")}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className="bg-neutral-800 border-neutral-700 focus:border-pink-500 focus:ring-0 focus:outline-none text-neutral-200 placeholder:text-neutral-500"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 min-h-[29rem]">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-pink-400">
+                {t("auth.emailLabel")}
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="email"
+                  placeholder={t("auth.emailPlaceholder")}
+                  className="bg-neutral-800 border-neutral-700 focus:border-pink-500 focus:ring-0 focus:outline-none text-neutral-200 placeholder:text-neutral-500"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="email" className="text-pink-400">
-          {t("auth.emailLabel")}
-        </Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder={t("auth.emailPlaceholder")}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="bg-neutral-800 border-neutral-700 focus:border-pink-500 focus:ring-0 focus:outline-none text-neutral-200 placeholder:text-neutral-500"
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-pink-400">
+                {t("auth.passwordLabel")}
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder={t("auth.createPasswordPlaceholder")}
+                  className="bg-neutral-800 border-neutral-700 focus:border-pink-500 focus:ring-0 focus:outline-none text-neutral-200 placeholder:text-neutral-500"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="password" className="text-pink-400">
-          {t("auth.passwordLabel")}
-        </Label>
-        <Input
-          id="password"
-          type="password"
-          placeholder={t("auth.createPasswordPlaceholder")}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="bg-neutral-800 border-neutral-700 focus:border-pink-500 focus:ring-0 focus:outline-none text-neutral-200 placeholder:text-neutral-500"
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-pink-400">
+                {t("auth.confirmPasswordLabel")}
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder={t("auth.confirmPasswordPlaceholder")}
+                  className="bg-neutral-800 border-neutral-700 focus:border-pink-500 focus:ring-0 focus:outline-none text-neutral-200 placeholder:text-neutral-500"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      <Button
-        type="submit"
-        className="gradient-button w-full hover:shadow-[0_0_15px_3px_rgba(236,72,153,0.6)] transition-shadow duration-300"
-        disabled={isLoading}
-      >
-        {isLoading
-          ? t("auth.creatingAccountButton")
-          : t("auth.createAccountButton")}
-      </Button>
-
-      <div className="my-6">
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-neutral-700" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-neutral-900 px-2 text-neutral-500">
-              {t("auth.orContinueWith")}
-            </span>
-          </div>
-        </div>
-
-        <div className="mt-6 flex  justify-around gap-3">
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <span className="font-bold text-neutral-400">G</span>
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <Send className="h-5 w-5 text-neutral-400" />
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <span className="font-bold text-neutral-400">M</span>
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <Twitter className="h-5 w-5 text-neutral-400" />
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <span className="font-bold text-neutral-400">WC</span>
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <MessageCircle className="h-5 w-5 text-neutral-400" />
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <span className="font-bold text-neutral-400">L</span>
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
-          >
-            <span className="font-bold text-neutral-400">Z</span>
-          </Button>
-        </div>
-      </div>
-
-      <div className="text-center">
-        <span className="text-sm text-neutral-400">
-          {t("auth.hasAccount")}{" "}
-        </span>
         <Button
-          type="button"
-          variant="link"
-          className="text-pink-500 hover:text-pink-400 p-0"
-          onClick={() => setMode("login")}
+          type="submit"
+          className="gradient-button w-full hover:shadow-[0_0_15px_3px_rgba(236,72,153,0.6)] transition-shadow duration-300"
+          disabled={isLoading}
         >
-          {t("auth.loginLink")}
+          {isLoading
+            ? t("auth.creatingAccountButton")
+            : t("auth.createAccountButton")}
         </Button>
-      </div>
-    </form>
+
+        <div className="my-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-neutral-700" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-neutral-900 px-2 text-neutral-500">
+                {t("auth.orContinueWith")}
+              </span>
+            </div>
+          </div>
+
+          <div className="mt-6 flex  justify-around gap-3">
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                loginWithGoogle();
+              }}
+              type="button"
+              title={t("auth.signInWithGoogle")}
+            >
+              <GoogleIcon className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+            >
+              <Send className="h-5 w-5 text-neutral-400" />
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+            >
+              <span className="font-bold text-neutral-400">M</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+            >
+              <Twitter className="h-5 w-5 text-neutral-400" />
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+            >
+              <span className="font-bold text-neutral-400">WC</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+            >
+              <MessageCircle className="h-5 w-5 text-neutral-400" />
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+            >
+              <span className="font-bold text-neutral-400">L</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+            >
+              <span className="font-bold text-neutral-400">Z</span>
+            </Button>
+          </div>
+        </div>
+
+        <div className="text-center">
+          <span className="text-sm text-neutral-400">
+            {t("auth.hasAccount")}{" "}
+          </span>
+          <Button
+            type="button"
+            variant="link"
+            className="text-pink-500 hover:text-pink-400 p-0"
+            onClick={() => setMode("login")}
+          >
+            {t("auth.loginLink")}
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };
 
@@ -393,9 +466,9 @@ const AuthButtons = () => {
 
               <div className="py-4">
                 {authMode === "login" ? (
-                  <LoginForm setMode={setAuthMode} />
+                  <LoginForm setMode={setAuthMode} onSuccess={() => setIsDialogOpen(false)} />
                 ) : (
-                  <RegisterForm setMode={setAuthMode} />
+                  <RegisterForm setMode={setAuthMode} onSuccess={() => setIsDialogOpen(false)} />
                 )}
               </div>
             </div>

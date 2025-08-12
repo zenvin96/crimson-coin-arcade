@@ -158,7 +158,19 @@
     "loginTitle": "登录您的账户",
     "loginDesc": "输入您的凭据以访问您的账户",
     "registerTitle": "创建账户",
-    "registerDesc": "填写下面的表单以创建您的账户"
+    "registerDesc": "填写下面的表单以创建您的账户",
+    "confirmPasswordLabel": "确认密码",
+    "confirmPasswordPlaceholder": "重新输入您的密码",
+    "orContinueWith": "或继续使用",
+    "signInWithGoogle": "使用 Google 登录",
+    "googleSignInFailTitle": "Google 登录失败",
+    "googleSignInFailDesc": "无法使用 Google 登录。请重试",
+    "noTokenReceived": "未收到来自 Google 的身份验证令牌",
+    "authenticationFailed": "身份验证失败。请重试",
+    "processingSignIn": "正在处理登录...",
+    "authenticationError": "身份验证错误",
+    "unknownError": "发生未知错误",
+    "redirectingHome": "正在重定向到主页..."
   },
   "theme": {
     "switchToLight": "切换到浅色模式",

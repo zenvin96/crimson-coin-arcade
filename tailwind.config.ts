@@ -106,6 +106,10 @@ export default {
           "0%": { transform: "translateX(-10px)", opacity: "0" },
           "100%": { transform: "translateX(0)", opacity: "1" },
         },
+        "infinite-scroll": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -114,6 +118,7 @@ export default {
         counter: "counter-animation 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         "fade-in": "fade-in 0.3s ease-in-out",
         "slide-in": "slide-in 0.3s ease-out",
+        "infinite-scroll": "infinite-scroll 5s linear infinite",
       },
       boxShadow: {
         soft: "0px 4px 8px rgba(0, 0, 0, 0.05)",
