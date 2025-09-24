@@ -136,6 +136,8 @@
     "logoutSuccessTitle": "Logged out",
     "logoutSuccessDesc": "You have been logged out successfully",
     "emailLabel": "Email",
+    "usernameLabel": "Username",
+    "usernamePlaceholder": "e.g. crypto_player",
     "emailPlaceholder": "youremail@example.com",
     "passwordLabel": "Password",
     "passwordPlaceholder": "••••••••",

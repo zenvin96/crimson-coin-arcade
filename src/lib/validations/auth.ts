@@ -6,6 +6,13 @@ const emailSchema = z
   .min(1, 'Email is required')
   .email('Invalid email address');
 
+// Username validation
+const usernameSchema = z
+  .string()
+  .min(1, 'Username is required')
+  .min(3, 'Username must be at least 3 characters')
+  .regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores');
+
 // Password validation with strength requirements
 const passwordSchema = z
   .string()
@@ -24,6 +31,7 @@ export const loginSchema = z.object({
 
 // Register schema
 export const registerSchema = z.object({
+  username: usernameSchema,
   email: emailSchema,
   password: passwordSchema,
   confirmPassword: z.string().min(1, 'Please confirm your password'),

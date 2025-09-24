@@ -218,6 +218,7 @@ const RegisterForm = ({ setMode, onSuccess }: { setMode: (mode: AuthMode) => voi
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
+      username: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -226,7 +227,7 @@ const RegisterForm = ({ setMode, onSuccess }: { setMode: (mode: AuthMode) => voi
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      await register(data.email, data.password);
+      await register(data.username, data.email, data.password);
       toast({
         title: t("auth.registerSuccessTitle"),
         description: t("auth.registerSuccessDesc"),
@@ -244,6 +245,26 @@ const RegisterForm = ({ setMode, onSuccess }: { setMode: (mode: AuthMode) => voi
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 min-h-[29rem]">
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-pink-400">
+                {t("auth.usernameLabel")}
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder={t("auth.usernamePlaceholder")}
+                  className="bg-neutral-800 border-neutral-700 focus:border-pink-500 focus:ring-0 focus:outline-none text-neutral-200 placeholder:text-neutral-500"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="email"

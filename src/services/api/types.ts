@@ -1,14 +1,14 @@
 // API Response Types
 
 export interface ApiResponse<T = unknown> {
-  success: boolean;
-  status: number;
-  message: string;
+  success?: boolean;
+  status?: 'success' | 'fail' | 'error' | number;
+  message?: string;
   data: T | null;
-  error: {
-    code: string;
+  error?: {
+    code?: string;
     details?: unknown;
-    timestamp: string;
+    timestamp?: string;
   } | null;
 }
 
@@ -16,6 +16,7 @@ export interface ApiResponse<T = unknown> {
 export interface User {
   id: string;
   email: string;
+  username?: string;
   role: 'USER' | 'ADMIN';
   createdAt: string;
 }
@@ -27,12 +28,14 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
+  username: string;
   email: string;
   password: string;
 }
 
 export interface AuthResponse {
-  accessToken: string;
+  accessToken?: string;
+  token?: string;
   user: User;
 }
 

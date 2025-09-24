@@ -136,6 +136,8 @@
     "logoutSuccessTitle": "已退出登录",
     "logoutSuccessDesc": "您已成功退出登录",
     "emailLabel": "邮箱",
+    "usernameLabel": "用户名",
+    "usernamePlaceholder": "例如: crypto_player",
     "emailPlaceholder": "youremail@example.com",
     "passwordLabel": "密码",
     "passwordPlaceholder": "••••••••",

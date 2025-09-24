@@ -43,18 +43,17 @@ apiClient.interceptors.request.use(
 // Response interceptor to handle errors
 apiClient.interceptors.response.use(
   (response) => {
-    // All responses are wrapped in ApiResponse format
     const apiResponse = response.data as ApiResponse;
-    
-    if (!apiResponse.success) {
+    // Accept both { success: true } and { status: 'success' }
+    const isSuccess = apiResponse?.success === true || apiResponse?.status === 'success' || (typeof apiResponse?.status === 'number' && apiResponse.status >= 200 && apiResponse.status < 300);
+    if (!isSuccess) {
       throw new ApiError(
-        apiResponse.error?.code || 'UNKNOWN_ERROR',
+        apiResponse?.error?.code || 'UNKNOWN_ERROR',
         response.status,
-        apiResponse.message,
-        apiResponse.error?.details
+        apiResponse?.message || 'Request failed',
+        apiResponse?.error?.details
       );
     }
-    
     return response;
   },
   (error: AxiosError<ApiResponse>) => {

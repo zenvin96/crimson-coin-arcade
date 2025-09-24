@@ -396,10 +396,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   // Real register function using API
-  const register = async (email: string, password: string) => {
+  const register = async (username: string, email: string, password: string) => {
     setIsLoading(true);
     try {
-      const response = await authApi.register({ email, password });
+      const response = await authApi.register({ username, email, password });
       setUser(response.user);
       setIsAuthenticated(true);
       

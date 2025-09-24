@@ -9,14 +9,14 @@ import {
 export const authApi = {
   /**
    * Register a new user
-   * @param data - Registration data (email, password)
+   * @param data - Registration data (username, email, password)
    * @returns Authentication response with token and user data
    */
   async register(data: RegisterRequest): Promise<AuthResponse> {
     const response = await api.post<AuthResponse>('/auth/register', data);
-    // Store the token after successful registration
-    if (response.accessToken) {
-      setToken(response.accessToken);
+    const token = response.accessToken || response.token;
+    if (token) {
+      setToken(token);
     }
     return response;
   },
@@ -28,9 +28,9 @@ export const authApi = {
    */
   async login(data: LoginRequest): Promise<AuthResponse> {
     const response = await api.post<AuthResponse>('/auth/login', data);
-    // Store the token after successful login
-    if (response.accessToken) {
-      setToken(response.accessToken);
+    const token = response.accessToken || response.token;
+    if (token) {
+      setToken(token);
     }
     return response;
   },
