@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hi-Lo Card Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style-v2.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Left Sidebar -->
+        <div class="game-sidebar">
+            <!-- Mode Tabs -->
+            <div class="mode-tabs">
+                <button class="mode-tab active" id="manual-tab">Manual</button>
+                <button class="mode-tab" id="auto-tab">Auto</button>
+            </div>
+
+            <!-- Bet Amount Section -->
+            <div class="bet-section">
+                <label class="input-label">
+                    <span class="label-text">Bet Amount</span>
+                    <div class="input-wrapper">
+                        <input type="number" id="bet-amount" class="bet-input" value="0.00" step="0.01" min="0">
+                        <div class="input-buttons">
+                            <button class="quick-btn" id="half-bet">½</button>
+                            <button class="quick-btn" id="double-bet">2×</button>
+                        </div>
+                        <div class="currency-icon">
+                            <i class="fab fa-bitcoin"></i>
+                        </div>
+                    </div>
+                    <div class="conversion-text">
+                        <span id="bet-conversion">0.00000000 BTC</span>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Auto Bet Settings (Hidden by default) -->
+            <div class="auto-settings" id="auto-settings" style="display: none;">
+                <div class="auto-setting-row">
+                    <label>Number of Bets</label>
+                    <input type="number" id="auto-bet-count" value="10" min="1" max="1000">
+                </div>
+                <div class="auto-setting-row">
+                    <label>Stop on Win</label>
+                    <input type="checkbox" id="auto-stop-win">
+                </div>
+                <div class="auto-setting-row">
+                    <label>Stop on Loss</label>
+                    <input type="checkbox" id="auto-stop-loss">
+                </div>
+                <div class="auto-setting-row">
+                    <label>Increase on Loss (%)</label>
+                    <input type="number" id="auto-increase-loss" value="0" min="0" max="100">
+                </div>
+            </div>
+
+            <!-- Game Controls -->
+            <div class="game-controls" id="manual-controls">
+                <button class="action-btn higher-btn" id="higher-btn" disabled>
+                    <span>Higher or Same</span>
+                    <i class="fas fa-chevron-up"></i>
+                    <span class="probability" id="higher-prob">46.15%</span>
+                </button>
+
+                <button class="action-btn lower-btn" id="lower-btn" disabled>
+                    <span>Lower or Same</span>
+                    <i class="fas fa-chevron-down"></i>
+                    <span class="probability" id="lower-prob">53.85%</span>
+                </button>
+
+                <button class="action-btn skip-btn" id="skip-btn" disabled>
+                    <span>Skip Card</span>
+                    <i class="fas fa-forward"></i>
+                </button>
+
+                <button class="action-btn cashout-btn" id="cashout-btn" disabled>
+                    <span>Cashout</span>
+                    <span id="cashout-multiplier">(1.00×)</span>
+                </button>
+            </div>
+
+            <!-- Start/Auto Button -->
+            <button class="bet-btn" id="bet-btn">BET</button>
+            <button class="bet-btn auto-btn" id="auto-bet-btn" style="display: none;">START AUTO</button>
+
+            <!-- Profit Display -->
+            <div class="profit-section">
+                <div class="profit-row">
+                    <label>Total Profit (<span id="total-multiplier">1.00×</span>)</label>
+                    <div class="profit-value">
+                        <span id="total-profit">0.00</span>
+                        <i class="fab fa-bitcoin"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Game Area -->
+        <div class="game-main">
+            <!-- Card Display Area -->
+            <div class="card-area" id="card-area">
+                <!-- Deck Stack (Left side) -->
+                <div class="deck-stack">
+                    <div class="deck-card" style="--index: 0"></div>
+                    <div class="deck-card" style="--index: 1"></div>
+                    <div class="deck-card" style="--index: 2"></div>
+                    <div class="deck-card" style="--index: 3"></div>
+                    <div class="deck-card" style="--index: 4"></div>
+                </div>
+
+                <!-- Cards Container -->
+                <div class="cards-container" id="cards-container">
+                    <!-- Previous cards will be added here dynamically -->
+
+                    <!-- Current Card (Always on the right) -->
+                    <div class="current-card-wrapper" id="current-card-wrapper">
+                        <div class="playing-card" id="current-card">
+                            <div class="card-back"></div>
+                            <div class="card-face" data-rank="?">
+                                <span class="card-rank" id="card-rank">?</span>
+                                <span class="card-suit" id="card-suit"></span>
+                            </div>
+                        </div>
+                        <div class="card-info">
+                            <span id="card-status">Click BET to start</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skip Button -->
+                <button class="skip-card-btn" id="skip-card-btn" disabled>
+                    <i class="fas fa-forward"></i>
+                </button>
+            </div>
+
+            <!-- Profit Info Boxes -->
+            <div class="profit-info">
+                <div class="profit-box">
+                    <div class="profit-label">
+                        <i class="fas fa-arrow-up"></i>
+                        Profit Higher (<span id="higher-multiplier">2.15×</span>)
+                    </div>
+                    <div class="profit-amount">
+                        <span id="higher-profit">0.00</span>
+                    </div>
+                </div>
+
+                <div class="profit-box">
+                    <div class="profit-label">
+                        <i class="fas fa-arrow-down"></i>
+                        Profit Lower (<span id="lower-multiplier">1.61×</span>)
+                    </div>
+                    <div class="profit-amount">
+                        <span id="lower-profit">0.00</span>
+                    </div>
+                </div>
+
+                <div class="profit-box">
+                    <div class="profit-label">
+                        Total Profit (<span id="current-multiplier">1.00×</span>)
+                    </div>
+                    <div class="profit-amount">
+                        <span id="current-profit">0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card History -->
+            <div class="card-history" id="card-history">
+                <!-- History cards will be added here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Footer -->
+    <div class="game-footer">
+        <div class="footer-left">
+            <button class="footer-btn" id="settings-btn">
+                <i class="fas fa-cog"></i>
+            </button>
+            <button class="footer-btn" id="stats-btn">
+                <i class="fas fa-chart-line"></i>
+            </button>
+            <button class="footer-btn" id="fullscreen-btn">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+
+        <div class="footer-center">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20'%3E%3Ctext x='50' y='15' text-anchor='middle' fill='%23fff' font-family='Arial' font-weight='bold'%3ESTAKE%3C/text%3E%3C/svg%3E" alt="Stake" class="stake-logo">
+        </div>
+
+        <div class="footer-right">
+            <button class="fairness-btn" id="fairness-btn">
+                <i class="fas fa-shield-alt"></i>
+                Fairness
+            </button>
+        </div>
+    </div>
+
+    <!-- Fairness Modal -->
+    <div class="modal" id="fairness-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Provably Fair</h3>
+                <button class="modal-close" id="close-fairness">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="fairness-row">
+                    <label>Server Seed (Hashed)</label>
+                    <input type="text" id="server-seed" readonly>
+                </div>
+                <div class="fairness-row">
+                    <label>Client Seed</label>
+                    <input type="text" id="client-seed" value="my-client-seed">
+                </div>
+                <div class="fairness-row">
+                    <label>Nonce</label>
+                    <input type="text" id="nonce" value="0" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="game-v2.js"></script>
+</body>
+</html>

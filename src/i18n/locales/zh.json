@@ -124,6 +124,78 @@
     "favorites": "收藏夹",
     "all": "全部"
   },
+  "originalGamesPage": {
+    "title": "原创游戏",
+    "description": "体验我们独家的原创游戏系列",
+    "searchPlaceholder": "搜索原创游戏...",
+    "all": "全部",
+    "popular": "热门",
+    "new": "最新",
+    "noGamesFound": "未找到游戏",
+    "crash": "碰撞",
+    "hilo": "高低",
+    "mines": "地雷",
+    "dice": "骰子"
+  },
+  "mines": {
+    "panel": {
+      "title": "投注与风险",
+      "betLabel": "投注金额",
+      "betHint": "请输入以 USD 计价的投注",
+      "quickSet": "快捷设置",
+      "riskLabel": "地雷数量（风险）",
+      "riskHint": "地雷越多 = 风险更高，倍率更高",
+      "start": "开始游戏",
+      "starting": "开始中...",
+      "cashout": "兑现",
+      "cashoutWithValue": "兑现（${{value}}）",
+      "cashingOut": "兑现中...",
+      "safeChance": "安全概率"
+    },
+    "dialog": {
+      "winTitle": "已兑现",
+      "winDesc": "您的奖金已计入余额。",
+      "loseTitle": "爆炸！你踩到地雷了",
+      "loseDesc": "下次好运。调整风险后再试一次。"
+    },
+    "stats": {
+      "bet": "投注",
+      "multiplier": "倍率",
+      "profit": "收益",
+      "cashout": "可兑现",
+      "currentMultiplier": "当前倍率"
+    },
+    "presets": {
+      "half": "1/2",
+      "double": "2倍",
+      "max": "最大",
+      "default": "默认",
+      "mid": "$500"
+    }
+  },
+  "crash": {
+    "description": "体验火箭碰撞游戏的刺激",
+    "betAmount": "投注金额",
+    "autoCashout": "自动兑现",
+    "off": "关闭",
+    "balance": "余额",
+    "profit": "收益",
+    "placeBet": "下注",
+    "betPlaced": "已下注: ${{amount}}",
+    "cashoutAt": "兑现 (${{amount}})",
+    "watching": "观看中",
+    "nextRound": "下一轮",
+    "crashed": "已坠毁",
+    "livePlayers": "在线玩家",
+    "totalBets": "总投注",
+    "playing": "游戏中...",
+    "dialog": {
+      "winTitle": "已兑现！",
+      "winDesc": "您的奖金已加入余额。",
+      "loseTitle": "坠毁了！",
+      "loseDesc": "祝下次好运！"
+    }
+  },
   "auth": {
     "loginSuccessTitle": "登录成功",
     "loginSuccessDesc": "欢迎回到 CrimsonCoin！",

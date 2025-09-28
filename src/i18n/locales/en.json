@@ -124,6 +124,78 @@
     "favorites": "Favorites",
     "all": "All"
   },
+  "originalGamesPage": {
+    "title": "Original Games",
+    "description": "Experience our exclusive collection of original games",
+    "searchPlaceholder": "Search original games...",
+    "all": "All",
+    "popular": "Popular",
+    "new": "New",
+    "noGamesFound": "No games found",
+    "crash": "Crash",
+    "hilo": "HiLo",
+    "mines": "Mines",
+    "dice": "Dice"
+  },
+  "mines": {
+    "panel": {
+      "title": "Bet & Risk",
+      "betLabel": "Bet Amount",
+      "betHint": "Enter your wager in USD",
+      "quickSet": "Quick Set",
+      "riskLabel": "Mines (risk)",
+      "riskHint": "More mines = higher risk & multiplier",
+      "start": "Start Game",
+      "starting": "Starting...",
+      "cashout": "Cash Out",
+      "cashoutWithValue": "Cash Out (${{value}})",
+      "cashingOut": "Cashouting...",
+      "safeChance": "Safe chance"
+    },
+    "dialog": {
+      "winTitle": "Cashed Out",
+      "winDesc": "Your winnings have been added to your balance.",
+      "loseTitle": "Boom! You hit a mine",
+      "loseDesc": "Better luck next time. Adjust your risk and try again."
+    },
+    "stats": {
+      "bet": "Bet",
+      "multiplier": "Multiplier",
+      "profit": "Profit",
+      "cashout": "Cashout",
+      "currentMultiplier": "Current Multiplier"
+    },
+    "presets": {
+      "half": "1/2",
+      "double": "2x",
+      "max": "MAX",
+      "default": "Default",
+      "mid": "$500"
+    }
+  },
+  "crash": {
+    "description": "Experience the thrill of the rocket crash game",
+    "betAmount": "Bet Amount",
+    "autoCashout": "Auto Cashout",
+    "off": "Off",
+    "balance": "Balance",
+    "profit": "Profit",
+    "placeBet": "Place Bet",
+    "betPlaced": "Bet Placed: ${{amount}}",
+    "cashoutAt": "Cash Out (${{amount}})",
+    "watching": "Watching",
+    "nextRound": "Next Round",
+    "crashed": "CRASHED",
+    "livePlayers": "Live Players",
+    "totalBets": "Total Bets",
+    "playing": "Playing...",
+    "dialog": {
+      "winTitle": "Cashed Out!",
+      "winDesc": "Your winnings have been added to your balance.",
+      "loseTitle": "Crashed!",
+      "loseDesc": "Better luck next time!"
+    }
+  },
   "auth": {
     "loginSuccessTitle": "Login successful",
     "loginSuccessDesc": "Welcome back to CrimsonCoin!",

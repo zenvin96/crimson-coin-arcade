@@ -1,0 +1,966 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: linear-gradient(135deg, #0f212e 0%, #1a2c38 100%);
+    color: #b1bad3;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Game Container */
+.game-container {
+    display: flex;
+    flex: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Left Sidebar */
+.game-sidebar {
+    width: 340px;
+    background: #213743;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Mode Tabs */
+.mode-tabs {
+    display: flex;
+    gap: 6px;
+    background: #1a2c38;
+    padding: 6px;
+    border-radius: 8px;
+}
+
+.mode-tab {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    color: #8a94a8;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.mode-tab.active {
+    background: #2f4553;
+    color: #fff;
+}
+
+.mode-tab:hover:not(.active) {
+    background: rgba(47, 69, 83, 0.5);
+}
+
+/* Bet Section */
+.bet-section {
+    background: #1a2c38;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.input-label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.label-text {
+    font-size: 12px;
+    color: #8a94a8;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.bet-input {
+    width: 100%;
+    background: #0f212e;
+    border: 1px solid #2f4553;
+    border-radius: 6px;
+    color: #fff;
+    padding: 14px 44px 14px 16px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+}
+
+.bet-input:focus {
+    outline: none;
+    border-color: #4a6377;
+}
+
+.input-buttons {
+    position: absolute;
+    right: 40px;
+    display: flex;
+    gap: 4px;
+}
+
+.quick-btn {
+    background: #2f4553;
+    border: none;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.quick-btn:hover {
+    background: #3a5163;
+}
+
+.currency-icon {
+    position: absolute;
+    right: 12px;
+    color: #f7931a;
+}
+
+.conversion-text {
+    font-size: 12px;
+    color: #8a94a8;
+}
+
+/* Auto Settings */
+.auto-settings {
+    background: #1a2c38;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.auto-setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.auto-setting-row:last-child {
+    margin-bottom: 0;
+}
+
+.auto-setting-row label {
+    font-size: 13px;
+    color: #8a94a8;
+}
+
+.auto-setting-row input[type="number"] {
+    width: 90px;
+    background: #0f212e;
+    border: 1px solid #2f4553;
+    border-radius: 6px;
+    color: #fff;
+    padding: 8px 10px;
+    font-size: 13px;
+    text-align: right;
+}
+
+.auto-setting-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* Game Controls */
+.game-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background: #2f4553;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.action-btn:hover:not(:disabled) {
+    background: #3a5163;
+    transform: translateY(-1px);
+}
+
+.higher-btn i {
+    color: #ffce00;
+}
+
+.lower-btn i {
+    color: #7f47fd;
+}
+
+.skip-btn {
+    background: #1a2c38;
+}
+
+.cashout-btn {
+    background: #00e701;
+    color: #000;
+}
+
+.cashout-btn:hover:not(:disabled) {
+    background: #00ff01;
+}
+
+.probability {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* Bet Button */
+.bet-btn {
+    width: 100%;
+    padding: 18px;
+    background: #00e701;
+    border: none;
+    border-radius: 8px;
+    color: #000;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+.bet-btn:hover {
+    background: #00ff01;
+    transform: translateY(-1px);
+}
+
+.bet-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.auto-btn {
+    background: #ff3838;
+}
+
+.auto-btn.running {
+    background: #ff3838;
+}
+
+/* Profit Section */
+.profit-section {
+    background: #1a2c38;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.profit-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profit-row label {
+    font-size: 13px;
+    color: #8a94a8;
+}
+
+.profit-value {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.profit-value i {
+    color: #f7931a;
+}
+
+/* Main Game Area */
+.game-main {
+    flex: 1;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    background: #0f212e;
+}
+
+/* Card Area */
+.card-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    min-height: 240px;
+    gap: 20px;
+    padding: 30px 0;
+}
+
+/* Cards Container */
+.cards-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    transition: all 0.5s ease;
+    height: 140px;
+}
+
+/* Deck Stack */
+.deck-stack {
+    position: relative;
+    width: 100px;
+    height: 140px;
+    flex-shrink: 0;
+}
+
+.deck-card {
+    position: absolute;
+    width: 100px;
+    height: 140px;
+    background: linear-gradient(135deg, #2f4553 0%, #1a2c38 100%);
+    border: 1px solid #3a5163;
+    border-radius: 8px;
+    transform: translateY(calc(var(--index) * -2px));
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.deck-card::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1px solid #4a6377;
+    border-radius: 6px;
+}
+
+.deck-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(circle at center, transparent 30%, rgba(47, 69, 83, 0.1) 30%),
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 8px,
+            rgba(58, 81, 99, 0.1) 8px,
+            rgba(58, 81, 99, 0.1) 16px
+        );
+    opacity: 0.5;
+}
+
+/* Playing Card */
+.current-card-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.playing-card {
+    width: 100px;
+    height: 140px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    border-radius: 8px;
+}
+
+.playing-card.flipped {
+    transform: rotateY(180deg);
+}
+
+.playing-card.small {
+    width: 70px;
+    height: 98px;
+}
+
+/* Previous Cards */
+.prev-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.8;
+    transition: all 0.5s ease;
+}
+
+.prev-card .playing-card {
+    width: 70px;
+    height: 98px;
+}
+
+.card-face,
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.card-face {
+    background: #ffffff;
+    color: #000;
+    transform: rotateY(0deg);
+    position: relative;
+    border: 1px solid #d0d0d0;
+}
+
+.card-face::before,
+.card-face::after {
+    content: attr(data-rank);
+    position: absolute;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.card-face::before {
+    top: 6px;
+    left: 6px;
+}
+
+.card-face::after {
+    bottom: 6px;
+    right: 6px;
+    transform: rotate(180deg);
+}
+
+.card-back {
+    background: linear-gradient(135deg, #1a3545 0%, #0f212e 100%);
+    border: 1px solid #2f4553;
+    transform: rotateY(180deg);
+    position: relative;
+    overflow: hidden;
+}
+
+.card-back::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1px solid #3a5163;
+    border-radius: 6px;
+}
+
+.card-back::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(circle at center, transparent 30%, rgba(47, 69, 83, 0.1) 30%),
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 8px,
+            rgba(58, 81, 99, 0.1) 8px,
+            rgba(58, 81, 99, 0.1) 16px
+        );
+}
+
+.card-rank {
+    font-size: 36px;
+    line-height: 1;
+    font-weight: 700;
+    margin-bottom: -4px;
+}
+
+.card-suit {
+    font-size: 32px;
+    line-height: 1;
+}
+
+.card-suit.hearts,
+.card-suit.diamonds {
+    color: #ff0000;
+}
+
+.card-suit.spades,
+.card-suit.clubs {
+    color: #000000;
+}
+
+/* Small card styles */
+.playing-card.small .card-rank {
+    font-size: 24px;
+}
+
+.playing-card.small .card-suit {
+    font-size: 20px;
+}
+
+.playing-card.small .card-face::before,
+.playing-card.small .card-face::after {
+    font-size: 9px;
+}
+
+.card-info {
+    font-size: 14px;
+    color: #8a94a8;
+    text-align: center;
+}
+
+/* Skip Button */
+.skip-card-btn {
+    width: 48px;
+    height: 48px;
+    background: #2f4553;
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    font-size: 18px;
+}
+
+.skip-card-btn:hover:not(:disabled) {
+    background: #3a5163;
+    transform: scale(1.1);
+}
+
+.skip-card-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.skip-card-mobile:hover:not(:disabled) {
+    background: #3a5163;
+    transform: scale(1.1);
+}
+
+/* Profit Info */
+.profit-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.profit-box {
+    background: #1a2c38;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.profit-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #8a94a8;
+    margin-bottom: 8px;
+}
+
+.profit-label i.fa-arrow-up {
+    color: #ffce00;
+}
+
+.profit-label i.fa-arrow-down {
+    color: #7f47fd;
+}
+
+.profit-amount {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* Card History */
+.card-history {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 16px 0;
+    align-items: center;
+    justify-content: flex-start;
+    scrollbar-width: thin;
+}
+
+.card-history::-webkit-scrollbar {
+    height: 6px;
+}
+
+.card-history::-webkit-scrollbar-thumb {
+    background: #3a5163;
+    border-radius: 3px;
+}
+
+.history-card {
+    position: relative;
+    min-width: 60px;
+    height: 84px;
+    background: #fff;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    border: 1px solid #d0d0d0;
+    flex-shrink: 0;
+}
+
+.history-card .card-value {
+    font-size: 20px;
+    color: #000;
+    font-weight: 700;
+}
+
+.history-card .card-suit-small {
+    font-size: 18px;
+}
+
+.history-card .multiplier {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #2f4553;
+    color: #fff;
+    padding: 4px;
+    font-size: 11px;
+    text-align: center;
+    border-radius: 0 0 8px 8px;
+}
+
+.history-card .result {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 2px;
+    font-size: 10px;
+    text-align: center;
+    color: #fff;
+    border-radius: 8px 8px 0 0;
+}
+
+.history-card .result.win {
+    background: #00e701;
+    color: #000;
+}
+
+.history-card .result.loss {
+    background: #ff3838;
+}
+
+.history-card.start-card {
+    opacity: 0.7;
+}
+
+/* Game Footer */
+.game-footer {
+    height: 72px;
+    background: #213743;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+}
+
+.footer-left,
+.footer-right {
+    display: flex;
+    gap: 8px;
+}
+
+.footer-btn {
+    background: transparent;
+    border: none;
+    color: #8a94a8;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    font-size: 18px;
+}
+
+.footer-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.stake-logo {
+    height: 24px;
+    opacity: 0.5;
+}
+
+.fairness-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #2f4553;
+    border: none;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.fairness-btn:hover {
+    background: #3a5163;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: #213743;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.modal-header h3 {
+    color: #fff;
+    font-size: 18px;
+}
+
+.modal-close {
+    background: transparent;
+    border: none;
+    color: #8a94a8;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #fff;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.fairness-row {
+    margin-bottom: 16px;
+}
+
+.fairness-row label {
+    display: block;
+    font-size: 12px;
+    color: #8a94a8;
+    margin-bottom: 6px;
+}
+
+.fairness-row input {
+    width: 100%;
+    background: #0f212e;
+    border: 1px solid #2f4553;
+    border-radius: 6px;
+    color: #fff;
+    padding: 14px;
+    font-size: 14px;
+    font-family: monospace;
+}
+
+/* Animations */
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(200px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideToLeft {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-150px);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.current-card-wrapper.new-card {
+    animation: slideInFromRight 0.5s ease;
+}
+
+.prev-card-wrapper.sliding {
+    animation: slideToLeft 0.5s ease forwards;
+}
+
+.history-card {
+    animation: slideInFromRight 0.3s ease;
+}
+
+.cashout-btn:not(:disabled) {
+    animation: pulse 2s infinite;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .game-container {
+        flex-direction: column;
+    }
+
+    .game-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .profit-info {
+        grid-template-columns: 1fr;
+    }
+
+    .card-area {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .deck-stack {
+        display: none;
+    }
+
+    .prev-card-wrapper {
+        position: static;
+        opacity: 1;
+    }
+
+    .skip-card-mobile {
+        display: block;
+        position: static;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 640px) {
+    .game-sidebar {
+        padding: 12px;
+    }
+
+    .game-main {
+        padding: 16px;
+    }
+
+    .playing-card {
+        width: 80px;
+        height: 112px;
+    }
+
+    .playing-card.small {
+        width: 60px;
+        height: 84px;
+    }
+
+    .card-rank {
+        font-size: 28px;
+    }
+
+    .card-suit {
+        font-size: 24px;
+    }
+
+    .playing-card.small .card-rank {
+        font-size: 20px;
+    }
+
+    .playing-card.small .card-suit {
+        font-size: 16px;
+    }
+
+    .history-card {
+        min-width: 50px;
+        height: 70px;
+    }
+
+    .history-card .card-value {
+        font-size: 16px;
+    }
+
+    .history-card .card-suit-small {
+        font-size: 14px;
+    }
+
+    .game-footer {
+        padding: 0 12px;
+    }
+
+    .footer-btn {
+        padding: 8px;
+    }
+}

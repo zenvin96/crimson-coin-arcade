@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PixiJS Hi-Lo Game</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Sound Toggle Button -->
+    <button class="sound-toggle" id="sound-toggle" title="Toggle Sound">
+      <i class="fas fa-volume-up"></i>
+    </button>
+
+    <div class="container">
+      <div class="game-wrapper">
+        <!-- 左侧投注区域 -->
+        <div class="bet-panel">
+          <!-- 模式选择标签 -->
+          <div class="mode-tabs">
+            <button class="mode-tab active" id="manual-tab">Manual</button>
+            <button class="mode-tab" id="auto-tab">Auto</button>
+          </div>
+          <!-- 余额显示 -->
+          <div class="balance-section">
+            <div class="balance-label">Balance</div>
+            <div class="balance-value" id="balance-value">$1,000.00</div>
+          </div>
+
+          <div class="bet-amount-section">
+            <div class="bet-amount-label">Bet Amount</div>
+            <div class="bet-amount-value" id="bet-amount-display">$0.00</div>
+            <div class="bet-amount-input">
+              <input type="text" id="bet-amount" value="0.00000000" />
+              <div class="bet-currency-btns">
+                <button class="currency-btn">
+                  <i class="fas fa-dollar-sign"></i>
+                </button>
+                <button class="currency-btn">
+                  <i class="fab fa-bitcoin"></i>
+                </button>
+              </div>
+            </div>
+            <div class="bet-multiplier-btns">
+              <button class="bet-btn" id="half-bet">½</button>
+              <button class="bet-btn" id="double-bet">2×</button>
+            </div>
+            <div class="quick-bet-amounts">
+              <button class="quick-bet-btn" data-amount="1">$1</button>
+              <button class="quick-bet-btn" data-amount="5">$5</button>
+              <button class="quick-bet-btn" data-amount="10">$10</button>
+              <button class="quick-bet-btn" data-amount="25">$25</button>
+              <button class="quick-bet-btn" data-amount="100">$100</button>
+              <button class="quick-bet-btn" id="max-bet">MAX</button>
+            </div>
+          </div>
+
+          <div class="probability-section">
+            <div class="prob-row">
+              <span class="prob-label">Higher</span>
+              <span class="prob-arrow up">↑</span>
+              <span class="prob-value" id="prob-higher">46.15%</span>
+            </div>
+            <div class="prob-row">
+              <span class="prob-label">Same</span>
+              <div class="prob-equals">=</div>
+              <span class="prob-value" id="prob-same">7.69%</span>
+            </div>
+            <div class="prob-row">
+              <span class="prob-label">Lower</span>
+              <span class="prob-arrow down">↓</span>
+              <span class="prob-value" id="prob-lower">46.15%</span>
+            </div>
+          </div>
+
+          <button class="skip-card-btn" id="skip-card-btn">
+            Skip Card <i class="fas fa-forward"></i>
+          </button>
+
+          <!-- 自动投注设置 (默认隐藏) -->
+          <div class="auto-bet-section" id="auto-bet-section" style="display: none;">
+            <div class="auto-bet-row">
+              <label>Number of Bets</label>
+              <input type="number" id="auto-bet-count" value="10" min="1" max="1000" />
+            </div>
+            <div class="auto-bet-row">
+              <label>Stop on Win</label>
+              <input type="checkbox" id="auto-stop-win" />
+            </div>
+            <div class="auto-bet-row">
+              <label>Stop on Loss</label>
+              <input type="checkbox" id="auto-stop-loss" />
+            </div>
+            <div class="auto-bet-row">
+              <label>Reset on Win</label>
+              <input type="checkbox" id="auto-reset-win" />
+            </div>
+            <div class="auto-bet-row">
+              <label>Increase on Loss (%)</label>
+              <input type="number" id="auto-increase-loss" value="0" min="0" max="100" step="1" />
+            </div>
+          </div>
+
+          <button class="bet-action-btn" id="start-bet-btn">
+            <span class="btn-text" id="bet-btn-text">BET</span>
+            <span class="btn-hotkey">(Space)</span>
+          </button>
+
+          <button class="bet-action-btn" id="auto-bet-btn" style="display: none;">
+            <span class="btn-text" id="auto-btn-text">START AUTO</span>
+          </button>
+        </div>
+
+        <!-- 中央游戏区域 -->
+        <div class="game-area">
+          <div class="cards-container">
+            <div class="card-position left-card">
+              <div class="card-display">
+                <div class="card-symbol">K</div>
+                <div class="card-suit">♠</div>
+              </div>
+              <div class="card-label">KING BEING<br />THE HIGHEST</div>
+            </div>
+
+            <div class="card-position center-card">
+              <div id="pixi-canvas-container">
+                <!-- PixiJS Canvas will be inserted here by script -->
+              </div>
+              <div class="current-card-text">
+                Current Card: <span id="current-card-text">-</span>
+              </div>
+              <div class="multiplier-text">
+                Multiplier: <span id="multiplier">1.00</span>×
+              </div>
+            </div>
+
+            <div class="card-position right-card">
+              <div class="card-display">
+                <div class="card-symbol">A</div>
+                <div class="card-suit">♠</div>
+              </div>
+              <div class="card-label">ACE BEING<br />THE LOWEST</div>
+            </div>
+          </div>
+
+          <div class="payout-info">
+            <div class="payout-box">
+              <div class="payout-label">
+                Profit Higher (<span id="higher-multiplier">12.87</span>×)
+              </div>
+              <div class="payout-value">
+                <i class="fas fa-arrow-up"></i>
+                <span id="higher-profit">0.00000000</span>
+                <i class="fab fa-bitcoin"></i>
+              </div>
+            </div>
+
+            <div class="payout-box">
+              <div class="payout-label">
+                Profit Lower (<span id="lower-multiplier">1.07</span>×)
+              </div>
+              <div class="payout-value">
+                <i class="fas fa-arrow-down"></i>
+                <span id="lower-profit">0.00000000</span>
+                <i class="fab fa-bitcoin"></i>
+              </div>
+            </div>
+
+            <div class="payout-box">
+              <div class="payout-label">Total Profit (1.00×)</div>
+              <div class="payout-value">
+                <span id="total-profit">0.00000000</span>
+                <i class="fab fa-bitcoin"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="guess-controls">
+            <button id="lower-button" class="guess-btn lower-btn">
+              <span>Lower</span>
+              <span class="hotkey">(L)</span>
+            </button>
+            <button id="higher-button" class="guess-btn higher-btn">
+              <span>Higher</span>
+              <span class="hotkey">(H)</span>
+            </button>
+            <button id="cashout-button" class="guess-btn cashout-btn">
+              <span>Cash Out</span>
+              <span class="hotkey">(C)</span>
+            </button>
+          </div>
+
+          <div class="card-history">
+            <!-- 卡片历史区域，会由JS动态填充 -->
+          </div>
+
+          <!-- 统计信息 -->
+          <div class="stats-section">
+            <div class="stat-item">
+              <span class="stat-label">Wins:</span>
+              <span class="stat-value" id="stat-wins">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Losses:</span>
+              <span class="stat-value" id="stat-losses">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Total Profit:</span>
+              <span class="stat-value" id="stat-profit">$0.00</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Best Win:</span>
+              <span class="stat-value" id="stat-best-win">0x</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部公平性验证区域，默认隐藏 -->
+      <div class="fairness-panel">
+        <div class="fairness-toggle">
+          Fairness <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="provably-fair-verify" style="display: none">
+          <div class="fairness-row">
+            <label>Unhashed Server Seed:</label>
+            <span id="verify-server-seed"></span>
+          </div>
+          <div class="fairness-row">
+            <label>Client Seed Used:</label>
+            <span id="verify-client-seed"></span>
+          </div>
+          <div class="fairness-row">
+            <label>Nonce Used:</label>
+            <span id="verify-nonce">0</span>
+          </div>
+          <div class="fairness-row">
+            <label>Combined Seed String:</label>
+            <span id="verify-combined-seed"></span>
+          </div>
+          <details>
+            <summary>Show Full Shuffled Deck</summary>
+            <pre id="verify-shuffled-deck"></pre>
+          </details>
+        </div>
+      </div>
+    </div>
+
+    <!-- 客户端种子输入区域，隐藏起来但仍然在DOM中 -->
+    <div style="display: none">
+      <input type="text" id="client-seed" value="default-client-seed" />
+      <span id="hashed-server-seed"></span>
+      <span id="nonce">0</span>
+      <span id="next-payout">-</span>
+      <p id="result-message"></p>
+      <button id="start-button">Start</button>
+    </div>
+
+    <!-- Win/Loss Overlay -->
+    <div class="result-overlay" id="result-overlay">
+      <div class="result-content">
+        <div class="result-icon" id="result-icon"></div>
+        <div class="result-text" id="result-text"></div>
+        <div class="result-amount" id="result-amount"></div>
+      </div>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.2.4/pixi.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="game.js"></script>
+  </body>
+</html>

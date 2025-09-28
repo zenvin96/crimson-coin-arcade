@@ -16,7 +16,7 @@ const GameCard = ({ game }: GameProps) => {
         className={`flex-1 ${game.color} flex items-center justify-center p-4 relative`}
       >
         <div className="absolute top-2 right-2 bg-black/30 rounded-full px-2 py-1 text-xs text-white">
-          SLOTS
+          ORIGINALS
         </div>
         <div className="text-white text-4xl font-bold">
           {game.name.slice(0, 1)}

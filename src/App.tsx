@@ -22,6 +22,8 @@ import SettingsPage from "./pages/SettingsPage";
 import LogoutPage from "./pages/LogoutPage";
 import AuthCallback from "./pages/AuthCallback";
 import AuthError from "./pages/AuthError";
+import MinesPage from "./pages/MinesPage";
+import CrashPage from "./pages/CrashPage";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +40,8 @@ const App = () => (
             <Route path="/all-games" element={<AllGames />} />
             <Route path="/tournaments" element={<TournamentsPage />} />
             <Route path="/original-games" element={<OriginalGamesPage />} />
+          <Route path="/original-games/mines" element={<MinesPage />} />
+          <Route path="/original-games/crash" element={<CrashPage />} />
             <Route path="/slot-machines" element={<SlotMachinesPage />} />
             <Route path="/table-games" element={<TableGamesPage />} />
             <Route path="/live-casino" element={<LiveCasinoPage />} />

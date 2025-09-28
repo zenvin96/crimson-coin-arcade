@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a2b38">
+    <title>Enhanced Rocket Crash Game</title>
+    <link rel="stylesheet" href="rocket_crash.css">
+</head>
+<body>
+    <div id="stars-container"></div>
+    <div id="main-wrapper">
+        <div id="game-container">
+            <div id="graph-container">
+                <div id="multiplier-display">
+                    <span class="multiplier-value">1.00x</span>
+                    <span class="multiplier-shadow"></span>
+                </div>
+                <div id="round-timer"></div>
+                <canvas id="crash-graph"></canvas>
+                <canvas id="effects-layer"></canvas>
+                <div id="crash-message"></div>
+            </div>
+            <div id="controls-container">
+                <div class="stats-row">
+                    <div class="balance-container">
+                        <span class="label">Balance:</span>
+                        <span id="balance" class="value">1000.00</span>
+                    </div>
+                    <div class="profit-container">
+                        <span class="label">Profit:</span>
+                        <span id="profit" class="value">0.00</span>
+                    </div>
+                </div>
+                <div class="betting-controls">
+                    <div class="input-group">
+                        <label for="bet-amount">Bet Amount</label>
+                        <div class="input-wrapper">
+                            <span class="currency">$</span>
+                            <input type="number" id="bet-amount" value="10" min="1" step="1">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="auto-cashout">Auto Cashout</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="auto-cashout" placeholder="Off" min="1.01" step="0.01">
+                            <span class="suffix">x</span>
+                        </div>
+                    </div>
+                </div>
+                <button id="action-button" class="bet-button">
+                    <span class="button-text">Place Bet</span>
+                    <span class="button-glow"></span>
+                </button>
+                <div id="status-display"></div>
+            </div>
+        </div>
+        <div id="players-panel">
+            <div class="panel-header">
+                <h3>Live Players (<span id="player-count">0</span>)</h3>
+                <div class="total-bets">Total: $<span id="total-bets">0</span></div>
+            </div>
+            <div id="players-list"></div>
+        </div>
+    </div>
+    <script src="rocket_crash.js"></script>
+</body>
+</html>

@@ -1,88 +1,50 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides comprehensive guidance to AI assistants (Claude Code, Cursor, etc.) when working with the 赤币街机 (Crimson Coin Arcade) codebase. All rules and specifications here are mandatory and must be strictly followed.
 
-## Project Overview
+## 🎯 Project Overview
 
-Crimson Coin Arcade (赤币街机) is a modern cryptocurrency gambling/gaming platform built with React 18, TypeScript 5, and Vite. The project uses a comprehensive UI component library (Shadcn/UI) with Tailwind CSS for styling.
-
-## Essential Commands
-
-### Development
-```bash
-npm run dev         # Start development server on port 8080
-npm run build       # Build for production
-npm run build:dev   # Build for development environment
-npm run preview     # Preview production build locally
-npm run lint        # Run ESLint checks
-```
-
-### Testing
-**Note**: No test infrastructure is currently set up. When implementing tests, consider using Vitest as mentioned in README.md.
-
-## Architecture Overview
+**赤币街机 (Crimson Coin Arcade)** - A modern cryptocurrency gambling/gaming platform built with React 18, TypeScript 5, and Vite.
 
 ### Technology Stack
 - **Framework**: React 18.3.1 with TypeScript 5.5.3
 - **Build Tool**: Vite 5.4.1 with React SWC plugin
-- **UI Components**: Shadcn/UI (50+ components in src/components/ui/)
-- **Styling**: Tailwind CSS with custom theme configuration
-- **State Management**: React Context API (AppContext)
-- **Data Fetching**: TanStack Query (React Query)
+- **UI Library**: Shadcn/UI (50+ components)
+- **Styling**: Tailwind CSS with custom theme
+- **State Management**: React Context API + TanStack Query
 - **Forms**: React Hook Form with Zod validation
-- **Internationalization**: i18next (English and Chinese support)
-- **Routing**: React Router DOM 6
+- **Internationalization**: i18next (English/Chinese)
+- **Routing**: React Router DOM v6
 
-### Key Architectural Patterns
+## 📦 Essential Commands
 
-1. **Component Organization**:
-   - `src/components/ui/`: Base Shadcn/UI components (Button, Card, Dialog, etc.)
-   - `src/components/layout/`: Layout components (AppLayout, Sidebar, Header)
-   - `src/components/sections/`: Page-specific sections (Hero, GameShowcase)
-   - `src/components/games/`: Game-related components
+```bash
+npm run dev         # Start development server (port 8080)
+npm run build       # Production build
+npm run build:dev   # Development build
+npm run preview     # Preview production build
+npm run lint        # Run ESLint checks
+```
 
-2. **State Management**:
-   - Global state via AppContext (src/contexts/AppContext.tsx)
-   - Authentication state, theme preferences, and user session handled centrally
-   - Component-level state with useState/useReducer
+**Note**: No test infrastructure currently exists. When implementing tests, use Vitest.
 
-3. **API Services**:
-   - Mock data currently in use (src/services/)
-   - Services for games, winners, token prices, and exchange rates
-   - TanStack Query for data fetching and caching
+## ⚡ CRITICAL DEVELOPMENT RULES
 
-4. **Styling Approach**:
-   - Tailwind CSS with custom configuration
-   - CSS variables for theming (defined in globals.css)
-   - Dark/light mode support via next-themes
-   - 8px grid system for spacing
-   - Custom color palette: Primary (#E11D48), Accent (#F59E0B)
+### 1. TypeScript Mandatory
+- **ALL files must use TypeScript** (.tsx/.ts extensions)
+- **NEVER use `any` type** - define proper types
+- **Dual config awareness**:
+  - `tsconfig.json`: Base config (less strict)
+  - `tsconfig.app.json`: App config (strict mode enabled)
+- **Path alias**: `@/*` → `./src/*`
 
-5. **Internationalization**:
-   - Language files in src/i18n/locales/
-   - Automatic language detection
-   - Support for English (en) and Chinese (zh)
+### 2. Strict Naming Conventions
+- **Components**: PascalCase (e.g., `GameCard.tsx`, `HeroSection.tsx`)
+- **Functions/Variables**: camelCase (e.g., `toggleTheme`, `setIsLoading`)
+- **Constants**: UPPER_SNAKE_CASE (e.g., `API_URL`, `MAX_ATTEMPTS`)
+- **Files**: Match exported component name, use PascalCase
 
-## TypeScript Configuration
-
-**Important**: There's a configuration split:
-- `tsconfig.json`: Disables some strict checks (noImplicitAny: false, noUnusedParameters: false)
-- `tsconfig.app.json`: Enables strict mode for application code
-- Path alias configured: `@/*` → `./src/*`
-
-When working with TypeScript, be aware that the app config is stricter than the base config.
-
-## Development Guidelines
-
-### Code Style Requirements
-- Use TypeScript for all files (.tsx/.ts)
-- Components: PascalCase (e.g., GameCard.tsx)
-- Functions/variables: camelCase (e.g., toggleTheme)
-- Constants: UPPER_SNAKE_CASE (e.g., API_URL)
-- Prefer functional components with hooks
-- Follow single responsibility principle
-
-### Import Order
+### 3. Import Order (MUST follow exactly)
 1. React and React-related imports
 2. Third-party libraries
 3. Project contexts and hooks
@@ -91,42 +53,259 @@ When working with TypeScript, be aware that the app config is stricter than the 
 6. Types
 7. Styles
 
+### 4. Component Patterns
+- **ONLY functional components with hooks** (no class components)
+- **Single responsibility principle** - small, focused components
+- **Composition over inheritance**
+- **NO COMMENTS unless explicitly requested**
+
+## 🏗️ Architecture Specifications
+
+### Folder Structure
+```
+src/
+├── components/           # UI Components
+│   ├── ui/              # Base Shadcn/UI components (Button, Card, Dialog, etc.)
+│   ├── layout/          # Layout components (AppLayout, Sidebar, Header)
+│   ├── sections/        # Page-specific sections (Hero, GameShowcase)
+│   └── games/           # Game-related components
+├── contexts/            # React Context providers (AppContext)
+├── hooks/               # Custom React hooks
+├── pages/               # Route page components
+├── services/            # API calls and data services
+├── types/               # TypeScript type definitions
+├── lib/                 # Utility functions and constants
+└── i18n/               # Internationalization
+    └── locales/        # Language files (en.json, zh.json)
+```
+
+### State Management Strategy
+- **Global State**: React Context API via `AppContext`
+  - Authentication state
+  - Theme preferences
+  - User session
+- **Server State**: TanStack Query for API data
+- **Form State**: React Hook Form
+- **Local State**: useState/useReducer
+
+### Service Layer
+- All API calls in `src/services/`
+- Currently using mock data
+- TypeScript types for all API responses
+- TanStack Query for caching
+
+## 🎨 Style and Design System
+
+### Color Palette
+```css
+/* Primary Colors */
+--primary: #E11D48;        /* Red - main brand color */
+--accent: #F59E0B;         /* Gold - secondary emphasis */
+
+/* Semantic Colors */
+--success: #10B981;
+--warning: #F59E0B;
+--error: #EF4444;
+--info: #3B82F6;
+
+/* Backgrounds */
+--dark-bg: #18181B;        /* Dark mode */
+--light-bg: #FAFAFA;       /* Light mode */
+```
+
+### Spacing (8px Grid System)
+- Use only: 4px, 8px, 12px, 16px, 24px, 32px, 48px, 64px
+- Tailwind classes: `space-x-1`, `p-2`, `m-4`, etc.
+
+### Typography Scale
+```
+H1: 2.5rem (40px)
+H2: 2rem (32px)
+H3: 1.5rem (24px)
+H4: 1.25rem (20px)
+Body: 1rem (16px)
+Small: 0.875rem (14px)
+```
+
+### Border Radius
+- Small: `rounded-sm` (2px)
+- Default: `rounded` (4px)
+- Medium: `rounded-md` (8px)
+- Large: `rounded-lg` (16px)
+- Full: `rounded-full`
+
+### Shadows
+- Small: `shadow-sm`
+- Default: `shadow`
+- Medium: `shadow-md`
+- Large: `shadow-lg`
+- Extra Large: `shadow-xl`
+
+### Animation Durations
+- Ultra Fast: 100ms
+- Fast: 200ms
+- Normal: 300ms
+- Slow: 500ms
+- Ultra Slow: 700ms
+
+## 🧩 UI Component Guidelines
+
+### Buttons
+- **Primary**: bg-primary text-white hover:bg-primary/90
+- **Secondary**: border border-primary text-primary hover:bg-primary/10
+- **Link**: text-primary hover:underline
+- Height: 40px (2.5rem)
+- Padding: px-3 py-2
+
+### Cards
+- Background: bg-white dark:bg-gray-800
+- Border: border border-gray-200 dark:border-gray-700
+- Border Radius: rounded-md (8px)
+- Shadow: shadow-sm to shadow-md
+- Padding: p-4 (16px) to p-6 (24px)
+
+### Input Fields
+- Height: h-10 (40px)
+- Background: bg-white dark:bg-gray-800
+- Border: border-gray-300 dark:border-gray-600
+- Focus: focus:border-primary focus:ring-primary
+- Border Radius: rounded (4px)
+- Padding: px-3 py-2
+
+### Icons
+- Default: w-6 h-6 (24px)
+- Small: w-4 h-4 (16px)
+- Large: w-8 h-8 (32px)
+
+## ✅ Code Quality Standards
+
+### ESLint Rules
+- Must pass all ESLint checks
+- Run `npm run lint` before committing
+- No unused variables or imports
+- Consistent code formatting
+
+### Performance Optimization
+- Use `React.memo` for expensive components
+- Apply `useMemo` for complex calculations
+- Implement `useCallback` for event handlers
+- Lazy load images and routes
+- Show loading states and skeleton screens
+
+### Testing Requirements
+- Target: 80% coverage minimum
+- Use Vitest for unit tests
+- Follow AAA pattern: Arrange, Act, Assert
+- Test critical user flows
+
+## 🔒 Security Best Practices
+- NEVER expose or log secrets/keys
+- NEVER commit credentials
+- Validate all user inputs
+- Sanitize data before rendering
+- Use HTTPS for all external requests
+
+## ♿ Accessibility Requirements
+
+### Mandatory Standards
+- Text contrast ratio: 4.5:1 minimum
+- All interactive elements keyboard navigable
+- ARIA labels for icon buttons
+- Form labels for all inputs
+- Focus indicators visible
+- Alt text for images
+
+### Responsive Design
+- Mobile-first approach
+- Breakpoints:
+  - Mobile: 0px
+  - Tablet: 640px (sm:)
+  - Laptop: 1024px (lg:)
+  - Desktop: 1280px (xl:)
+  - Large: 1536px (2xl:)
+
+## 📝 Git Workflow
+
+### Branch Strategy
+- Main branch: `main`
+- Feature branches: `feature/description`
+- Fix branches: `fix/description`
+
+### Commit Convention (Mandatory)
+```
+feat: New feature
+fix: Bug fix
+docs: Documentation update
+style: Style changes (formatting, etc.)
+refactor: Code restructuring
+test: Test additions/changes
+chore: Build process or tool changes
+perf: Performance improvements
+```
+
 ### AI Collaboration
-- The project actively uses AI assistance (see CURSOR_GUIDE.md)
-- AI-generated code must be reviewed
-- Mark AI contributions in commits with [AI辅助] or [AI-assisted]
+- Mark AI-assisted code with `[AI辅助]` or `[AI-assisted]` in commits
+- All AI-generated code must be reviewed
+- Follow CURSOR_GUIDE.md for AI best practices
 
-### Key Features to Understand
-1. **Multi-currency Support**: USDT, BTC, ETH, MYR, EUR, USD
-2. **Game Categories**: Slots, Table Games, Live Casino, Jackpots, Originals, Sports Betting
-3. **Authentication**: Login/logout with session management
-4. **Theme System**: Dark/light mode toggle
-5. **Responsive Design**: Mobile-first approach with specific mobile navigation
+## 🚀 Development Workflow
 
-## Common Workflows
+### Adding New Components
+1. Check existing similar components first
+2. Use Shadcn/UI base components when possible
+3. Follow existing patterns and conventions
+4. Define TypeScript interfaces/types
+5. Add i18n keys to both en.json and zh.json
+6. Ensure responsive design
+7. Test dark/light theme compatibility
 
-### Adding a New Component
-1. Create component in appropriate directory (ui/, sections/, or layout/)
-2. Follow existing component patterns (check similar components first)
-3. Use Shadcn/UI components as base when possible
-4. Ensure TypeScript types are properly defined
-5. Add internationalization keys if needed
+### Before Committing
+1. Run `npm run lint` and fix all issues
+2. Ensure TypeScript compilation succeeds
+3. Test in both themes
+4. Check responsive design
+5. Verify i18n keys are complete
 
 ### Working with Translations
-1. Language files located in src/i18n/locales/
-2. Use the useTranslation hook from react-i18next
-3. Add keys to both en.json and zh.json files
+- Files: `src/i18n/locales/{en,zh}.json`
+- Hook: `useTranslation()` from react-i18next
+- Always provide both English and Chinese
 
-### Modifying Styles
-1. Use Tailwind classes following the project's conventions
-2. Custom animations defined in tailwind.config.ts
-3. Theme colors use CSS variables (see globals.css)
-4. Maintain 8px grid system for spacing
+## 🎮 Project Features
 
-## Important Notes
+### Core Functionalities
+- Multi-currency support: USDT, BTC, ETH, MYR, EUR, USD
+- Game categories: Slots, Table Games, Live Casino, Jackpots, Originals, Sports
+- Authentication: Login/logout with session management
+- Theme system: Dark/light mode toggle
+- Language switch: English/Chinese
 
-- **No Test Infrastructure**: Testing setup needs to be implemented
-- **Mock Data**: Currently using mock services, real API integration pending
-- **Strict TypeScript**: Be aware of the dual TypeScript configuration
-- **Documentation**: Comprehensive docs in README.md, STYLE_GUIDE.md, CONTRIBUTING.md
-- **Git Workflow**: Uses Git Flow with conventional commits
+### Current Status
+- **Mock Data**: Using mock services, real API pending
+- **No Tests**: Test infrastructure needs implementation
+- **TypeScript Dual Config**: Be aware of different strictness levels
+
+## ⚠️ Important Reminders
+
+1. **NEVER add comments** unless explicitly requested
+2. **ALWAYS use TypeScript** - no JavaScript files
+3. **FOLLOW import order** exactly as specified
+4. **USE functional components** only
+5. **RESPECT the 8px grid** for all spacing
+6. **TEST dark mode** compatibility
+7. **ENSURE responsive design** works
+8. **CHECK ESLint** before committing
+9. **PREFER editing** existing files over creating new ones
+10. **AVOID creating** documentation files unless requested
+
+## 📚 Related Documentation
+
+- [README.md](./README.md) - Project overview and setup
+- [STYLE_GUIDE.md](./STYLE_GUIDE.md) - Detailed design specifications
+- [CONTRIBUTING.md](./CONTRIBUTING.md) - Contribution guidelines
+- [CURSOR_GUIDE.md](./CURSOR_GUIDE.md) - AI collaboration best practices
+- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) - Community standards
+
+---
+
+**Remember**: This document represents the single source of truth for all development standards in the 赤币街机 project. All specifications are mandatory and must be strictly followed to maintain consistency and quality.
