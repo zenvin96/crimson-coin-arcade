@@ -69,6 +69,8 @@ const OriginalGamesPage = () => {
                 navigate("/original-games/mines");
               } else if (game.name.toLowerCase() === "crash") {
                 navigate("/original-games/crash");
+              } else if (game.name.toLowerCase() === "dice") {
+                navigate("/original-games/dice");
               }
             }}
           >

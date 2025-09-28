@@ -30,6 +30,67 @@ body {
 @tailwind components;
 @tailwind utilities;
 
+/* Dice game animations */
+@keyframes dice-drop {
+  0% {
+    top: -60px;
+    opacity: 0;
+    transform: translateX(-50%) scale(0.5);
+  }
+  60% {
+    top: 50%;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  80% {
+    transform: translate(-50%, -45%) scale(0.95);
+  }
+  100% {
+    top: 50%;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes dice-roll {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dice-bounce {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -55%) scale(1.05);
+  }
+}
+
+.animate-dice-drop {
+  animation: dice-drop 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.animate-dice-roll {
+  animation: dice-roll 1s ease-in-out;
+}
+
+.animate-dice-bounce {
+  animation: dice-bounce 0.5s ease-out;
+}
+
 @layer base {
   :root {
     --background: 0 0% 97%; /* Light mode background */

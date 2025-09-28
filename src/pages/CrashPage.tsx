@@ -155,8 +155,30 @@ const CrashPage = () => {
     const innerHeight = Math.max(viewHeight - 2 * PADDING, 10);
 
     const mult = Math.exp(GROWTH_RATE * timeSec);
-    const worldX = timeSec * 80;
-    const worldY = (mult - 1) * 50;
+
+    // Apply smooth X-axis boost for initial movement
+    let xBoost = 1.0;
+    if (mult <= 1.0) {
+      xBoost = 1.5;
+    } else if (mult < 2.5) {
+      // Smooth interpolation from 1.5 to 1.0 over the range 1.0 to 2.5
+      const t = (mult - 1.0) / 1.5;  // 0 to 1 over the range
+      xBoost = 1.5 - (0.5 * t);  // Smoothly decrease from 1.5 to 1.0
+    }
+
+    const worldX = timeSec * 80 * xBoost;
+
+    // Apply smooth Y-axis boost for initial climb
+    let yBoost = 1.0;
+    if (mult <= 1.0) {
+      yBoost = 2.5;
+    } else if (mult < 2.5) {
+      // Smooth interpolation from 2.5 to 1.0 over the range 1.0 to 2.5
+      const t = (mult - 1.0) / 1.5;  // 0 to 1 over the range
+      yBoost = 2.5 - (1.5 * t);  // Smoothly decrease from 2.5 to 1.0
+    }
+
+    const worldY = (mult - 1) * 50 * yBoost;
 
     const view = viewRef.current;
 
@@ -697,7 +719,20 @@ const CrashPage = () => {
           const worldVelY = currPos.worldY - prevPos.worldY;
 
           if (worldVelX > 0 || worldVelY > 0) {
-            rocket.angle = Math.atan2(-worldVelY, worldVelX);
+            // Calculate base angle
+            const baseAngle = Math.atan2(-worldVelY, worldVelX);
+
+            // Apply smooth tilt amplification based on multiplier
+            let tiltMultiplier = 1.0;
+            if (currentMultiplier <= 1.0) {
+              tiltMultiplier = 2.0;
+            } else if (currentMultiplier < 3.0) {
+              // Smooth interpolation from 2.0 to 1.0 over the range 1.0 to 3.0
+              const t = (currentMultiplier - 1.0) / 2.0;  // 0 to 1 over the range
+              tiltMultiplier = 2.0 - t;  // Smoothly decrease from 2.0 to 1.0
+            }
+
+            rocket.angle = baseAngle * tiltMultiplier;
           }
         }
       }

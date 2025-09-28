@@ -196,6 +196,52 @@
       "loseDesc": "祝下次好运！"
     }
   },
+  "dice": {
+    "title": "骰子",
+    "description": "掷骰子，测试你的运气",
+    "betAmount": "投注金额",
+    "profitOnWin": "获胜收益",
+    "rollOver": "大于",
+    "rollUnder": "小于",
+    "multiplier": "倍数",
+    "winChance": "获胜概率",
+    "target": "目标",
+    "bet": "投注",
+    "betting": "投注中...",
+    "balance": "余额",
+    "manual": "手动",
+    "auto": "自动",
+    "numberOfBets": "投注次数",
+    "onWin": "获胜时",
+    "onLoss": "失败时",
+    "resetToBase": "重置为基础",
+    "increaseBy": "增加",
+    "decreaseBy": "减少",
+    "stopOnProfit": "盈利停止",
+    "stopOnLoss": "亏损停止",
+    "start": "开始",
+    "stop": "停止",
+    "starting": "开始中...",
+    "stopping": "停止中...",
+    "speed": "速度",
+    "slow": "慢速",
+    "normal": "中速",
+    "fast": "快速",
+    "turbo": "极速",
+    "result": "结果",
+    "recentRolls": "最近掷骰",
+    "dialog": {
+      "winTitle": "你赢了！",
+      "winDesc": "您的奖金已加入余额。",
+      "loseTitle": "你输了",
+      "loseDesc": "祝下次好运！"
+    },
+    "presets": {
+      "half": "1/2",
+      "double": "2倍",
+      "max": "最大"
+    }
+  },
   "auth": {
     "loginSuccessTitle": "登录成功",
     "loginSuccessDesc": "欢迎回到 CrimsonCoin！",

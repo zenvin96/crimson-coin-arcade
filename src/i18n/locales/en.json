@@ -196,6 +196,52 @@
       "loseDesc": "Better luck next time!"
     }
   },
+  "dice": {
+    "title": "Dice",
+    "description": "Roll the dice and test your luck",
+    "betAmount": "Bet Amount",
+    "profitOnWin": "Profit on Win",
+    "rollOver": "Roll Over",
+    "rollUnder": "Roll Under",
+    "multiplier": "Multiplier",
+    "winChance": "Win Chance",
+    "target": "Target",
+    "bet": "Bet",
+    "betting": "Betting...",
+    "balance": "Balance",
+    "manual": "Manual",
+    "auto": "Auto",
+    "numberOfBets": "Number of Bets",
+    "onWin": "On Win",
+    "onLoss": "On Loss",
+    "resetToBase": "Reset to base",
+    "increaseBy": "Increase by",
+    "decreaseBy": "Decrease by",
+    "stopOnProfit": "Stop on Profit",
+    "stopOnLoss": "Stop on Loss",
+    "start": "Start",
+    "stop": "Stop",
+    "starting": "Starting...",
+    "stopping": "Stopping...",
+    "speed": "Speed",
+    "slow": "Slow",
+    "normal": "Normal",
+    "fast": "Fast",
+    "turbo": "Turbo",
+    "result": "Result",
+    "recentRolls": "Recent Rolls",
+    "dialog": {
+      "winTitle": "You Won!",
+      "winDesc": "Your winnings have been added to your balance.",
+      "loseTitle": "You Lost",
+      "loseDesc": "Better luck next time!"
+    },
+    "presets": {
+      "half": "1/2",
+      "double": "2x",
+      "max": "MAX"
+    }
+  },
   "auth": {
     "loginSuccessTitle": "Login successful",
     "loginSuccessDesc": "Welcome back to CrimsonCoin!",
