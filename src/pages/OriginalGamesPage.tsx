@@ -71,6 +71,8 @@ const OriginalGamesPage = () => {
                 navigate("/original-games/crash");
               } else if (game.name.toLowerCase() === "dice") {
                 navigate("/original-games/dice");
+              } else if (game.name.toLowerCase() === "hilo") {
+                navigate("/original-games/hilo");
               }
             }}
           >

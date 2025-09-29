@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
+import DiceSvg from "@/assets/dice.svg";
 import {
   fetchDiceConfig,
   placeDiceBet,
@@ -11,7 +12,6 @@ import {
 } from "@/services/api/dice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -21,6 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 
 type GameState = {
@@ -56,8 +64,6 @@ const speedDelays = {
   fast: 300,
   turbo: 50,
 };
-
-const DiceIcons = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6];
 
 const DicePage = () => {
   const { t } = useTranslation();
@@ -106,46 +112,22 @@ const DicePage = () => {
     onSuccess: (result) => {
       addToMockHistory(result);
 
-      if (state.isFirstRoll || state.dicePosition === null) {
-        // First roll - drop from above
-        setState(prev => ({
-          ...prev,
-          dicePosition: result.result,
-          currentResult: result.result,
-          isAnimating: true,
-          isFirstRoll: false,
-          balance: prev.balance + result.profit,
-          history: [result, ...prev.history.slice(0, 49)],
-        }));
+      // Update state with new result - dice appears directly at result position
+      setState(prev => ({
+        ...prev,
+        dicePosition: result.result,
+        currentResult: result.result,
+        isAnimating: false, // No entrance animation
+        isFirstRoll: false,
+        balance: prev.balance + result.profit,
+        history: [result, ...prev.history.slice(0, 49)],
+      }));
 
-        // End animation after dice settles
+      // For auto betting, proceed after a short delay
+      if (autoBetState.isActive) {
         setTimeout(() => {
-          setState(prev => ({
-            ...prev,
-            isAnimating: false,
-          }));
-
-          if (autoBetState.isActive) {
-            handleAutoBetResult(result);
-          }
-        }, 1000);
-      } else {
-        // Consecutive rolls - slide to new position
-        setState(prev => ({
-          ...prev,
-          dicePosition: result.result,
-          currentResult: result.result,
-          isAnimating: false, // Use CSS transition for sliding
-          balance: prev.balance + result.profit,
-          history: [result, ...prev.history.slice(0, 49)],
-        }));
-
-        if (autoBetState.isActive) {
-          // For auto betting, trigger next bet after slide animation
-          setTimeout(() => {
-            handleAutoBetResult(result);
-          }, 500);
-        }
+          handleAutoBetResult(result);
+        }, 500);
       }
     },
   });
@@ -218,20 +200,12 @@ const DicePage = () => {
   const placeBet = useCallback(() => {
     if (state.betAmount > state.balance) return;
 
-    // Don't reset dice for consecutive rolls
-    if (!state.dicePosition) {
-      setState(prev => ({
-        ...prev,
-        isAnimating: true,
-      }));
-    }
-
     betMutation.mutate({
       betAmount: state.betAmount,
       target: state.target,
       isRollOver: state.isRollOver,
     });
-  }, [state.betAmount, state.target, state.isRollOver, state.balance, state.dicePosition, betMutation]);
+  }, [state.betAmount, state.target, state.isRollOver, state.balance, betMutation]);
 
   const startAutoBet = () => {
     setAutoBetState(prev => ({
@@ -291,7 +265,6 @@ const DicePage = () => {
     };
   }, []);
 
-  const RandomDiceIcon = DiceIcons[Math.floor(Math.random() * 6)];
 
   return (
     <div className="container mx-auto p-4 max-w-7xl">
@@ -551,112 +524,96 @@ const DicePage = () => {
           </Tabs>
         </Card>
 
-        <Card className="lg:col-span-2 p-6">
-          <div className="flex flex-col items-center justify-center h-full space-y-8">
-            <div className="relative">
-              <div className={cn(
-                "w-32 h-32 flex items-center justify-center transition-all duration-500",
-                state.isAnimating && !state.dicePosition && "animate-bounce"
-              )}>
-                {state.currentResult !== null ? (
-                  <div className={cn(
-                    "text-5xl font-bold transition-colors duration-500",
-                    state.history[0]?.isWin ? "text-green-400" : "text-red-400"
-                  )}>
-                    {state.currentResult.toFixed(2)}
-                  </div>
-                ) : (
-                  <RandomDiceIcon className="w-24 h-24 text-muted-foreground" />
-                )}
-              </div>
-            </div>
+        <Card className="lg:col-span-2 p-8 pt-16 relative bg-[#1e2c39]">
+          <div className="flex flex-col items-center justify-center h-full space-y-6">
+            <div className="w-full max-w-lg space-y-4 relative">
+              {/* Dice Container - positioned relative to slider */}
+              {state.dicePosition !== null && (
+                <div
+                  className={cn(
+                    "dice visible absolute", // Always visible, no entrance animation
+                    state.history[0]?.isWin ? "win" : "loss"
+                  )}
+                  style={{
+                    left: `${state.dicePosition}%`,
+                    top: '-40px',
+                    transform: 'translateX(-50%)',
+                    transition: state.dicePosition !== null ? 'left 0.5s ease' : 'none',
+                    zIndex: 20
+                  }}
+                >
+                  <img src={DiceSvg} alt="Dice" className="dice-svg" />
+                  <span className="dice-value">{state.currentResult?.toFixed(2)}</span>
+                </div>
+              )}
 
-            <div className="w-full max-w-md space-y-4">
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
+              {/* Slider Container */}
+              <div className="slider-container">
+                {/* Scale Values */}
+                <div className="scale-values">
                   <span>0</span>
                   <span>25</span>
                   <span>50</span>
                   <span>75</span>
                   <span>100</span>
                 </div>
-                <div className="relative h-12">
-                  {/* Slider track background */}
-                  <div className="absolute top-1/2 -translate-y-1/2 w-full h-2 bg-muted rounded-full">
-                    {/* Red zone (loss area) */}
-                    <div
-                      className="absolute top-0 h-full bg-red-500/20 rounded-full"
-                      style={{
-                        left: state.isRollOver ? '0%' : `${state.target}%`,
-                        width: state.isRollOver ? `${state.target}%` : `${100 - state.target}%`,
-                      }}
-                    />
-                    {/* Green zone (win area) */}
-                    <div
-                      className="absolute top-0 h-full bg-green-500/20 rounded-full"
-                      style={{
-                        left: state.isRollOver ? `${state.target}%` : '0%',
-                        width: state.isRollOver ? `${100 - state.target}%` : `${state.target}%`,
-                      }}
-                    />
-                  </div>
 
-                  {/* Target line */}
+                {/* Slider Track */}
+                <div className="slider-track">
                   <div
-                    className="absolute top-0 bottom-0 w-0.5 bg-primary z-10 transition-all duration-300"
+                    className="slider-fill-red"
+                    style={{
+                      width: state.isRollOver ? `${state.target}%` : `${100 - state.target}%`,
+                      left: state.isRollOver ? '0%' : 'auto',
+                      right: state.isRollOver ? 'auto' : '0%'
+                    }}
+                  />
+                  <div
+                    className="slider-thumb"
                     style={{ left: `${state.target}%` }}
-                  />
+                    onMouseDown={(e) => {
+                      const track = e.currentTarget.parentElement;
+                      if (!track) return;
 
-                  {/* Animated dice */}
-                  {state.dicePosition !== null && (
-                    <div
-                      className={cn(
-                        "absolute -translate-x-1/2 pointer-events-none z-20",
-                        state.isAnimating && state.isFirstRoll ? "animate-dice-drop" : "",
-                        !state.isAnimating && !state.isFirstRoll ? "transition-all duration-500 ease-out" : ""
-                      )}
-                      style={{
-                        left: `${state.dicePosition}%`,
-                        top: state.isAnimating && state.isFirstRoll ? '-60px' : '50%',
-                        transform: state.isAnimating && state.isFirstRoll ? 'translateX(-50%)' : 'translate(-50%, -50%)',
-                      }}
-                    >
-                      <div className={cn(
-                        "relative w-14 h-14 flex items-center justify-center rounded-lg",
-                        "bg-gradient-to-br transition-all duration-300",
-                        state.history[0]?.isWin
-                          ? "from-green-500 to-green-600 shadow-[0_4px_20px_rgba(34,197,94,0.6)]"
-                          : "from-red-500 to-red-600 shadow-[0_4px_20px_rgba(239,68,68,0.6)]",
-                        state.isAnimating && state.isFirstRoll && "animate-dice-roll",
-                        !state.isFirstRoll && "hover:scale-110"
-                      )}>
-                        <span className="text-white font-bold text-lg">
-                          {state.currentResult?.toFixed(2)}
-                        </span>
-                        {/* Add dice dots visual */}
-                        <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                          <div className="grid grid-cols-2 gap-1">
-                            <div className="w-1 h-1 bg-white rounded-full"></div>
-                            <div className="w-1 h-1 bg-white rounded-full"></div>
-                            <div className="w-1 h-1 bg-white rounded-full"></div>
-                            <div className="w-1 h-1 bg-white rounded-full"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                      const handleMouseMove = (event: MouseEvent) => {
+                        const rect = track.getBoundingClientRect();
+                        const x = event.clientX - rect.left;
+                        const percent = Math.max(0.01, Math.min(99.99, (x / rect.width) * 100));
+                        handleTargetChange([percent]);
+                      };
 
-                  {/* Slider */}
-                  <Slider
-                    value={[state.target]}
-                    onValueChange={handleTargetChange}
-                    min={0.01}
-                    max={99.99}
-                    step={0.01}
-                    className="w-full absolute top-1/2 -translate-y-1/2"
-                    disabled={betMutation.isPending || state.isAnimating}
+                      const handleMouseUp = () => {
+                        document.removeEventListener('mousemove', handleMouseMove);
+                        document.removeEventListener('mouseup', handleMouseUp);
+                      };
+
+                      document.addEventListener('mousemove', handleMouseMove);
+                      document.addEventListener('mouseup', handleMouseUp);
+                    }}
                   />
+                  <div
+                    className="slider-fill-green"
+                    style={{
+                      width: state.isRollOver ? `${100 - state.target}%` : `${state.target}%`,
+                      right: state.isRollOver ? '0%' : 'auto',
+                      left: state.isRollOver ? 'auto' : '0%'
+                    }}
+                  />
+                  <div className="vertical-line" style={{ left: `${state.target}%` }} />
                 </div>
+              </div>
+
+              {/* Result Display */}
+              <div className="result-display">
+                {state.currentResult !== null && (
+                  <span className={cn(
+                    "font-bold",
+                    state.history[0]?.isWin ? "text-[#2ecc71]" : "text-[#e74c3c]"
+                  )}>
+                    {state.history[0]?.isWin ? "You Won!" : "You Lost!"}
+                    <span className="ml-2">{state.currentResult.toFixed(2)}</span>
+                  </span>
+                )}
               </div>
 
               <div className="grid grid-cols-3 gap-4 text-center">
@@ -687,8 +644,84 @@ const DicePage = () => {
           </div>
         </Card>
       </div>
+
+      <Card className="mt-6 p-6">
+        <h2 className="text-2xl font-bold mb-4">{t("dice.betHistory")}</h2>
+        {state.history.length === 0 ? (
+          <p className="text-center text-muted-foreground py-8">
+            {t("dice.noHistory")}
+          </p>
+        ) : (
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t("dice.time")}</TableHead>
+                  <TableHead>{t("dice.betAmount")}</TableHead>
+                  <TableHead>{t("dice.target")}</TableHead>
+                  <TableHead>{t("dice.result")}</TableHead>
+                  <TableHead>{t("dice.profit")}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {state.history.map((bet, index) => {
+                  const timeAgo = bet.timestamp ? getTimeAgo(bet.timestamp) : `${index + 1}m ago`;
+                  return (
+                    <TableRow key={index}>
+                      <TableCell className="text-muted-foreground">
+                        {timeAgo}
+                      </TableCell>
+                      <TableCell>${bet.betAmount.toFixed(2)}</TableCell>
+                      <TableCell>
+                        {bet.isRollOver ? ">" : "<"} {bet.target.toFixed(2)}
+                      </TableCell>
+                      <TableCell>
+                        <span
+                          className={cn(
+                            "font-medium",
+                            bet.isWin ? "text-green-500" : "text-red-500"
+                          )}
+                        >
+                          {bet.result.toFixed(2)}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <span
+                          className={cn(
+                            "font-medium",
+                            bet.profit >= 0 ? "text-green-500" : "text-red-500"
+                          )}
+                        >
+                          {bet.profit >= 0 ? "+" : ""}
+                          ${bet.profit.toFixed(2)}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </Card>
     </div>
   );
+};
+
+const getTimeAgo = (timestamp: number): string => {
+  const now = Date.now();
+  const diff = now - timestamp;
+  const seconds = Math.floor(diff / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+
+  if (hours > 0) {
+    return `${hours}h ago`;
+  } else if (minutes > 0) {
+    return `${minutes}m ago`;
+  } else {
+    return `${seconds}s ago`;
+  }
 };
 
 export default DicePage;

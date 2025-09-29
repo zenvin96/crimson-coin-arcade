@@ -25,6 +25,7 @@ import AuthError from "./pages/AuthError";
 import MinesPage from "./pages/MinesPage";
 import CrashPage from "./pages/CrashPage";
 import DicePage from "./pages/DicePage";
+import HiloPage from "./pages/HiloPage";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const App = () => (
           <Route path="/original-games/mines" element={<MinesPage />} />
           <Route path="/original-games/crash" element={<CrashPage />} />
           <Route path="/original-games/dice" element={<DicePage />} />
+          <Route path="/original-games/hilo" element={<HiloPage />} />
             <Route path="/slot-machines" element={<SlotMachinesPage />} />
             <Route path="/table-games" element={<TableGamesPage />} />
             <Route path="/live-casino" element={<LiveCasinoPage />} />
