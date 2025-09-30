@@ -72,16 +72,17 @@ export async function cashoutMines(
   const gridSize = 25;
   const safeSquares = gridSize - minesCount;
 
-  // Approximate multiplier using same risk factor progression as the demo
-  // This is a simplified estimate for mock purposes
   let multiplier = 1;
   for (let i = 0; i < revealedSafeTiles; i++) {
     const remainingSafe = safeSquares - i;
-    const remaining = gridSize - i;
+    const remainingTotal = gridSize - i;
     if (remainingSafe <= 0) break;
-    const riskFactor = remaining / remainingSafe;
-    multiplier *= 0.99 * riskFactor;
+    const probability = remainingSafe / remainingTotal;
+    multiplier *= 1 / probability;
   }
+
+  const houseEdge = 0.97;
+  multiplier *= houseEdge;
 
   const profit = Math.max(0, betAmount * (multiplier - 1));
 

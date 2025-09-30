@@ -186,6 +186,9 @@
     "watching": "Watching",
     "nextRound": "Next Round",
     "crashed": "CRASHED",
+    "cashedOut": "Cashed Out",
+    "crashedAt": "Crashed At",
+    "lost": "Lost",
     "livePlayers": "Live Players",
     "totalBets": "Total Bets",
     "playing": "Playing...",
@@ -223,7 +226,10 @@
     "correctPrediction": "Correct Prediction!",
     "wrongPrediction": "Wrong Prediction",
     "youPredicted": "You predicted",
-    "currentMultiplier": "Current Multiplier"
+    "currentMultiplier": "Current Multiplier",
+    "gameOver": "Game Over",
+    "lost": "Lost",
+    "playAgain": "Play Again"
   },
   "dice": {
     "title": "Dice",

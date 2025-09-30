@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import GameResultDialog from "@/components/ui/GameResultDialog";
 
 type GameState = "waiting" | "in-progress" | "crashed";
 
@@ -24,6 +23,59 @@ interface CashoutMarker {
   opacity: number;
   scale: number;
   age: number;
+  isPlayer?: boolean;
+}
+
+interface FlameParticle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  life: number;
+  maxLife: number;
+}
+
+interface SparkParticle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  life: number;
+  maxLife: number;
+  color: string;
+}
+
+interface SmokeParticle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  life: number;
+  maxLife: number;
+  opacity: number;
+}
+
+interface ExplosionParticle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  color: string;
+  life: number;
+  maxLife: number;
+  rotation: number;
+  rotationSpeed: number;
+}
+
+interface ParticleSystems {
+  flame: FlameParticle[];
+  spark: SparkParticle[];
+  smoke: SmokeParticle[];
+  explosion: ExplosionParticle[];
 }
 
 const CrashPage = () => {
@@ -47,10 +99,10 @@ const CrashPage = () => {
   const [autoCashout, setAutoCashout] = useState<number | undefined>();
   const [countdown, setCountdown] = useState<number | null>(null);
   const [simulatedPlayers, setSimulatedPlayers] = useState<SimulatedPlayer[]>([]);
-  const [resultDialog, setResultDialog] = useState<
-    | { open: true; type: "win" | "lose"; amount?: number; multiplier?: number }
-    | { open: false }
-  >({ open: false });
+  const [showWinToast, setShowWinToast] = useState(false);
+  const [winToastData, setWinToastData] = useState<{ profit: number; multiplier: number } | null>(null);
+  const [showSettlement, setShowSettlement] = useState(false);
+  const [settlementData, setSettlementData] = useState<{ loss: number; crashMultiplier: number } | null>(null);
 
   // Game constants
   const BETTING_COUNTDOWN_MS = 5000;
@@ -87,11 +139,11 @@ const CrashPage = () => {
   });
 
   // Particle systems
-  const particlesRef = useRef({
-    flame: [] as Array<any>,
-    spark: [] as Array<any>,
-    smoke: [] as Array<any>,
-    explosion: [] as Array<any>,
+  const particlesRef = useRef<ParticleSystems>({
+    flame: [],
+    spark: [],
+    smoke: [],
+    explosion: [],
   });
 
   // Cashout markers
@@ -172,9 +224,9 @@ const CrashPage = () => {
     let yBoost = 1.0;
     if (mult <= 1.0) {
       yBoost = 2.5;
-    } else if (mult < 2.5) {
-      // Smooth interpolation from 2.5 to 1.0 over the range 1.0 to 2.5
-      const t = (mult - 1.0) / 1.5;  // 0 to 1 over the range
+    } else if (mult < 3.0) {
+      // Smooth interpolation from 2.5 to 1.0 over the range 1.0 to 3.0
+      const t = (mult - 1.0) / 2.0;  // 0 to 1 over the range 1.0 to 3.0
       yBoost = 2.5 - (1.5 * t);  // Smoothly decrease from 2.5 to 1.0
     }
 
@@ -402,28 +454,47 @@ const CrashPage = () => {
   const createExplosion = useCallback((x: number, y: number) => {
     const particles = particlesRef.current;
 
-    // Create explosion particles
-    for (let i = 0; i < 50; i++) {
-      const angle = (Math.PI * 2 * i) / 50;
-      const speed = 100 + Math.random() * 200;
+    // Create explosion particles with rotation
+    for (let i = 0; i < 80; i++) {
+      const angle = (Math.PI * 2 * i) / 80;
+      const speed = 100 + Math.random() * 250;
       particles.explosion.push({
         x,
         y,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
-        size: 3 + Math.random() * 5,
-        color: `hsl(${Math.random() * 60}, 100%, 50%)`,
-        life: 0.5 + Math.random() * 0.5,
-        maxLife: 0.5 + Math.random() * 0.5,
+        size: 3 + Math.random() * 8,
+        color: `hsl(${Math.random() * 60 + (i % 2 === 0 ? 0 : 10)}, 100%, ${50 + Math.random() * 20}%)`,
+        life: 0.6 + Math.random() * 0.8,
+        maxLife: 0.6 + Math.random() * 0.8,
+        rotation: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() - 0.5) * 10,
       });
     }
 
-    rocketRef.current.shake = 15;
+    // Add secondary smoke particles
+    for (let i = 0; i < 30; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 30 + Math.random() * 80;
+      particles.smoke.push({
+        x,
+        y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        size: 10 + Math.random() * 20,
+        life: 1.0 + Math.random() * 1.5,
+        maxLife: 1.0 + Math.random() * 1.5,
+        opacity: 0.6,
+      });
+    }
+
+    rocketRef.current.shake = 20;
   }, []);
 
   // Add cashout marker
   const addCashoutMarker = useCallback((playerName: string, mult: number, timeSec: number) => {
     const pos = getPointAtTime(timeSec);
+    const isPlayer = playerName === "You";
 
     cashoutMarkersRef.current.push({
       name: playerName,
@@ -432,8 +503,9 @@ const CrashPage = () => {
       worldX: pos.worldX || (timeSec * 80),
       worldY: pos.worldY || ((Math.exp(GROWTH_RATE * timeSec) - 1) * 50),
       opacity: 1.0,
-      scale: 1.0,
-      age: 0
+      scale: isPlayer ? 1.3 : 1.0,
+      age: 0,
+      isPlayer
     });
 
     // Keep only recent markers (max 20)
@@ -460,15 +532,36 @@ const CrashPage = () => {
 
       ctx.globalAlpha = marker.opacity;
 
-      // Draw marker circle
+      // Draw marker circle with different colors for player
       const markerSize = 6 * marker.scale;
-      ctx.fillStyle = '#2ecc71';
-      ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(screenX, screenY, markerSize, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
+      const isPlayer = marker.isPlayer;
+
+      if (isPlayer) {
+        // Player marker: gold with pulse glow
+        ctx.fillStyle = '#FFD700';
+        ctx.strokeStyle = '#FFF';
+        ctx.lineWidth = 3;
+
+        // Add glow effect
+        ctx.shadowColor = '#FFD700';
+        ctx.shadowBlur = 15;
+
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, markerSize, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.shadowBlur = 0;
+      } else {
+        // NPC marker: green
+        ctx.fillStyle = '#2ecc71';
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, markerSize, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
 
       // Draw player name and multiplier
       ctx.fillStyle = '#fff';
@@ -484,7 +577,11 @@ const CrashPage = () => {
       const text = `${marker.name} @ ${marker.multiplier.toFixed(2)}x`;
       const textWidth = ctx.measureText(text).width;
 
-      ctx.fillStyle = `rgba(39, 174, 96, ${marker.opacity * 0.9})`;
+      if (isPlayer) {
+        ctx.fillStyle = `rgba(255, 215, 0, ${marker.opacity * 0.9})`;
+      } else {
+        ctx.fillStyle = `rgba(39, 174, 96, ${marker.opacity * 0.9})`;
+      }
       ctx.fillRect(textX - 3, textY - 12, textWidth + 6, 18);
 
       // Draw text
@@ -492,7 +589,11 @@ const CrashPage = () => {
       ctx.fillText(text, textX, textY);
 
       // Add connection line
-      ctx.strokeStyle = `rgba(46, 204, 113, ${marker.opacity * 0.5})`;
+      if (isPlayer) {
+        ctx.strokeStyle = `rgba(255, 215, 0, ${marker.opacity * 0.6})`;
+      } else {
+        ctx.strokeStyle = `rgba(46, 204, 113, ${marker.opacity * 0.5})`;
+      }
       ctx.lineWidth = 1;
       ctx.setLineDash([3, 3]);
       ctx.beginPath();
@@ -538,12 +639,15 @@ const CrashPage = () => {
       setBalance(prev => prev + winnings);
       setTotalProfit(prev => prev + profit);
 
-      setResultDialog({
-        open: true,
-        type: "win",
-        amount: profit,
-        multiplier: multiplier,
-      });
+      setShowWinToast(true);
+      setWinToastData({ profit, multiplier });
+
+      addCashoutMarker("You", multiplier, (Date.now() - startTimeRef.current) / 1000);
+
+      setTimeout(() => {
+        setShowWinToast(false);
+        setWinToastData(null);
+      }, 2000);
 
       setCurrentBet(0);
     }
@@ -585,7 +689,9 @@ const CrashPage = () => {
 
       if (currentBet > 0) {
         setTotalProfit(prev => prev - currentBet);
-        setResultDialog({ open: true, type: "lose", amount: currentBet });
+
+        setShowSettlement(true);
+        setSettlementData({ loss: currentBet, crashMultiplier: currentMultiplier });
       }
 
       setCurrentBet(0);
@@ -789,6 +895,30 @@ const CrashPage = () => {
       return player;
     }));
 
+    // Update and limit particles to prevent memory leak
+    const particles = particlesRef.current;
+
+    // Update explosion particles
+    particles.explosion = particles.explosion.filter(p => {
+      p.life -= dt;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.vy += 200 * dt; // gravity
+      p.rotation += p.rotationSpeed * dt;
+      return p.life > 0;
+    }).slice(-200); // Limit to 200 particles
+
+    // Update smoke particles
+    particles.smoke = particles.smoke.filter(p => {
+      p.life -= dt;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.vx *= 0.98;
+      p.vy *= 0.98;
+      p.opacity = (p.life / p.maxLife) * 0.6;
+      return p.life > 0;
+    }).slice(-100); // Limit to 100 particles
+
     // Update markers
     updateCashoutMarkers(dt);
 
@@ -924,6 +1054,25 @@ const CrashPage = () => {
     waitingAnimation();
   }, [gameState, getPointAtTime, drawGrid, drawRocket]);
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Prevent if user is typing in an input
+      if (e.target instanceof HTMLInputElement) return;
+
+      if (e.code === "Space" && gameState === "in-progress" && currentBet > 0) {
+        e.preventDefault();
+        handleCashout();
+      } else if (e.code === "Enter" && gameState === "waiting" && currentBet === 0 && betAmount > 0 && betAmount <= balance) {
+        e.preventDefault();
+        handlePlaceBet();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [gameState, currentBet, betAmount, balance, handleCashout, handlePlaceBet]);
+
   // Initialize
   useEffect(() => {
     resizeCanvas();
@@ -965,7 +1114,7 @@ const CrashPage = () => {
                   <div className="flex items-center justify-between mb-1">
                     <div className="text-xs text-muted-foreground uppercase tracking-wider">{t("crash.betAmount")}</div>
                   </div>
-                  <div className="flex gap-2 mb-3">
+                  <div className="flex gap-2 mb-2">
                     <div className="relative w-full">
                       <span className="absolute left-2 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 text-xs text-muted-foreground">
                         <img src="/tether-usdt-logo.svg" alt="USDT" className="h-4 w-4" />
@@ -976,20 +1125,34 @@ const CrashPage = () => {
                         className="pl-12 text-right font-semibold"
                         value={betAmount}
                         min={1}
-                        max={1000}
+                        max={balance}
                         onChange={(e) => setBetAmount(parseFloat(e.target.value) || 0)}
                         disabled={gameState !== "waiting"}
                       />
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    <Button variant="outline" size="sm" onClick={() => setBetAmount(Math.max(1, betAmount / 2))} disabled={gameState !== "waiting"}>
+                  <div className="grid grid-cols-4 gap-1.5 mb-1.5">
+                    <Button variant="outline" size="sm" onClick={() => setBetAmount(10)} disabled={gameState !== "waiting"} className="h-8 text-xs">
+                      10
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => setBetAmount(50)} disabled={gameState !== "waiting"} className="h-8 text-xs">
+                      50
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => setBetAmount(100)} disabled={gameState !== "waiting"} className="h-8 text-xs">
+                      100
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => setBetAmount(500)} disabled={gameState !== "waiting"} className="h-8 text-xs">
+                      500
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    <Button variant="outline" size="sm" onClick={() => setBetAmount(Math.max(1, betAmount / 2))} disabled={gameState !== "waiting"} className="h-8 text-xs">
                       ½
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => setBetAmount(Math.min(1000, betAmount * 2))} disabled={gameState !== "waiting"}>
+                    <Button variant="outline" size="sm" onClick={() => setBetAmount(Math.min(balance, betAmount * 2))} disabled={gameState !== "waiting"} className="h-8 text-xs">
                       2x
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => setBetAmount(1000)} disabled={gameState !== "waiting"}>
+                    <Button variant="outline" size="sm" onClick={() => setBetAmount(Math.min(balance, 1000))} disabled={gameState !== "waiting"} className="h-8 text-xs">
                       MAX
                     </Button>
                   </div>
@@ -1000,6 +1163,44 @@ const CrashPage = () => {
                   <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
                     {t("crash.autoCashout")}
                   </div>
+                  <div className="grid grid-cols-4 gap-1.5 mb-2">
+                    <Button
+                      variant={autoCashout === 2 ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setAutoCashout(2)}
+                      disabled={gameState !== "waiting"}
+                      className="h-8 text-xs"
+                    >
+                      2x
+                    </Button>
+                    <Button
+                      variant={autoCashout === 5 ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setAutoCashout(5)}
+                      disabled={gameState !== "waiting"}
+                      className="h-8 text-xs"
+                    >
+                      5x
+                    </Button>
+                    <Button
+                      variant={autoCashout === 10 ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setAutoCashout(10)}
+                      disabled={gameState !== "waiting"}
+                      className="h-8 text-xs"
+                    >
+                      10x
+                    </Button>
+                    <Button
+                      variant={!autoCashout ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setAutoCashout(undefined)}
+                      disabled={gameState !== "waiting"}
+                      className="h-8 text-xs"
+                    >
+                      OFF
+                    </Button>
+                  </div>
                   <Input
                     type="number"
                     placeholder={t("crash.off")}
@@ -1008,6 +1209,7 @@ const CrashPage = () => {
                     step={0.01}
                     onChange={(e) => setAutoCashout(e.target.value ? parseFloat(e.target.value) : undefined)}
                     disabled={gameState !== "waiting"}
+                    className="text-sm"
                   />
                 </div>
 
@@ -1031,7 +1233,13 @@ const CrashPage = () => {
 
                 {/* Action Button */}
                 <Button
-                  className="w-full"
+                  className={`w-full transition-all duration-300 font-bold text-lg ${
+                    gameState === "in-progress" && currentBet > 0
+                      ? multiplier >= 5
+                        ? "h-16 bg-gradient-to-r from-green-500 via-emerald-500 to-green-500 hover:from-green-400 hover:via-emerald-400 hover:to-green-400 shadow-2xl shadow-green-500/60 animate-pulse border-2 border-green-300"
+                        : "h-14 bg-green-600 hover:bg-green-500 shadow-xl shadow-green-600/50"
+                      : "h-12 bg-primary hover:bg-primary/90"
+                  }`}
                   size="lg"
                   onClick={gameState === "waiting" ? handlePlaceBet : handleCashout}
                   disabled={
@@ -1041,11 +1249,29 @@ const CrashPage = () => {
                   }
                 >
                   {gameState === "waiting" ? (
-                    currentBet > 0 ? t("crash.betPlaced", { amount: currentBet }) : t("crash.placeBet")
+                    currentBet > 0 ? (
+                      <span className="text-base">{t("crash.betPlaced", { amount: currentBet })}</span>
+                    ) : (
+                      <span>{t("crash.placeBet")}</span>
+                    )
+                  ) : currentBet > 0 ? (
+                    <div className="flex items-baseline justify-center gap-2">
+                      <span className="text-2xl font-extrabold tracking-tight">
+                        ${(currentBet * multiplier).toFixed(2)}
+                      </span>
+                      <span className="text-lg font-bold opacity-90">
+                        @ {multiplier.toFixed(2)}x
+                      </span>
+                    </div>
                   ) : (
-                    currentBet > 0 ? t("crash.cashoutAt", { amount: (currentBet * multiplier).toFixed(2) }) : t("crash.watching")
+                    <span>{t("crash.watching")}</span>
                   )}
                 </Button>
+                {gameState === "in-progress" && currentBet > 0 && (
+                  <div className="text-center text-xs text-muted-foreground mt-1">
+                    Press <kbd className="px-1.5 py-0.5 bg-muted border border-border rounded text-xs">Space</kbd> to cashout
+                  </div>
+                )}
               </div>
             </div>
 
@@ -1135,32 +1361,104 @@ const CrashPage = () => {
         </div>
       </div>
 
-      <GameResultDialog
-        open={resultDialog.open}
-        onOpenChange={(open) => setResultDialog(open ? resultDialog : { open: false })}
-        type={resultDialog.open ? resultDialog.type : "win"}
-        title={
-          resultDialog.open && resultDialog.type === "win"
-            ? t("crash.dialog.winTitle")
-            : t("crash.dialog.loseTitle")
+      {showWinToast && winToastData && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-toast-slide-down">
+          <div className="bg-gradient-to-r from-green-500/95 to-emerald-500/95 backdrop-blur-md px-6 py-3 rounded-lg shadow-2xl border border-green-400/50">
+            <div className="flex items-center gap-3">
+              <div className="text-2xl">✓</div>
+              <div>
+                <div className="text-white font-bold text-lg">
+                  +${winToastData.profit.toFixed(2)}
+                </div>
+                <div className="text-green-100 text-sm">
+                  {t('crash.cashedOut')} @ {winToastData.multiplier.toFixed(2)}x
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showSettlement && settlementData && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 border-2 border-red-500/50 rounded-xl shadow-2xl max-w-md w-full p-6 space-y-4 animate-scale-in">
+            <div className="text-center space-y-2">
+              <div className="text-6xl">💥</div>
+              <h2 className="text-2xl font-bold text-red-500">{t('crash.crashed')}</h2>
+            </div>
+
+            <div className="space-y-3 bg-black/30 rounded-lg p-4">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-400">{t('crash.lost')}</span>
+                <span className="text-red-500 font-bold text-lg">
+                  -${settlementData.loss.toFixed(2)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-400">{t('crash.crashedAt')}</span>
+                <span className="text-orange-500 font-bold">
+                  {settlementData.crashMultiplier.toFixed(2)}x
+                </span>
+              </div>
+            </div>
+
+            <Button
+              className="w-full bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 h-12 text-lg font-bold"
+              onClick={() => {
+                setShowSettlement(false);
+                setSettlementData(null);
+              }}
+            >
+              {t('crash.nextRound')}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <style jsx>{`
+        @keyframes toast-slide-down {
+          0% {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-20px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+          }
         }
-        description={
-          resultDialog.open && resultDialog.type === "win"
-            ? t("crash.dialog.winDesc")
-            : t("crash.dialog.loseDesc")
+
+        .animate-toast-slide-down {
+          animation: toast-slide-down 0.3s ease-out;
         }
-        amountText={
-          resultDialog.open && resultDialog.amount !== undefined
-            ? `$${resultDialog.amount.toFixed(2)}`
-            : undefined
+
+        @keyframes fade-in {
+          0% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
         }
-        multiplierText={
-          resultDialog.open && resultDialog.multiplier !== undefined
-            ? `${resultDialog.multiplier.toFixed(2)}x`
-            : undefined
+
+        .animate-fade-in {
+          animation: fade-in 0.2s ease-out;
         }
-        autoCloseMs={1800}
-      />
+
+        @keyframes scale-in {
+          0% {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        .animate-scale-in {
+          animation: scale-in 0.3s ease-out;
+        }
+      `}</style>
     </>
   );
 };

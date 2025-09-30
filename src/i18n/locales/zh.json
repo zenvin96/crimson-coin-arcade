@@ -186,6 +186,9 @@
     "watching": "观看中",
     "nextRound": "下一轮",
     "crashed": "已坠毁",
+    "cashedOut": "已兑现",
+    "crashedAt": "坠毁于",
+    "lost": "损失",
     "livePlayers": "在线玩家",
     "totalBets": "总投注",
     "playing": "游戏中...",
@@ -223,7 +226,10 @@
     "correctPrediction": "预测正确！",
     "wrongPrediction": "预测错误",
     "youPredicted": "您预测了",
-    "currentMultiplier": "当前倍数"
+    "currentMultiplier": "当前倍数",
+    "gameOver": "游戏结束",
+    "lost": "损失",
+    "playAgain": "再玩一局"
   },
   "dice": {
     "title": "骰子",
