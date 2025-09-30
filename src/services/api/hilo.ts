@@ -19,7 +19,7 @@ export interface HiloGameStart {
 
 export interface HiloPrediction {
   sessionId: string;
-  prediction: 'higher' | 'lower';
+  prediction: 'higher' | 'lower' | 'skip';
 }
 
 export interface HiloGameResult {
@@ -160,8 +160,22 @@ class HiloService {
       throw new Error('Invalid session');
     }
 
-    const odds = this.calculateOdds(session.currentCard);
     const newCard = this.createCard();
+
+    if (prediction.prediction === 'skip') {
+      session.currentCard = newCard;
+      this.activeSessions.set(prediction.sessionId, session);
+
+      return {
+        correct: true,
+        newCard,
+        multiplier: session.multiplier,
+        streak: session.streak,
+        payout: session.betAmount * session.multiplier
+      };
+    }
+
+    const odds = this.calculateOdds(session.currentCard);
     const oldValue = session.currentCard.value;
     const newValue = newCard.value;
 
@@ -173,7 +187,6 @@ class HiloService {
     }
 
     if (correct) {
-      // Apply dynamic payout based on odds
       const payoutMultiplier = prediction.prediction === 'higher' ? odds.higherPayout : odds.lowerPayout;
       session.streak++;
       session.multiplier = session.multiplier * payoutMultiplier;
