@@ -103,14 +103,20 @@ const CrashPage = () => {
   const [winToastData, setWinToastData] = useState<{ profit: number; multiplier: number } | null>(null);
   const [showSettlement, setShowSettlement] = useState(false);
   const [settlementData, setSettlementData] = useState<{ loss: number; crashMultiplier: number } | null>(null);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
 
   // Game constants
   const BETTING_COUNTDOWN_MS = 5000;
   const POST_CRASH_DELAY_MS = 3000;
   const GROWTH_RATE = 0.12;
   const HOUSE_EDGE = 0.03;
-  const PADDING = 50;
-  const RIGHT_MARGIN = 30;
+  const PADDING = isMobile ? 30 : 50;
+  const RIGHT_MARGIN = isMobile ? 0 : 30;
 
   // Game refs for animation state
   const startTimeRef = useRef<number>(0);
@@ -181,6 +187,9 @@ const CrashPage = () => {
   // Resize canvas
   const resizeCanvas = useCallback(() => {
     if (!canvasRef.current || !effectsCanvasRef.current) return;
+
+    // Update mobile state
+    setIsMobile(window.innerWidth < 768);
 
     const dpr = window.devicePixelRatio || 1;
     const rect = canvasRef.current.getBoundingClientRect();
@@ -254,19 +263,19 @@ const CrashPage = () => {
   }, []);
 
   // Draw grid
-  const drawGrid = useCallback((ctx: CanvasRenderingContext2D, elapsed: number) => {
+  const drawGrid = useCallback((ctx: CanvasRenderingContext2D, elapsed: number, padding: number, rightMargin: number) => {
     const rect = ctx.canvas.getBoundingClientRect();
     const viewWidth = rect.width;
     const viewHeight = rect.height;
 
     ctx.save();
 
-    const innerWidth = viewWidth - PADDING - RIGHT_MARGIN - PADDING;
-    const innerHeight = viewHeight - 2 * PADDING;
-    const left = PADDING;
-    const right = PADDING + innerWidth;
-    const bottom = viewHeight - PADDING;
-    const top = PADDING;
+    const innerWidth = viewWidth - padding - rightMargin - padding;
+    const innerHeight = viewHeight - 2 * padding;
+    const left = padding;
+    const right = padding + innerWidth;
+    const bottom = viewHeight - padding;
+    const top = padding;
 
     // Background
     const bgGradient = ctx.createLinearGradient(left, top, left, bottom);
@@ -327,6 +336,7 @@ const CrashPage = () => {
     }
 
     // Y-axis labels (multiplier) - map screen position to multiplier value
+    const labelOffset = padding > 40 ? 40 : padding - 5;
     for (let i = 0; i <= 5; i++) {
       const y = bottom - (innerHeight / 5) * i;
 
@@ -340,7 +350,7 @@ const CrashPage = () => {
 
       // Skip the bottom label (1.0x) to avoid overlap with axis
       if (i > 0) {
-        ctx.fillText(label, left - 40, y + 5);
+        ctx.fillText(label, left - labelOffset, y + 5);
       }
     }
 
@@ -701,7 +711,7 @@ const CrashPage = () => {
       ctx.clearRect(0, 0, rect.width, rect.height);
       effectsCtx.clearRect(0, 0, rect.width, rect.height);
 
-      drawGrid(ctx, elapsed);
+      drawGrid(ctx, elapsed, PADDING, RIGHT_MARGIN);
       drawCashoutMarkers(ctx);
       const rocket = rocketRef.current;
       drawRocket(ctx, rocket.x, rocket.y, rocket.angle);
@@ -928,7 +938,7 @@ const CrashPage = () => {
     effectsCtx.clearRect(0, 0, rect.width, rect.height);
 
     // Draw
-    drawGrid(ctx, elapsed);
+    drawGrid(ctx, elapsed, PADDING, RIGHT_MARGIN);
     drawCashoutMarkers(ctx);
     drawRocket(ctx, rocket.x, rocket.y, rocket.angle);
 
@@ -1035,7 +1045,7 @@ const CrashPage = () => {
       const rect = ctx.canvas.getBoundingClientRect();
       ctx.clearRect(0, 0, rect.width, rect.height);
 
-      drawGrid(ctx, 0);
+      drawGrid(ctx, 0, PADDING, RIGHT_MARGIN);
 
       // Draw idle rocket
       const rocket = rocketRef.current;
@@ -1098,16 +1108,16 @@ const CrashPage = () => {
   return (
     <>
       <div className="min-h-screen">
-        <div className="mb-6">
+        <div className="mb-6 hidden lg:block">
           <h1 className="text-3xl font-bold mb-1">CRASH</h1>
           <p className="text-muted-foreground">{t("crash.description")}</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6 items-stretch">
-          {/* Left Controls Panel */}
-          <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-4 lg:gap-6 items-stretch">
+          {/* Left Controls Panel - Order 2 on mobile, Order 1 on desktop */}
+          <div className="flex flex-col gap-3 lg:gap-4 order-2 lg:order-1 p-3 lg:p-0 pb-20 lg:pb-0">
             {/* Betting Controls */}
-            <div className="bg-card/40 rounded-lg p-4 border border-border/40">
+            <div className="bg-card/40 rounded-lg p-3 lg:p-4 border border-border/40">
               <div className="space-y-4">
                 {/* Bet Amount */}
                 <div>
@@ -1324,9 +1334,9 @@ const CrashPage = () => {
             </div>
           </div>
 
-          {/* Right Game Canvas */}
-          <div className="flex flex-col min-w-0">
-            <div className="relative h-[500px] lg:h-[600px] bg-card/40 rounded-lg border border-border/40 overflow-hidden">
+          {/* Right Game Canvas - Order 1 on mobile, Order 2 on desktop */}
+          <div className="flex flex-col min-w-0 order-1 lg:order-2">
+            <div className="relative h-[45vh] lg:h-[600px] bg-card/40 rounded-lg lg:border border-border/40 overflow-hidden">
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 text-center">
                 <div className={`text-5xl lg:text-6xl font-bold ${gameState === "crashed" ? "text-red-500" : "text-white"}`}>
                   {multiplier.toFixed(2)}x

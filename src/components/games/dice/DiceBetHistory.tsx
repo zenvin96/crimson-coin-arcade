@@ -35,10 +35,10 @@ export const DiceBetHistory = ({ history }: DiceBetHistoryProps) => {
   const { t } = useTranslation();
 
   return (
-    <Card className="p-0 sm:p-6 min-w-0">
-      <h2 className="text-base sm:text-xl font-bold mb-2 sm:mb-4 px-2 pt-2 sm:px-0 sm:pt-0">{t("dice.betHistory")}</h2>
+    <Card className="bg-gray-900/70 backdrop-blur-2xl border-gray-800/60 shadow-[0_4px_24px_rgba(0,0,0,0.3)] p-0 sm:p-4 md:p-6 min-w-0">
+      <h2 className="text-sm sm:text-base md:text-xl font-bold mb-2 sm:mb-3 md:mb-4 px-2 pt-2 sm:px-0 sm:pt-0">{t("dice.betHistory")}</h2>
       {history.length === 0 ? (
-        <p className="text-center text-muted-foreground py-12">
+        <p className="text-center text-xs sm:text-sm text-muted-foreground py-8 sm:py-12">
           {t("dice.noHistory")}
         </p>
       ) : (
@@ -109,35 +109,44 @@ export const DiceBetHistory = ({ history }: DiceBetHistoryProps) => {
                 <div
                   key={`${bet.timestamp}-${index}`}
                   className={cn(
-                    "p-2 rounded-md border transition-colors",
-                    index === 0 ? "bg-muted/50 border-primary/20" : "bg-background border-border"
+                    "p-2 rounded-md border transition-all duration-200",
+                    index === 0
+                      ? "bg-gradient-to-br from-gray-800/60 via-gray-900/50 to-gray-800/60 border-amber-500/40 shadow-md"
+                      : "bg-gradient-to-br from-gray-800/40 via-gray-900/30 to-gray-800/40 border-gray-700/30"
                   )}
+                  style={{
+                    boxShadow: index === 0
+                      ? 'inset 0 1px 1px rgba(255,255,255,0.05), 0 0 8px rgba(251,191,36,0.15)'
+                      : 'inset 0 1px 1px rgba(255,255,255,0.03)',
+                  }}
                 >
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[10px] text-muted-foreground">{timeAgo}</span>
+                    <span className="text-[10px] text-gray-400 font-medium">{timeAgo}</span>
                     <span
                       className={cn(
-                        "text-xs font-semibold",
-                        bet.profit >= 0 ? "text-success" : "text-destructive"
+                        "text-xs font-bold px-1.5 py-0.5 rounded",
+                        bet.profit >= 0
+                          ? "text-emerald-400 bg-emerald-500/15"
+                          : "text-rose-400 bg-rose-500/15"
                       )}
                     >
                       {bet.profit >= 0 ? "+" : ""}${bet.profit.toFixed(2)}
                     </span>
                   </div>
                   <div className="grid grid-cols-3 gap-1.5 text-[10px]">
-                    <div>
-                      <div className="text-muted-foreground mb-0.5">{t("dice.betAmount")}</div>
-                      <div className="font-medium">${bet.betAmount.toFixed(2)}</div>
+                    <div className="bg-gray-900/50 rounded p-1">
+                      <div className="text-gray-500 mb-0.5">{t("dice.betAmount")}</div>
+                      <div className="font-semibold text-gray-200">${bet.betAmount.toFixed(2)}</div>
                     </div>
-                    <div>
-                      <div className="text-muted-foreground mb-0.5">{t("dice.target")}</div>
-                      <div className="font-medium">{bet.isRollOver ? ">" : "<"} {bet.target.toFixed(2)}</div>
+                    <div className="bg-gray-900/50 rounded p-1">
+                      <div className="text-gray-500 mb-0.5">{t("dice.target")}</div>
+                      <div className="font-semibold text-gray-200">{bet.isRollOver ? ">" : "<"} {bet.target.toFixed(2)}</div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-muted-foreground mb-0.5">{t("dice.result")}</div>
+                    <div className="bg-gray-900/50 rounded p-1 text-right">
+                      <div className="text-gray-500 mb-0.5">{t("dice.result")}</div>
                       <div className={cn(
-                        "font-semibold",
-                        bet.isWin ? "text-success" : "text-destructive"
+                        "font-bold",
+                        bet.isWin ? "text-emerald-400" : "text-rose-400"
                       )}>
                         {bet.result.toFixed(2)}
                       </div>

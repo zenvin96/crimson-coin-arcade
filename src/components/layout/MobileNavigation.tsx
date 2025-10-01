@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useApp } from "@/contexts/AppContext";
 import { Button } from "@/components/ui/button";
-import { Home, Search, Menu, Bell, User } from "lucide-react";
+import { Home, Search, Menu, Bell, User, Gamepad2 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import Logo from "../ui/Logo";
+import AuthButtons from "../ui/AuthButtons";
 
 const MobileNavigation = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { notificationCount, isAuthenticated } = useApp();
   const [showSearch, setShowSearch] = useState(false);
 
@@ -20,9 +23,20 @@ const MobileNavigation = () => {
           variant="ghost"
           size="icon"
           className="flex flex-col items-center gap-1 text-foreground"
+          onClick={() => navigate("/")}
         >
           <Home className="h-5 w-5" />
           <span className="text-xs">{t("mobileNav.home")}</span>
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          className="flex flex-col items-center gap-1 text-foreground"
+          onClick={() => navigate("/original-games")}
+        >
+          <Gamepad2 className="h-5 w-5" />
+          <span className="text-xs">{t("mobileNav.originalGames")}</span>
         </Button>
 
         <Button
@@ -62,12 +76,28 @@ const MobileNavigation = () => {
                     {t("mobileNav.mainMenu")}
                   </h3>
                   <div className="space-y-2">
-                    <Button variant="outline" className="w-full justify-start">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={() => navigate("/")}
+                    >
                       <Home className="h-5 w-5 mr-2" /> {t("mobileNav.home")}
                     </Button>
-                    <Button variant="outline" className="w-full justify-start">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={() => navigate("/all-games")}
+                    >
                       <Menu className="h-5 w-5 mr-2" />{" "}
                       {t("mobileNav.allGames")}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={() => navigate("/original-games")}
+                    >
+                      <Gamepad2 className="h-5 w-5 mr-2" />{" "}
+                      {t("mobileNav.originalGames")}
                     </Button>
                   </div>
                 </div>
@@ -77,13 +107,8 @@ const MobileNavigation = () => {
                     <h3 className="text-lg font-medium mb-4">
                       {t("mobileNav.account")}
                     </h3>
-                    <div className="flex flex-col gap-2">
-                      <Button className="gradient-button w-full">
-                        {t("mobileNav.signUp")}
-                      </Button>
-                      <Button variant="outline" className="w-full">
-                        {t("mobileNav.signIn")}
-                      </Button>
+                    <div className="flex justify-center">
+                      <AuthButtons />
                     </div>
                   </div>
                 )}

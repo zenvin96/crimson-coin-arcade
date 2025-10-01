@@ -54,7 +54,7 @@ const AppLayout = () => {
       {/* Main Content - 确保内容有较高的z-index */}
       <main
         className={cn(
-          "flex-1 transition-all duration-300 pb-20 bg-background relative",
+          "flex-1 transition-all duration-300 pb-20 bg-background relative overflow-x-hidden",
           isSidebarOpen && !isMobile ? "ml-64" : isMobile ? "ml-0" : "ml-16",
           (isMobile && "pt-0") || "pt-16" // Account for fixed header
         )}
@@ -64,7 +64,7 @@ const AppLayout = () => {
         {!isMobile && <TopHeader />}
 
         {/* Page Content */}
-        <div className="container max-w-7xl mx-auto p-4 md:p-6 relative">
+        <div className="container max-w-7xl mx-auto p-3 md:p-6 relative overflow-x-hidden">
           <Outlet />
         </div>
 

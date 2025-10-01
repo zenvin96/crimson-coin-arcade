@@ -6,7 +6,7 @@ import MouseGlow from "@/components/ui/MouseGlow";
 
 const Index = () => {
   return (
-    <>
+    <div className="overflow-x-hidden">
       <MouseGlow />
       <HeroSection />
       <RecentBigWins />
@@ -14,7 +14,7 @@ const Index = () => {
       <div id="game-section">
         <GameShowcase />
       </div>
-    </>
+    </div>
   );
 };
 

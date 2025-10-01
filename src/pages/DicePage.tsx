@@ -55,38 +55,41 @@ const DicePage = () => {
   }, [handleAutoBetResult, autoBetState.isActive]);
 
   return (
-    <div className="w-full min-h-screen">
-      <div className="container mx-auto p-2 sm:p-4 max-w-7xl">
-        <div className="flex flex-col gap-1 mb-2 sm:gap-2 sm:mb-6">
-          <h1 className="text-xl sm:text-3xl font-bold">{t("dice.title")}</h1>
-          <p className="text-xs sm:text-base text-muted-foreground">{t("dice.description")}</p>
+    <div className="container mx-auto p-2 sm:p-3 lg:p-4 space-y-3 sm:space-y-4">
+      <div className="text-center space-y-1 px-2">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-rose-400 to-amber-400 bg-clip-text text-transparent">
+          {t("dice.title")}
+        </h1>
+        <p className="text-xs sm:text-sm text-gray-400 max-w-2xl mx-auto px-2">
+          {t("dice.description")}
+        </p>
+      </div>
+
+      <DiceHistoryBar history={state.history} maxItems={window.innerWidth < 640 ? 5 : 10} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-3 sm:gap-4">
+        <div className="space-y-2 sm:space-y-3 order-2 lg:order-1">
+          <DiceControls
+            betAmount={state.betAmount}
+            balance={state.balance}
+            profitOnWin={profitOnWin}
+            config={config}
+            isPlacingBet={isPlacingBet}
+            autoBetState={autoBetState}
+            activeTab={activeTab}
+            history={state.history}
+            onTabChange={setActiveTab}
+            onBetAmountChange={setBetAmount}
+            onQuickAmount={handleQuickAmount}
+            onPlaceBet={placeBet}
+            onStartAutoBet={startAutoBet}
+            onStopAutoBet={stopAutoBet}
+            onAutoBetConfigChange={updateAutoBetConfig}
+          />
         </div>
 
-        <div className="space-y-2 sm:space-y-6">
-          <DiceHistoryBar history={state.history} maxItems={window.innerWidth < 640 ? 5 : 10} />
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 sm:gap-6 min-w-0">
-          <div className="order-2 lg:order-1">
-            <DiceControls
-              betAmount={state.betAmount}
-              balance={state.balance}
-              profitOnWin={profitOnWin}
-              config={config}
-              isPlacingBet={isPlacingBet}
-              autoBetState={autoBetState}
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-              onBetAmountChange={setBetAmount}
-              onQuickAmount={handleQuickAmount}
-              onPlaceBet={placeBet}
-              onStartAutoBet={startAutoBet}
-              onStopAutoBet={stopAutoBet}
-              onAutoBetConfigChange={updateAutoBetConfig}
-            />
-          </div>
-
-          <div className="order-1 lg:order-2 lg:col-span-2">
-            <DiceGameArea
+        <div className="order-1 lg:order-2">
+          <DiceGameArea
               target={state.target}
               isRollOver={state.isRollOver}
               multiplier={multiplier}
@@ -98,12 +101,10 @@ const DicePage = () => {
               onTargetChange={setTarget}
               onToggleRollType={toggleRollType}
             />
-          </div>
-        </div>
-
-          <DiceBetHistory history={state.history} />
         </div>
       </div>
+
+      <DiceBetHistory history={state.history} />
     </div>
   );
 };

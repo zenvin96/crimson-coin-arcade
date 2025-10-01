@@ -83,6 +83,7 @@
   },
   "mobileNav": {
     "home": "Home",
+    "originalGames": "Originals",
     "search": "Search",
     "menu": "Menu",
     "alerts": "Alerts",
@@ -279,7 +280,12 @@
       "half": "1/2",
       "double": "2x",
       "max": "MAX"
-    }
+    },
+    "stats": "Statistics",
+    "winRate": "Win Rate",
+    "bestStreak": "Best Streak",
+    "highestMultiplier": "Highest Multiplier",
+    "totalGames": "Total Games"
   },
   "auth": {
     "loginSuccessTitle": "Login successful",

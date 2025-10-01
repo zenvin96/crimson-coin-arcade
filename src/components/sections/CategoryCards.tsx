@@ -49,19 +49,19 @@ const CategoryCard = ({
     <div
       onClick={onClick}
       className={cn(
-        "bg-card rounded-lg shadow-soft p-6 flex flex-col items-center text-center",
+        "bg-card rounded-lg shadow-soft p-4 md:p-6 flex flex-col items-center text-center",
         "hover-scale hover:shadow-medium cursor-pointer relative",
         "border border-primary/30 hover:border-primary/70",
         "after:absolute after:inset-0 after:rounded-lg after:border after:border-primary/10 after:opacity-0 hover:after:opacity-100",
         "before:absolute before:-inset-0.5 before:rounded-lg before:bg-gradient-to-r before:from-primary/10 before:to-primary/5 before:opacity-0 hover:before:opacity-100 before:blur-md before:-z-10"
       )}
     >
-      <div className="mb-4 bg-primary-light/10 p-4 rounded-full">
+      <div className="mb-3 md:mb-4 bg-primary-light/10 p-3 md:p-4 rounded-full">
         {getCategoryIcon(icon)}
       </div>
-      <h3 className="text-lg font-medium mb-2">{title}</h3>
-      <p className="text-sm text-muted-foreground mb-4">{description}</p>
-      <Button className="bg-primary hover:bg-primary-hover">
+      <h3 className="text-sm md:text-lg font-medium mb-1 md:mb-2">{title}</h3>
+      <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4 line-clamp-2">{description}</p>
+      <Button className="bg-primary hover:bg-primary-hover text-xs md:text-sm">
         {t("games.allGames")}
       </Button>
     </div>
@@ -78,9 +78,9 @@ const CategoryCards = () => {
 
   return (
     <section className="w-full mb-12">
-      <h2 className="text-2xl font-bold mb-8">{t("categories.title")}</h2>
+      <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8">{t("categories.title")}</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
         {isLoading
           ? Array(6)
               .fill(null)

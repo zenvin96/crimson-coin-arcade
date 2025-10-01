@@ -65,7 +65,7 @@ const LoginForm = ({ setMode, onSuccess }: { setMode: (mode: AuthMode) => void; 
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 min-h-[29rem]">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4 sm:min-h-[29rem]">
         <FormField
           control={form.control}
           name="email"
@@ -135,10 +135,10 @@ const LoginForm = ({ setMode, onSuccess }: { setMode: (mode: AuthMode) => void; 
             </div>
           </div>
 
-          <div className="mt-6 flex  justify-around gap-3">
+          <div className="mt-6 grid grid-cols-4 sm:flex sm:justify-around gap-2 sm:gap-3">
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -151,43 +151,43 @@ const LoginForm = ({ setMode, onSuccess }: { setMode: (mode: AuthMode) => void; 
             </Button>
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
             >
               <Send className="h-5 w-5 text-neutral-400" />
             </Button>
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
             >
               <span className="font-bold text-neutral-400">M</span>
             </Button>
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
             >
               <Twitter className="h-5 w-5 text-neutral-400" />
             </Button>
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
             >
               <span className="font-bold text-neutral-400">WC</span>
             </Button>
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
             >
               <MessageCircle className="h-5 w-5 text-neutral-400" />
             </Button>
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
             >
               <span className="font-bold text-neutral-400">L</span>
             </Button>
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
             >
               <span className="font-bold text-neutral-400">Z</span>
             </Button>
@@ -244,7 +244,7 @@ const RegisterForm = ({ setMode, onSuccess }: { setMode: (mode: AuthMode) => voi
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 min-h-[29rem]">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4 sm:min-h-[29rem]">
         <FormField
           control={form.control}
           name="username"
@@ -347,10 +347,10 @@ const RegisterForm = ({ setMode, onSuccess }: { setMode: (mode: AuthMode) => voi
             </div>
           </div>
 
-          <div className="mt-6 flex  justify-around gap-3">
+          <div className="mt-6 grid grid-cols-4 sm:flex sm:justify-around gap-2 sm:gap-3">
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -363,43 +363,43 @@ const RegisterForm = ({ setMode, onSuccess }: { setMode: (mode: AuthMode) => voi
             </Button>
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
             >
               <Send className="h-5 w-5 text-neutral-400" />
             </Button>
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
             >
               <span className="font-bold text-neutral-400">M</span>
             </Button>
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
             >
               <Twitter className="h-5 w-5 text-neutral-400" />
             </Button>
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
             >
               <span className="font-bold text-neutral-400">WC</span>
             </Button>
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
             >
               <MessageCircle className="h-5 w-5 text-neutral-400" />
             </Button>
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
             >
               <span className="font-bold text-neutral-400">L</span>
             </Button>
             <Button
               variant="outline"
-              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-10 flex items-center justify-center"
+              className="bg-neutral-800 border-neutral-700 hover:bg-neutral-700 aspect-square p-0 h-9 sm:h-10 flex items-center justify-center text-xs sm:text-sm"
             >
               <span className="font-bold text-neutral-400">Z</span>
             </Button>
@@ -469,9 +469,9 @@ const AuthButtons = () => {
             {t("auth.signInButton")}
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[calc(28rem+300px)] bg-neutral-900 border border-pink-600/70 shadow-2xl shadow-pink-600/30 rounded-lg p-0 overflow-hidden">
-          <div className="flex">
-            <div className="sm:w-[28rem] p-6">
+        <DialogContent className="w-[95vw] max-w-[calc(28rem+300px)] sm:w-auto bg-neutral-900 border border-pink-600/70 shadow-2xl shadow-pink-600/30 rounded-lg p-0 overflow-hidden max-h-[90vh] overflow-y-auto">
+          <div className="flex flex-col sm:flex-row">
+            <div className="w-full sm:w-[28rem] p-4 sm:p-6">
               <DialogHeader>
                 <DialogTitle className="text-pink-400">
                   {authMode === "login"

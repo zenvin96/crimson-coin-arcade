@@ -51,27 +51,27 @@ const GameCard = ({
 
   return (
     <div className="game-card relative group border border-border/30">
-      {!imageLoaded && <Skeleton className="h-40 w-full rounded-t-lg" />}
+      {!imageLoaded && <Skeleton className="h-32 md:h-40 w-full rounded-t-lg" />}
       <img
         src={image}
         alt={title}
         className={cn(
-          "w-full h-40 object-cover rounded-t-lg transition-all",
+          "w-full h-32 md:h-40 object-cover rounded-t-lg transition-all",
           !imageLoaded && "hidden"
         )}
         onLoad={() => setImageLoaded(true)}
       />
 
       {/* Badges */}
-      <div className="absolute top-2 left-2 flex gap-1">
+      <div className="absolute top-1 left-1 md:top-2 md:left-2 flex gap-1">
         {isHot && (
-          <div className="bg-blue-500 text-white text-xs font-medium px-2 py-1 rounded-full">
+          <div className="bg-blue-500 text-white text-[10px] md:text-xs font-medium px-1.5 py-0.5 md:px-2 md:py-1 rounded-full">
             {t("gameShowcase.hotBadge")}
           </div>
         )}
         {isNew && (
-          <div className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full flex items-center gap-1">
-            <Flame className="h-3 w-3" />
+          <div className="bg-red-500 text-white text-[10px] md:text-xs font-medium px-1.5 py-0.5 md:px-2 md:py-1 rounded-full flex items-center gap-0.5 md:gap-1">
+            <Flame className="h-2.5 w-2.5 md:h-3 md:w-3" />
             {t("gameShowcase.newBadge")}
           </div>
         )}
@@ -79,14 +79,14 @@ const GameCard = ({
 
       {/* Play button overlay */}
       <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 rounded-lg">
-        <Button className="gradient-button hover:scale-105 transition-all">
+        <Button className="gradient-button hover:scale-105 transition-all text-xs md:text-sm">
           {t("gameShowcase.playNow")}
         </Button>
       </div>
 
-      <div className="p-3">
-        <h3 className="font-medium text-sm">{title}</h3>
-        <p className="text-xs text-muted-foreground">{provider}</p>
+      <div className="p-2 md:p-3">
+        <h3 className="font-medium text-xs md:text-sm truncate">{title}</h3>
+        <p className="text-[10px] md:text-xs text-muted-foreground truncate">{provider}</p>
       </div>
     </div>
   );
@@ -134,30 +134,30 @@ const WinnerCard = ({
   };
 
   return (
-    <div className="flex flex-col bg-card rounded-lg shadow-card p-3 min-w-[280px] border border-border/30 hover:border-border/50 transition-colors">
-      <div className="flex gap-3 items-center mb-3">
+    <div className="flex flex-col bg-card rounded-lg shadow-card p-2 md:p-3 min-w-[240px] md:min-w-[280px] border border-border/30 hover:border-border/50 transition-colors">
+      <div className="flex gap-2 md:gap-3 items-center mb-2 md:mb-3">
         <img
           src={avatar}
           alt={username}
-          className="h-10 w-10 rounded-full border-2 border-primary/20"
+          className="h-8 w-8 md:h-10 md:w-10 rounded-full border-2 border-primary/20"
         />
         <div>
-          <p className="font-medium text-sm">{username}</p>
-          <p className="text-xs text-muted-foreground">{timeAgo(timestamp)}</p>
+          <p className="font-medium text-xs md:text-sm">{username}</p>
+          <p className="text-[10px] md:text-xs text-muted-foreground">{timeAgo(timestamp)}</p>
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 md:gap-3">
         <img
           src={game.image}
           alt={game.title}
-          className="h-12 w-12 rounded-md object-cover"
+          className="h-10 w-10 md:h-12 md:w-12 rounded-md object-cover"
         />
-        <div className="flex-1">
-          <p className="text-xs text-muted-foreground">
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] md:text-xs text-muted-foreground truncate">
             {t("gameShowcase.wonOn", { gameTitle: game.title })}
           </p>
-          <p className="font-bold text-primary">
+          <p className="font-bold text-sm md:text-base text-primary">
             {currency} {amount.toLocaleString()}
           </p>
         </div>
@@ -276,19 +276,19 @@ const RecentWinners = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section className="w-full mb-12">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">
+    <section className="w-full mb-8 md:mb-12">
+      <div className="flex items-center justify-between mb-4 md:mb-6">
+        <h2 className="text-lg md:text-2xl font-bold">
           {t("gameShowcase.recentWinners")}
         </h2>
-        <Button variant="link" className="text-primary">
+        <Button variant="link" className="text-primary text-xs md:text-sm">
           {t("gameShowcase.viewAll")}
-          <ArrowRight className="ml-1 h-4 w-4" />
+          <ArrowRight className="ml-1 h-3 w-3 md:h-4 md:w-4" />
         </Button>
       </div>
 
       <div
-        className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide"
+        className="flex overflow-x-auto gap-3 md:gap-4 pb-3 md:pb-4 scrollbar-hide"
         ref={scrollRef}
       >
         {recentWinners.map((winner) => (
@@ -314,13 +314,13 @@ const GameShowcase = () => {
     <section className="w-full">
       <TabNavigation />
 
-      <Separator className="my-12 bg-border/50" />
+      <Separator className="my-8 md:my-12 bg-border/50" />
 
       <RecentWinners />
 
-      <Separator className="my-8" />
+      <Separator className="my-6 md:my-8" />
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 md:gap-4">
         {isLoading
           ? Array(12)
               .fill(null)
@@ -329,10 +329,10 @@ const GameShowcase = () => {
                   key={`skeleton-${i}`}
                   className="bg-card rounded-lg shadow-card border border-border/30"
                 >
-                  <Skeleton className="h-40 w-full rounded-t-lg" />
-                  <div className="p-3">
-                    <Skeleton className="h-4 w-3/4 mb-2" />
-                    <Skeleton className="h-3 w-1/2" />
+                  <Skeleton className="h-32 md:h-40 w-full rounded-t-lg" />
+                  <div className="p-2 md:p-3">
+                    <Skeleton className="h-3 md:h-4 w-3/4 mb-1 md:mb-2" />
+                    <Skeleton className="h-2 md:h-3 w-1/2" />
                   </div>
                 </div>
               ))
@@ -350,8 +350,8 @@ const GameShowcase = () => {
               ))}
       </div>
 
-      <div className="flex justify-center mt-6">
-        <Button size="lg" className="gradient-button hover-scale">
+      <div className="flex justify-center mt-4 md:mt-6">
+        <Button size="lg" className="gradient-button hover-scale text-sm md:text-base">
           Load More Games
         </Button>
       </div>

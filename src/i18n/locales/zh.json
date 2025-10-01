@@ -83,6 +83,7 @@
   },
   "mobileNav": {
     "home": "首页",
+    "originalGames": "原创",
     "search": "搜索",
     "menu": "菜单",
     "alerts": "提醒",
@@ -279,7 +280,12 @@
       "half": "1/2",
       "double": "2倍",
       "max": "最大"
-    }
+    },
+    "stats": "统计数据",
+    "winRate": "胜率",
+    "bestStreak": "最佳连胜",
+    "highestMultiplier": "最高倍数",
+    "totalGames": "总游戏次数"
   },
   "auth": {
     "loginSuccessTitle": "登录成功",
