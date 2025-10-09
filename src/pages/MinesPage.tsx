@@ -329,26 +329,32 @@ const MinesPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6 items-stretch">
         {/* Left Controls */}
         <div className="bg-card/40 rounded-lg p-3 sm:p-4 border border-border/40 flex flex-col">
-          <div className="mb-3">
-            <div className="text-xs text-muted-foreground uppercase tracking-wider mb-2">{t("mines.panel.betLabel")}</div>
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <span className="absolute left-2 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 text-xs text-muted-foreground">
-                  <img src="/tether-usdt-logo.svg" alt="USDT" className="h-4 w-4" />
-                  <span className="hidden sm:inline">USDT</span>
-                </span>
-                <Input
-                  type="number"
-                  className="pl-12 text-right font-semibold"
-                  value={state.betAmount}
-                  min={1}
-                  max={config?.maxBet ?? 1000}
-                  onChange={(e) => onSetBet(parseFloat(e.target.value) || 0)}
-                />
-              </div>
-              <Button variant="outline" size="sm" className="px-3 text-xs" onClick={() => onAdjustBet(0.5)}>½</Button>
-              <Button variant="outline" size="sm" className="px-3 text-xs" onClick={() => onAdjustBet(2)}>2×</Button>
-              <Button variant="outline" size="sm" className="px-3 text-xs" onClick={() => onSetBet(config?.maxBet ?? 1000)}>MAX</Button>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t("mines.panel.betLabel")}</label>
+            <div className="relative">
+              <span className="absolute left-2 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                <img src="/tether-usdt-logo.svg" alt="USDT" className="h-4 w-4" />
+                <span className="hidden sm:inline">USDT</span>
+              </span>
+              <Input
+                type="number"
+                className="pl-12 text-right font-semibold h-10"
+                value={state.betAmount}
+                min={1}
+                max={config?.maxBet ?? 1000}
+                onChange={(e) => onSetBet(parseFloat(e.target.value) || 0)}
+              />
+            </div>
+            <div className="grid grid-cols-4 gap-1.5">
+              <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => onSetBet(10)}>10</Button>
+              <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => onSetBet(50)}>50</Button>
+              <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => onSetBet(100)}>100</Button>
+              <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => onSetBet(500)}>500</Button>
+            </div>
+            <div className="grid grid-cols-3 gap-1.5">
+              <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => onAdjustBet(0.5)}>½</Button>
+              <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => onAdjustBet(2)}>2×</Button>
+              <Button variant="outline" size="sm" className="h-8 text-xs font-bold" onClick={() => onSetBet(config?.maxBet ?? 1000)}>MAX</Button>
             </div>
           </div>
 
@@ -394,15 +400,14 @@ const MinesPage = () => {
 
           <div className="flex gap-2 mt-auto">
             <Button
-              className={`flex-1 transition-all duration-300 text-sm sm:text-base ${canStart && !state.isActive ? "pulse-soft-animation" : ""}`}
+              className={`flex-1 h-12 bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl transition-all duration-200 font-bold text-base ${canStart && !state.isActive ? "pulse-soft-animation" : ""}`}
               onClick={onStart}
               disabled={!canStart || state.isActive}
             >
               {startMutation.isPending ? t("mines.panel.starting") : t("mines.panel.start")}
             </Button>
             <Button
-              className={`flex-1 transition-all duration-300 text-sm sm:text-base ${isCashoutEnabled ? "pulse-soft-animation" : ""}`}
-              variant="secondary"
+              className={`flex-1 h-12 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl hover:shadow-green-500/50 transition-all duration-200 font-bold text-base ${isCashoutEnabled ? "pulse-soft-animation" : ""}`}
               onClick={onCashout}
               disabled={!isCashoutEnabled}
             >

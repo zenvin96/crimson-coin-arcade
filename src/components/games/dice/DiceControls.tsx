@@ -78,26 +78,22 @@ export const DiceControls = ({
 
   return (
     <>
-      <Card className="bg-gray-900/70 backdrop-blur-2xl border-gray-800/60 shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
-        <CardContent className="p-2 sm:p-3 space-y-2 sm:space-y-3">
-          <div
-            className="flex items-center justify-between py-1.5 px-2 sm:py-2 sm:px-3 bg-gradient-to-br from-amber-950/40 via-gray-900/30 to-amber-950/40 border border-amber-700/30 rounded-md"
-            style={{ boxShadow: 'inset 0 1px 2px rgba(251,191,36,0.05)' }}
-          >
-            <span className="text-[10px] sm:text-xs text-gray-400">{t("dice.balance")}</span>
-            <span className="text-xs sm:text-sm font-bold text-amber-400">${balance.toFixed(2)}</span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 sm:gap-3">
-            <div className="text-center">
-              <p className="text-[10px] sm:text-xs text-gray-400">{t("dice.profit")}</p>
-              <p className={cn("text-sm sm:text-lg font-bold", stats.totalProfit >= 0 ? "text-emerald-400" : "text-rose-400")}>
-                {stats.totalProfit >= 0 ? "+" : ""}${stats.totalProfit.toFixed(2)}
-              </p>
+      <Card className="bg-card/40 backdrop-blur-xl border-border/40 shadow-xl">
+        <CardContent className="p-3 lg:p-4 space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-card/60 border border-border/40 rounded-lg p-3 text-center">
+              <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
+                {t("dice.balance")}
+              </div>
+              <div className="text-lg font-bold">${balance.toFixed(2)}</div>
             </div>
-            <div className="text-center">
-              <p className="text-[10px] sm:text-xs text-gray-400">{t("dice.winRate")}</p>
-              <p className="text-sm sm:text-lg font-bold">{stats.winRate}%</p>
+            <div className="bg-card/60 border border-border/40 rounded-lg p-3 text-center">
+              <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
+                {t("dice.profit")}
+              </div>
+              <div className={cn("text-lg font-bold", stats.totalProfit >= 0 ? "text-green-500" : "text-red-500")}>
+                {stats.totalProfit >= 0 ? "+" : ""}${stats.totalProfit.toFixed(2)}
+              </div>
             </div>
           </div>
 
@@ -107,17 +103,21 @@ export const DiceControls = ({
               <TabsTrigger value="auto" className="text-[10px] sm:text-xs md:text-sm">{t("dice.auto")}</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="manual" className="space-y-2 sm:space-y-3 mt-0">
-              <div>
-                <div className="flex items-center justify-between mb-1 sm:mb-1.5">
-                  <label className="text-[10px] sm:text-xs font-medium" htmlFor="bet-amount-manual">
+            <TabsContent value="manual" className="space-y-3 mt-0">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider" htmlFor="bet-amount-manual">
                     {t("dice.betAmount")}
                   </label>
-                  <span className="text-[10px] sm:text-xs text-gray-400">
-                    {t("dice.profitOnWin")}: <span className="text-emerald-400 font-medium">${profitOnWin.toFixed(2)}</span>
+                  <span className="text-xs text-gray-400">
+                    {t("dice.profitOnWin")}: <span className="text-green-500 font-medium">${profitOnWin.toFixed(2)}</span>
                   </span>
                 </div>
                 <div className="relative">
+                  <span className="absolute left-2 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                    <img src="/tether-usdt-logo.svg" alt="USDT" className="h-4 w-4" />
+                    <span className="hidden sm:inline">USDT</span>
+                  </span>
                   <Input
                     id="bet-amount-manual"
                     type="number"
@@ -126,53 +126,77 @@ export const DiceControls = ({
                     min={config?.minBet || 0.01}
                     max={config?.maxBet || 10000}
                     step="0.01"
-                    className="w-full h-8 sm:h-9 pr-28 sm:pr-32 text-xs sm:text-sm"
+                    className="pl-12 text-right font-semibold h-10"
                     aria-label={t("dice.betAmount")}
                   />
-                  <div className="absolute right-0.5 sm:right-1 top-0.5 sm:top-1 flex gap-0.5 sm:gap-1">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => onQuickAmount(0.5)}
-                      className="h-6 sm:h-7 px-1.5 sm:px-2 text-[10px] sm:text-xs"
-                      aria-label={t("dice.presets.half")}
-                    >
-                      ½
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => onQuickAmount(2)}
-                      className="h-6 sm:h-7 px-1 sm:px-1.5 text-[10px] sm:text-xs"
-                      aria-label={t("dice.presets.double")}
-                    >
-                      2×
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => onQuickAmount(balance / betAmount)}
-                      className="h-6 sm:h-7 px-1 sm:px-1.5 text-[10px] sm:text-xs"
-                      aria-label={t("dice.presets.max")}
-                    >
-                      MAX
-                    </Button>
-                  </div>
+                </div>
+                <div className="grid grid-cols-4 gap-1.5">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onBetAmountChange(10)}
+                    className="h-8 text-xs"
+                  >
+                    10
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onBetAmountChange(50)}
+                    className="h-8 text-xs"
+                  >
+                    50
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onBetAmountChange(100)}
+                    className="h-8 text-xs"
+                  >
+                    100
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onBetAmountChange(500)}
+                    className="h-8 text-xs"
+                  >
+                    500
+                  </Button>
+                </div>
+                <div className="grid grid-cols-3 gap-1.5">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onQuickAmount(0.5)}
+                    className="h-8 text-xs"
+                    aria-label={t("dice.presets.half")}
+                  >
+                    ½
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onQuickAmount(2)}
+                    className="h-8 text-xs"
+                    aria-label={t("dice.presets.double")}
+                  >
+                    2×
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onQuickAmount(balance / betAmount)}
+                    className="h-8 text-xs font-bold"
+                    aria-label={t("dice.presets.max")}
+                  >
+                    MAX
+                  </Button>
                 </div>
               </div>
 
               <Button
-                className="w-full bg-gradient-to-br from-rose-600 via-pink-600 to-purple-700 hover:from-rose-500 hover:via-pink-500 hover:to-purple-600 hover:scale-[1.02] active:scale-95 transition-all duration-200 h-9 sm:h-10 text-sm sm:text-base font-bold"
-                style={{
-                  boxShadow: '0 4px 16px rgba(236,72,153,0.4)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = '0 6px 24px rgba(236,72,153,0.6)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(236,72,153,0.4)';
-                }}
-                size="default"
+                className="w-full h-12 bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl transition-all duration-200 font-bold text-base"
                 onClick={onPlaceBet}
                 disabled={isPlacingBet || betAmount > balance || betAmount <= 0}
                 aria-label={t("dice.bet")}
@@ -377,8 +401,7 @@ export const DiceControls = ({
                 <Button
                   onClick={onStartAutoBet}
                   disabled={autoBetState.isActive || betAmount > balance || betAmount <= 0}
-                  className="h-9 sm:h-10 text-sm sm:text-base bg-gradient-to-br from-rose-600 via-pink-600 to-purple-700 hover:from-rose-500 hover:via-pink-500 hover:to-purple-600"
-                  style={{ boxShadow: '0 4px 16px rgba(236,72,153,0.4)' }}
+                  className="h-12 bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl transition-all duration-200 font-bold text-base"
                   aria-label={t("dice.start")}
                 >
                   {t("dice.start")}
@@ -387,7 +410,7 @@ export const DiceControls = ({
                   variant="destructive"
                   onClick={onStopAutoBet}
                   disabled={!autoBetState.isActive}
-                  className="h-9 sm:h-10 text-sm sm:text-base"
+                  className="h-12 font-bold text-base"
                   aria-label={t("dice.stop")}
                 >
                   {t("dice.stop")}
@@ -398,7 +421,7 @@ export const DiceControls = ({
         </CardContent>
       </Card>
 
-      <Card className="bg-gray-900/70 backdrop-blur-2xl border-gray-800/60 shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
+      <Card className="bg-card/40 backdrop-blur-xl border-border/40 shadow-xl">
         <CardContent className="p-3">
           <Tabs defaultValue="stats" className="w-full">
             <TabsList className="grid w-full grid-cols-2">

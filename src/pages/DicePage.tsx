@@ -67,7 +67,7 @@ const DicePage = () => {
 
       <DiceHistoryBar history={state.history} maxItems={window.innerWidth < 640 ? 5 : 10} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-4">
         <div className="space-y-2 sm:space-y-3 order-2 lg:order-1">
           <DiceControls
             betAmount={state.betAmount}

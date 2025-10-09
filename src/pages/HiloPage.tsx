@@ -426,35 +426,35 @@ export default function HiloPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-4">
         <div className="space-y-3 order-2 lg:order-1">
           <Card className="bg-card/40 backdrop-blur-xl border-border/40 shadow-xl">
             <CardContent className="p-3 space-y-3">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">{t('hilo.betAmount')}</label>
+                <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('hilo.betAmount')}</label>
                 <div className="relative">
+                  <span className="absolute left-2 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                    <img src="/tether-usdt-logo.svg" alt="USDT" className="h-4 w-4" />
+                    <span className="hidden sm:inline">USDT</span>
+                  </span>
                   <Input
                     type="number"
                     value={gameState.betAmount}
                     onChange={(e) => setBetAmount(Number(e.target.value))}
                     disabled={gameState.isActive}
-                    className="pr-16 h-9"
+                    className="pl-12 text-right font-semibold h-10"
                     aria-label="Bet amount in USDT"
                     min="1"
                     max={gameState.balance}
                   />
-                  <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                    <img src="/usdt-logo.svg" alt="USDT" className="w-4 h-4" />
-                    <span className="text-xs text-gray-400">USDT</span>
-                  </div>
                 </div>
-                <div className="grid grid-cols-5 gap-1.5">
+                <div className="grid grid-cols-4 gap-1.5">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setBetAmount(10)}
                     disabled={gameState.isActive}
-                    className="hover:bg-primary/10 hover:border-primary transition-colors"
+                    className="h-8 text-xs"
                   >
                     10
                   </Button>
@@ -463,7 +463,7 @@ export default function HiloPage() {
                     size="sm"
                     onClick={() => setBetAmount(50)}
                     disabled={gameState.isActive}
-                    className="hover:bg-primary/10 hover:border-primary transition-colors"
+                    className="h-8 text-xs"
                   >
                     50
                   </Button>
@@ -472,7 +472,7 @@ export default function HiloPage() {
                     size="sm"
                     onClick={() => setBetAmount(100)}
                     disabled={gameState.isActive}
-                    className="hover:bg-primary/10 hover:border-primary transition-colors"
+                    className="h-8 text-xs"
                   >
                     100
                   </Button>
@@ -481,16 +481,36 @@ export default function HiloPage() {
                     size="sm"
                     onClick={() => setBetAmount(500)}
                     disabled={gameState.isActive}
-                    className="hover:bg-primary/10 hover:border-primary transition-colors"
+                    className="h-8 text-xs"
                   >
                     500
+                  </Button>
+                </div>
+                <div className="grid grid-cols-3 gap-1.5">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setBetAmount(Math.max(1, gameState.betAmount / 2))}
+                    disabled={gameState.isActive}
+                    className="h-8 text-xs"
+                  >
+                    ½
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setBetAmount(Math.min(gameState.balance, gameState.betAmount * 2))}
+                    disabled={gameState.isActive}
+                    className="h-8 text-xs"
+                  >
+                    2×
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setBetAmount(gameState.balance)}
                     disabled={gameState.isActive}
-                    className="hover:bg-primary/10 hover:border-primary transition-colors font-bold"
+                    className="h-8 text-xs font-bold"
                   >
                     MAX
                   </Button>
@@ -516,8 +536,7 @@ export default function HiloPage() {
 
               {!gameState.isActive ? (
                 <Button
-                  className="w-full bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 h-10"
-                  size="default"
+                  className="w-full h-12 bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl transition-all duration-200 font-bold text-base"
                   onClick={startGame}
                   disabled={gameState.isProcessing || gameState.betAmount > gameState.balance}
                   aria-label={`Start game with ${gameState.betAmount} USDT`}
@@ -526,31 +545,34 @@ export default function HiloPage() {
                 </Button>
               ) : (
                 <Button
-                  className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 shadow-lg hover:shadow-xl hover:shadow-green-500/50 hover:scale-105 active:scale-95 transition-all duration-200 font-semibold h-10"
-                  size="default"
+                  className="w-full h-12 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl hover:shadow-green-500/50 transition-all duration-200 font-bold text-base"
                   onClick={handleCashout}
                   disabled={gameState.isProcessing || gameState.streak === 0}
                   aria-label={`Cashout ${(gameState.betAmount * gameState.multiplier).toFixed(2)} USDT`}
                 >
                   <span className="flex items-center gap-2">
                     <span>{t('hilo.cashout')}</span>
-                    <span className="text-sm font-bold">
+                    <span className="font-bold">
                       {(gameState.betAmount * gameState.multiplier).toFixed(2)} USDT
                     </span>
                   </span>
                 </Button>
               )}
 
-              <div className="grid grid-cols-2 gap-3 pt-1">
-                <div className="text-center">
-                  <p className="text-xs text-gray-400">{t('hilo.balance')}</p>
-                  <p className="text-lg font-bold">{gameState.balance.toFixed(2)} USDT</p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-card/60 border border-border/40 rounded-lg p-3 text-center">
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
+                    {t('hilo.balance')}
+                  </div>
+                  <div className="text-lg font-bold">{gameState.balance.toFixed(2)}</div>
                 </div>
-                <div className="text-center">
-                  <p className="text-xs text-gray-400">{t('hilo.profit')}</p>
-                  <p className={`text-lg font-bold ${totalProfit >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                    {totalProfit >= 0 ? '+' : ''}{totalProfit.toFixed(2)} USDT
-                  </p>
+                <div className="bg-card/60 border border-border/40 rounded-lg p-3 text-center">
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
+                    {t('hilo.profit')}
+                  </div>
+                  <div className={`text-lg font-bold ${totalProfit >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    {totalProfit >= 0 ? '+' : ''}${totalProfit.toFixed(2)}
+                  </div>
                 </div>
               </div>
             </CardContent>

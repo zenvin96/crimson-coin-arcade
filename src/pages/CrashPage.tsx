@@ -1117,31 +1117,27 @@ const CrashPage = () => {
           {/* Left Controls Panel - Order 2 on mobile, Order 1 on desktop */}
           <div className="flex flex-col gap-3 lg:gap-4 order-2 lg:order-1 p-3 lg:p-0 pb-20 lg:pb-0">
             {/* Betting Controls */}
-            <div className="bg-card/40 rounded-lg p-3 lg:p-4 border border-border/40">
-              <div className="space-y-4">
+            <div className="bg-card/40 backdrop-blur-xl rounded-lg p-3 lg:p-4 border border-border/40 shadow-xl">
+              <div className="space-y-3">
                 {/* Bet Amount */}
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="text-xs text-muted-foreground uppercase tracking-wider">{t("crash.betAmount")}</div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t("crash.betAmount")}</label>
+                  <div className="relative">
+                    <span className="absolute left-2 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                      <img src="/tether-usdt-logo.svg" alt="USDT" className="h-4 w-4" />
+                      <span className="hidden sm:inline">USDT</span>
+                    </span>
+                    <Input
+                      type="number"
+                      className="pl-12 text-right font-semibold h-10"
+                      value={betAmount}
+                      min={1}
+                      max={balance}
+                      onChange={(e) => setBetAmount(parseFloat(e.target.value) || 0)}
+                      disabled={gameState !== "waiting"}
+                    />
                   </div>
-                  <div className="flex gap-2 mb-2">
-                    <div className="relative w-full">
-                      <span className="absolute left-2 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 text-xs text-muted-foreground">
-                        <img src="/tether-usdt-logo.svg" alt="USDT" className="h-4 w-4" />
-                        <span className="hidden sm:inline">USDT</span>
-                      </span>
-                      <Input
-                        type="number"
-                        className="pl-12 text-right font-semibold"
-                        value={betAmount}
-                        min={1}
-                        max={balance}
-                        onChange={(e) => setBetAmount(parseFloat(e.target.value) || 0)}
-                        disabled={gameState !== "waiting"}
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-4 gap-1.5 mb-1.5">
+                  <div className="grid grid-cols-4 gap-1.5">
                     <Button variant="outline" size="sm" onClick={() => setBetAmount(10)} disabled={gameState !== "waiting"} className="h-8 text-xs">
                       10
                     </Button>
@@ -1160,9 +1156,9 @@ const CrashPage = () => {
                       ½
                     </Button>
                     <Button variant="outline" size="sm" onClick={() => setBetAmount(Math.min(balance, betAmount * 2))} disabled={gameState !== "waiting"} className="h-8 text-xs">
-                      2x
+                      2×
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => setBetAmount(Math.min(balance, 1000))} disabled={gameState !== "waiting"} className="h-8 text-xs">
+                    <Button variant="outline" size="sm" onClick={() => setBetAmount(Math.min(balance, 1000))} disabled={gameState !== "waiting"} className="h-8 text-xs font-bold">
                       MAX
                     </Button>
                   </div>
@@ -1243,14 +1239,13 @@ const CrashPage = () => {
 
                 {/* Action Button */}
                 <Button
-                  className={`w-full transition-all duration-300 font-bold text-lg ${
+                  className={`w-full transition-all duration-200 font-bold text-base ${
                     gameState === "in-progress" && currentBet > 0
                       ? multiplier >= 5
                         ? "h-16 bg-gradient-to-r from-green-500 via-emerald-500 to-green-500 hover:from-green-400 hover:via-emerald-400 hover:to-green-400 shadow-2xl shadow-green-500/60 animate-pulse border-2 border-green-300"
-                        : "h-14 bg-green-600 hover:bg-green-500 shadow-xl shadow-green-600/50"
-                      : "h-12 bg-primary hover:bg-primary/90"
+                        : "h-14 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 shadow-xl shadow-green-600/50 hover:scale-105 active:scale-95"
+                      : "h-12 bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
                   }`}
-                  size="lg"
                   onClick={gameState === "waiting" ? handlePlaceBet : handleCashout}
                   disabled={
                     gameState === "waiting"
